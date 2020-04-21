@@ -16,6 +16,11 @@ func main() {
 		log.Fatalf("usage: %v %s\n", os.Args[0], "IPADDR")
 	}
 
+	ip := net.ParseIP(os.Args[1])
+	if ip == nil {
+		log.Fatalf("invalid IP address: %v\n", os.Args[1])
+	}
+
 	licenseKey := os.Getenv("GEOIP_LICENSE_KEY")
 	if licenseKey == "" {
 		log.Fatalf("environment variable GEOIP_LICENSE_KEY not defined")
@@ -35,11 +40,6 @@ func main() {
 	}
 
 	defer g.Close()
-
-	ip := net.ParseIP(os.Args[1])
-	if ip == nil {
-		log.Fatalf("invalid IP address: %v\n", os.Args[1])
-	}
 
 	record, err := g.DB.City(ip)
 	if err != nil {
