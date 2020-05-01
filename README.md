@@ -1,6 +1,14 @@
 # checkip
 
-Find out geographic location of an IP address:
+Find out geographic location of an IP address.
+
+Installation:
+
+```
+go install
+```
+
+Usage:
 
 ```
 > checkip $(dig +short reisinge.net)
