@@ -5,7 +5,7 @@ Find out geographic location of an IP address.
 Installation:
 
 ```
-go install
+> go install
 ```
 
 Usage:
