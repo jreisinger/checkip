@@ -18,5 +18,5 @@ Usage:
 Frankfurt am Main, Germany, DE
 
 > checkip $(curl -s util.reisinge.net/addr)
-Stupava, Slovakia, SK
+Partizanska lupca, Slovakia, SK
 ```
