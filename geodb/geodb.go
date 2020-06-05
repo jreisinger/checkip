@@ -3,6 +3,7 @@ package geodb
 import (
 	"net"
 	"os"
+	"time"
 
 	"github.com/oschwald/geoip2-golang"
 )
@@ -16,10 +17,14 @@ type GeoDB struct {
 	Location []string
 }
 
+func isOlderThanOneWeek(t time.Time) bool {
+	return time.Now().Sub(t) > 7*24*time.Hour
+}
+
 // Update downloads and creates database file if not present,
 // updates if file is older than a week.
 func (g *GeoDB) Update(url string) error {
-	if _, err := os.Stat(g.Filepath); os.IsNotExist(err) {
+	if file, err := os.Stat(g.Filepath); os.IsNotExist(err) || isOlderThanOneWeek(file.ModTime()) {
 		r, err := downloadFile(g.URL)
 		if err != nil {
 			return err
