@@ -2,7 +2,7 @@
 
 Find out geographic location of an IP address. It takes care of downloading the
 GeoLite2-City database if it's not present or outdated. You need to set the
-`GEOIP_LICENSE_KEY` environment variable in order to download the database. 
+`GEOIP_LICENSE_KEY` environment variable in order to download the database.
 
 Installation:
 
