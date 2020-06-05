@@ -61,6 +61,16 @@ func (g *GeoDB) GetLocation(ip net.IP) error {
 	country := record.Country.Names["en"]
 	isoCode := record.Country.IsoCode
 
+	if city == "" {
+		city = "city unknown"
+	}
+	if country == "" {
+		country = "country unknown"
+	}
+	if isoCode == "" {
+		isoCode = "ISO code unknown"
+	}
+
 	g.Location = append(g.Location, city)
 	g.Location = append(g.Location, country)
 	g.Location = append(g.Location, isoCode)

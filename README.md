@@ -17,7 +17,7 @@ Usage:
 
 ```
 > checkip 1.1.1.1
-, Australia, AU
+city unknown, Australia, AU
 
 > checkip $(dig +short reisinge.net)
 Frankfurt am Main, Germany, DE
