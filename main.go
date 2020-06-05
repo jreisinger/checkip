@@ -5,6 +5,7 @@ import (
 	"log"
 	"net"
 	"os"
+	"strings"
 
 	"github.com/jreisinger/checkip/geodb"
 )
@@ -35,22 +36,13 @@ func main() {
 		log.Fatalf("can't update geo DB: %v\n", err)
 	}
 
-	if err := g.Load(); err != nil {
+	if err := g.Open(); err != nil {
 		log.Fatalf("can't load geo DB: %v\n", err)
 	}
-
 	defer g.Close()
 
-	record, err := g.DB.City(ip)
-	if err != nil {
-		log.Fatal(err)
+	if err := g.GetLocation(ip); err != nil {
+		log.Fatalf("can't get location: %v\n", err)
 	}
-
-	city := record.City.Names["en"]
-	country := record.Country.Names["en"]
-	isoCode := record.Country.IsoCode
-
-	if city != "" || country != "" || isoCode != "" {
-		fmt.Printf("%v, %v (%v)\n", city, country, isoCode)
-	}
+	fmt.Printf("%v\n", strings.Join(g.Location, ", "))
 }

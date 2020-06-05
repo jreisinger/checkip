@@ -1,6 +1,7 @@
 package geodb
 
 import (
+	"net"
 	"os"
 
 	"github.com/oschwald/geoip2-golang"
@@ -9,9 +10,10 @@ import (
 // GeoDB represents MaxMind's GeoIP database.
 type GeoDB struct {
 	Filepath string
-	URL		 string
+	URL      string
 	Age      string
 	DB       *geoip2.Reader
+	Location []string
 }
 
 // Update downloads and creates database file if not present,
@@ -29,8 +31,8 @@ func (g *GeoDB) Update(url string) error {
 	return nil
 }
 
-// Load loads database from file to memory.
-func (g *GeoDB) Load() error {
+// Open loads database from file to memory.
+func (g *GeoDB) Open() error {
 	db, err := geoip2.Open(g.Filepath)
 	if err != nil {
 		return err
@@ -42,4 +44,21 @@ func (g *GeoDB) Load() error {
 // Close closes database file.
 func (g *GeoDB) Close() {
 	g.DB.Close()
+}
+
+func (g *GeoDB) GetLocation(ip net.IP) error {
+	record, err := g.DB.City(ip)
+	if err != nil {
+		return err
+	}
+
+	city := record.City.Names["en"]
+	country := record.Country.Names["en"]
+	isoCode := record.Country.IsoCode
+
+	g.Location = append(g.Location, city)
+	g.Location = append(g.Location, country)
+	g.Location = append(g.Location, isoCode)
+
+	return nil
 }
