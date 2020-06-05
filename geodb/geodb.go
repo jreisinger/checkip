@@ -12,7 +12,6 @@ import (
 type GeoDB struct {
 	Filepath string
 	URL      string
-	Age      string
 	DB       *geoip2.Reader
 	Location []string
 }
@@ -51,6 +50,7 @@ func (g *GeoDB) Close() {
 	g.DB.Close()
 }
 
+// GetLocation fills the geolocation data into the GeoDB struct.
 func (g *GeoDB) GetLocation(ip net.IP) error {
 	record, err := g.DB.City(ip)
 	if err != nil {
