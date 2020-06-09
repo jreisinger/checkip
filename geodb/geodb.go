@@ -1,6 +1,7 @@
 package geodb
 
 import (
+	"log"
 	"net"
 	"os"
 	"time"
@@ -16,14 +17,27 @@ type GeoDB struct {
 	Location []string
 }
 
+// New creates GeoDB with some defaults.
+func New() *GeoDB {
+	return &GeoDB{
+		Filepath: "/var/tmp/GeoLite2-City.mmdb",
+	}
+}
+
 func isOlderThanOneWeek(t time.Time) bool {
 	return time.Now().Sub(t) > 7*24*time.Hour
 }
 
 // Update downloads and creates database file if not present,
 // updates if file is older than a week.
-func (g *GeoDB) Update(url string) error {
+func (g *GeoDB) Update() error {
 	if file, err := os.Stat(g.Filepath); os.IsNotExist(err) || isOlderThanOneWeek(file.ModTime()) {
+		licenseKey := os.Getenv("GEOIP_LICENSE_KEY")
+		if licenseKey == "" {
+			log.Fatalf("environment variable GEOIP_LICENSE_KEY not defined")
+		}
+		g.URL = "https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-City&license_key=" + licenseKey + "&suffix=tar.gz"
+
 		r, err := downloadFile(g.URL)
 		if err != nil {
 			return err

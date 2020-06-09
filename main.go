@@ -22,17 +22,9 @@ func main() {
 		log.Fatalf("invalid IP address: %v\n", os.Args[1])
 	}
 
-	licenseKey := os.Getenv("GEOIP_LICENSE_KEY")
-	if licenseKey == "" {
-		log.Fatalf("environment variable GEOIP_LICENSE_KEY not defined")
-	}
+	g := geodb.New()
 
-	geoDBFilepath := "/var/tmp/GeoLite2-City.mmdb"
-	geoDBUrl := "https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-City&license_key=" + licenseKey + "&suffix=tar.gz"
-
-	g := &geodb.GeoDB{Filepath: geoDBFilepath, URL: geoDBUrl}
-
-	if err := g.Update(geoDBUrl); err != nil {
+	if err := g.Update(); err != nil {
 		log.Fatalf("can't update geo DB: %v\n", err)
 	}
 
