@@ -1,6 +1,7 @@
 package geodb
 
 import (
+	"fmt"
 	"log"
 	"net"
 	"os"
@@ -37,7 +38,7 @@ func (g *GeoDB) Update() error {
 
 	if os.IsNotExist(err) {
 		if licenseKey == "" {
-			log.Fatalf("error - environment variable GEOIP_LICENSE_KEY not defined and %s is not present", g.Filepath)
+			return fmt.Errorf("%s is not present and environment variable GEOIP_LICENSE_KEY is not set", g.Filepath)
 		}
 
 		r, err := downloadFile(g.URL)
@@ -47,11 +48,13 @@ func (g *GeoDB) Update() error {
 		if err := extractFile(g.Filepath, r); err != nil {
 			return err
 		}
+
+		return nil // don't check ModTime if file does not exist
 	}
 
 	if isOlderThanOneWeek(file.ModTime()) {
 		if licenseKey == "" {
-			log.Printf("warning - environment variable GEOIP_LICENSE_KEY not defined and %s is outdated", g.Filepath)
+			log.Printf("warning %s is outdated and environment variable GEOIP_LICENSE_KEY is not set", g.Filepath)
 			return nil
 		}
 
