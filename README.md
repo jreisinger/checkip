@@ -1,4 +1,4 @@
-# checkip
+# geoip
 
 Find out geographic location of an IP address using [GeoLite2 City
 database](https://dev.maxmind.com/geoip/geoip2/geolite2/). It takes care of
@@ -16,12 +16,12 @@ Installation:
 Usage:
 
 ```
-> checkip 1.1.1.1
+> geoip 1.1.1.1
 city unknown, Australia, AU
 
-> checkip $(dig +short reisinge.net)
+> geoip $(dig +short reisinge.net)
 Frankfurt am Main, Germany, DE
 
-> checkip $(curl -s util.reisinge.net/addr)
+> geoip $(curl -s util.reisinge.net/addr)
 Partizanska lupca, Slovakia, SK
 ```
