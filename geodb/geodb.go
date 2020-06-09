@@ -31,12 +31,14 @@ func isOlderThanOneWeek(t time.Time) bool {
 // Update downloads and creates database file if not present,
 // updates if file is older than a week.
 func (g *GeoDB) Update() error {
-	if file, err := os.Stat(g.Filepath); os.IsNotExist(err) || isOlderThanOneWeek(file.ModTime()) {
-		licenseKey := os.Getenv("GEOIP_LICENSE_KEY")
+	licenseKey := os.Getenv("GEOIP_LICENSE_KEY")
+	g.URL = "https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-City&license_key=" + licenseKey + "&suffix=tar.gz"
+	file, err := os.Stat(g.Filepath)
+
+	if os.IsNotExist(err) {
 		if licenseKey == "" {
-			log.Fatalf("environment variable GEOIP_LICENSE_KEY not defined")
+			log.Fatalf("error - environment variable GEOIP_LICENSE_KEY not defined and %s is not present", g.Filepath)
 		}
-		g.URL = "https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-City&license_key=" + licenseKey + "&suffix=tar.gz"
 
 		r, err := downloadFile(g.URL)
 		if err != nil {
@@ -46,6 +48,22 @@ func (g *GeoDB) Update() error {
 			return err
 		}
 	}
+
+	if isOlderThanOneWeek(file.ModTime()) {
+		if licenseKey == "" {
+			log.Printf("warning - environment variable GEOIP_LICENSE_KEY not defined and %s is outdated", g.Filepath)
+			return nil
+		}
+
+		r, err := downloadFile(g.URL)
+		if err != nil {
+			return err
+		}
+		if err := extractFile(g.Filepath, r); err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 
