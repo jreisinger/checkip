@@ -7,6 +7,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/jreisinger/geoip/asn"
 	"github.com/jreisinger/geoip/geodb"
 )
 
@@ -36,5 +37,11 @@ func main() {
 	if err := g.GetLocation(ip); err != nil {
 		log.Fatalf("can't get location: %v\n", err)
 	}
-	fmt.Printf("%v\n", strings.Join(g.Location, ", "))
+	fmt.Printf("Geo (maxmind.com): %v\n", strings.Join(g.Location, ", "))
+
+	as, err := asn.ForIP(ip)
+	if err != nil {
+		log.Fatalf("can't get ASN: %v\n", err)
+	}
+	fmt.Printf("ASN (iptoasn.com): %d, %s - %s, %s, %s\n", as.Number, as.FirsIP, as.LastIP, as.Description, as.CountryCode)
 }
