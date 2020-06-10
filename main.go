@@ -7,8 +7,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/jreisinger/geoip/asn"
-	"github.com/jreisinger/geoip/geodb"
+	"github.com/jreisinger/checkip/asn"
+	"github.com/jreisinger/checkip/geodb"
 )
 
 func main() {

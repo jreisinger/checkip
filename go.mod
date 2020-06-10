@@ -1,9 +1,8 @@
-module github.com/jreisinger/geoip
+module github.com/jreisinger/checkip
 
 go 1.13
 
 require (
-	github.com/bradfitz/ip2asn v0.0.0-20200601024024-5f8625d7bed5 // indirect
-	github.com/jreisinger/checkip v0.0.0-20200605123120-2f0fcc950e12 // indirect
+	github.com/jreisinger/geoip v0.0.0-20200610221001-fdc24cadbb4d
 	github.com/oschwald/geoip2-golang v1.4.0
 )
