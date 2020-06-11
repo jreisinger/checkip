@@ -16,21 +16,24 @@ type AS struct {
 	LastIP      net.IP `json:"last_ip"`
 }
 
-func ForIP(ipaddr net.IP) (*AS, error) {
+func New() *AS {
+	return &AS{}
+}
+
+func (a *AS) ForIP(ipaddr net.IP) error {
 	resp, err := http.Get("https://api.iptoasn.com/v1/as/ip/" + ipaddr.String())
 	if err != nil {
-		return nil, err
+		return err
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("search asn failed: %s", resp.Status)
+		return fmt.Errorf("search asn failed: %s", resp.Status)
 	}
 
-	var result AS
-	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
-		return nil, err
+	if err := json.NewDecoder(resp.Body).Decode(a); err != nil {
+		return err
 	}
 
-	return &result, nil
+	return nil
 }

@@ -35,8 +35,8 @@ func main() {
 		fmt.Printf("%s: %v\n", outputPrefix["geo"], strings.Join(g.Location, ", "))
 	}
 
-	a, err := asn.ForIP(ip)
-	if err != nil {
+	a := asn.New()
+	if err := a.ForIP(ip); err != nil {
 		fmt.Printf("%s: %v\n", outputPrefix["asn"], err)
 	} else {
 		fmt.Printf("%s: %d, %s - %s, %s, %s\n", outputPrefix["asn"], a.Number, a.FirsIP, a.LastIP, a.Description, a.CountryCode)
