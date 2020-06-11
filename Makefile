@@ -6,3 +6,10 @@ build: test
 
 install: test
 	go install
+
+release:
+	docker build -t checkip-releases -f Releases.Dockerfile .
+	docker create -ti --name checkip-releases checkip-releases sh
+	docker cp checkip-releases:/releases/checkip_linux.tar.gz releases/
+	docker rm checkip-releases
+	docker rmi checkip-releases

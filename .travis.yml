@@ -1,0 +1,28 @@
+language: go
+
+go:
+  - 1.14.x
+
+git:
+  depth: false
+  quiet: true
+  submodules: false
+
+branches:
+  only:
+    - master
+
+script:
+  - "make test"
+  - "make release"
+
+before_deploy:
+  - git config --local user.name "jreisinger"
+  - git config --local user.email "jozef.reisinger@gmail.com"
+
+deploy:
+  provider: releases
+  api_key: $GITHUB_TOKEN
+  file:
+    - "releases/certinfo_linux.tar.gz"
+  skip_cleanup: true
