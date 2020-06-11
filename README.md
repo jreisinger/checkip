@@ -8,7 +8,7 @@ CLI tool that finds out information about an IP address. Currently these types o
 
 ## Installation
 
-Download the latest [release](https://github.com/jreisinger/checkip/releases) for your operating systen and architecture.
+Download the latest [release](https://github.com/jreisinger/checkip/releases) for your operating system and architecture.
 
 ## Usage
 
