@@ -12,6 +12,9 @@ branches:
   only:
     - master
 
+env:
+  - VERSION="0.$TRAVIS_BUILD_NUMBER"
+
 script:
   - "make test"
   - "make release"
@@ -19,10 +22,11 @@ script:
 before_deploy:
   - git config --local user.name "jreisinger"
   - git config --local user.email "jozef.reisinger@gmail.com"
+  - git tag $VERSION
 
 deploy:
   provider: releases
   api_key: $GITHUB_TOKEN
   file:
-    - "releases/certinfo_linux.tar.gz"
+    - "releases/checkip_linux.tar.gz"
   skip_cleanup: true
