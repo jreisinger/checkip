@@ -28,5 +28,5 @@ deploy:
   provider: releases
   api_key: $GITHUB_TOKEN
   file:
-    - "releases/checkip_linux.tar.gz"
+    - "releases/checkip_linux_amd64.tar.gz"
   skip_cleanup: true
