@@ -12,7 +12,7 @@ CLI tool that finds out information about an IP address. Currently these types o
 
 Download the latest [release](https://github.com/jreisinger/checkip/releases) for your operating system and architecture.
 
-## Usage
+## Usage examples
 
 ```
 > checkip 255.255.255.256 # you must supply a valid IP address
