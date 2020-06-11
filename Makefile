@@ -10,6 +10,7 @@ install: test
 release:
 	docker build -t checkip-releases -f Releases.Dockerfile .
 	docker create -ti --name checkip-releases checkip-releases sh
+	[[ -d releases ]] || mkdir releases
 	docker cp checkip-releases:/releases/checkip_linux.tar.gz releases/
 	docker rm checkip-releases
 	docker rmi checkip-releases
