@@ -8,12 +8,14 @@ import (
 	"strings"
 
 	"github.com/jreisinger/checkip/asn"
+	"github.com/jreisinger/checkip/dns"
 	"github.com/jreisinger/checkip/geodb"
 )
 
 var outputPrefix = map[string]string{
-	"geo": "Geo (maxmind.com)",
-	"asn": "ASN (iptoasn.com)",
+	"geo": "Geo (maxmind.com)   ",
+	"asn": "ASN (iptoasn.com)   ",
+	"dns": "DNS (net.LookupAddr)",
 }
 
 func main() {
@@ -40,5 +42,12 @@ func main() {
 		fmt.Printf("%s: %v\n", outputPrefix["asn"], err)
 	} else {
 		fmt.Printf("%s: %d, %s - %s, %s, %s\n", outputPrefix["asn"], a.Number, a.FirsIP, a.LastIP, a.Description, a.CountryCode)
+	}
+
+	d := dns.New()
+	if err := d.ForIP(ip); err != nil {
+		fmt.Printf("%s: %v\n", outputPrefix["dns"], err)
+	} else {
+		fmt.Printf("%s: %v\n", outputPrefix["dns"], strings.Join(d.Names, ", "))
 	}
 }
