@@ -24,24 +24,16 @@ func main() {
 	}
 
 	g := geodb.New()
-
-	if err := g.Update(); err != nil {
-		log.Fatalf("can't update geo DB: %v\n", err)
+	if err := g.ForIP(ip); err != nil {
+		fmt.Printf("Geo (maxmind.com): %v\n", err)
+	} else {
+		fmt.Printf("Geo (maxmind.com): %v\n", strings.Join(g.Location, ", "))
 	}
 
-	if err := g.Open(); err != nil {
-		log.Fatalf("can't load geo DB: %v\n", err)
-	}
-	defer g.Close()
-
-	if err := g.GetLocation(ip); err != nil {
-		log.Fatalf("can't get location: %v\n", err)
-	}
-	fmt.Printf("Geo (maxmind.com): %v\n", strings.Join(g.Location, ", "))
-
-	as, err := asn.ForIP(ip)
+	a, err := asn.ForIP(ip)
 	if err != nil {
-		log.Fatalf("can't get ASN: %v\n", err)
+		fmt.Printf("ASN (iptoasn.com): %v\n", err)
+	} else {
+		fmt.Printf("ASN (iptoasn.com): %d, %s - %s, %s, %s\n", a.Number, a.FirsIP, a.LastIP, a.Description, a.CountryCode)
 	}
-	fmt.Printf("ASN (iptoasn.com): %d, %s - %s, %s, %s\n", as.Number, as.FirsIP, as.LastIP, as.Description, as.CountryCode)
 }

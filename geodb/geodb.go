@@ -85,8 +85,17 @@ func (g *GeoDB) Close() {
 	g.DB.Close()
 }
 
-// GetLocation fills the geolocation data into the GeoDB struct.
-func (g *GeoDB) GetLocation(ip net.IP) error {
+// ForIP fills the geolocation data into the GeoDB struct.
+func (g *GeoDB) ForIP(ip net.IP) error {
+	if err := g.Update(); err != nil {
+		return fmt.Errorf("can't update geo DB: %v", err)
+	}
+
+	if err := g.Open(); err != nil {
+		return fmt.Errorf("can't load geo DB: %v", err)
+	}
+	defer g.Close()
+
 	record, err := g.DB.City(ip)
 	if err != nil {
 		return err
