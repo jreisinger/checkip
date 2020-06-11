@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/jreisinger/checkip.svg?branch=master)](https://travis-ci.org/jreisinger/checkip)
+
 # checkip
 
 CLI tool that finds out information about an IP address. Currently these types of information are supported:
