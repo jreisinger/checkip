@@ -9,7 +9,7 @@ CLI tool that finds out information about an IP address. Currently two types of 
 Installation:
 
 ```
-> go install
+make install
 ```
 
 Usage:
