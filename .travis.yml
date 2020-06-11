@@ -30,5 +30,4 @@ deploy:
   file:
     - "releases/checkip_linux_amd64.tar.gz"
     - "releases/checkip_darwin_amd64.tar.gz"
-    - "releases/checkip_linux_arm64v8.tar.gz"
   skip_cleanup: true

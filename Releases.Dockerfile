@@ -12,7 +12,3 @@ RUN rm /releases/checkip
 RUN GOOS=darwin GOARCH=amd64 go build -o /releases/checkip
 RUN tar -czvf /releases/checkip_darwin_amd64.tar.gz -C /releases/ checkip
 RUN rm /releases/checkip
-
-RUN GOOS=linux GOARCH=arm64v8 go build -o /releases/checkip
-RUN tar -czvf /releases/checkip_linux_arm64v8.tar.gz -C /releases/ checkip
-RUN rm /releases/checkip
