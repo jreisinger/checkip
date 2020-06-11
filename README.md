@@ -8,8 +8,15 @@ CLI tool that finds out information about an IP address. Currently two types of 
 
 Installation:
 
+Download the latest [release](https://github.com/jreisinger/checkip/releases) for your operating systen and architecture.
+
+Development
+
 ```
+vim main.go
 make install
+make release # you'll find releases in releases/ directory
+# if you push to GitHub Travis will build a release for you
 ```
 
 Usage:
