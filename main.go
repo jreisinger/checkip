@@ -11,6 +11,11 @@ import (
 	"github.com/jreisinger/checkip/geodb"
 )
 
+var outputPrefix = map[string]string{
+	"geo": "Geo (maxmind.com)",
+	"asn": "ASN (iptoasn.com)",
+}
+
 func main() {
 	log.SetFlags(0) // no timestamp
 
@@ -25,15 +30,15 @@ func main() {
 
 	g := geodb.New()
 	if err := g.ForIP(ip); err != nil {
-		fmt.Printf("Geo (maxmind.com): %v\n", err)
+		fmt.Printf("%s: %v\n", outputPrefix["geo"], err)
 	} else {
-		fmt.Printf("Geo (maxmind.com): %v\n", strings.Join(g.Location, ", "))
+		fmt.Printf("%s: %v\n", outputPrefix["geo"], strings.Join(g.Location, ", "))
 	}
 
 	a, err := asn.ForIP(ip)
 	if err != nil {
-		fmt.Printf("ASN (iptoasn.com): %v\n", err)
+		fmt.Printf("%s: %v\n", outputPrefix["asn"], err)
 	} else {
-		fmt.Printf("ASN (iptoasn.com): %d, %s - %s, %s, %s\n", a.Number, a.FirsIP, a.LastIP, a.Description, a.CountryCode)
+		fmt.Printf("%s: %d, %s - %s, %s, %s\n", outputPrefix["asn"], a.Number, a.FirsIP, a.LastIP, a.Description, a.CountryCode)
 	}
 }
