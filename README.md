@@ -15,6 +15,9 @@ Download the latest [release](https://github.com/jreisinger/checkip/releases) fo
 ## Usage
 
 ```
+> checkip 255.255.255.256 # you must supply a valid IP address
+invalid IP address: 255.255.255.256
+
 > checkip 1.1.1.1
 Geo (maxmind.com)   : city unknown, Australia, AU
 ASN (iptoasn.com)   : 7497, 1.1.1.1 - 1.1.1.1, CSTNET-AS-AP Computer Network Information Center, CN
@@ -25,10 +28,10 @@ Geo (maxmind.com)   : Mountain View, United States, US
 ASN (iptoasn.com)   : 15169, 216.58.192.0 - 216.58.223.255, GOOGLE - Google LLC, US
 DNS (net.LookupAddr): prg03s01-in-f14.1e100.net., prg03s01-in-f78.1e100.net.
 
-> checkip $(curl -s util.reisinge.net/addr) # your own IP address
-Geo (maxmind.com)   : Bratislava, Slovakia, SK
-ASN (iptoasn.com)   : 15962, 109.230.0.0 - 109.230.63.255, OSK-DNI Slovakia, SK
-DNS (net.LookupAddr): 109-230-20-210.dynamic.orange.sk.
+> checkip $(curl -s util.reisinge.net/addr) # this will check your own IP address
+Geo (maxmind.com)   : Frankfurt am Main, Germany, DE
+ASN (iptoasn.com)   : 16509, 52.56.0.0 - 52.60.255.255, AMAZON-02 - Amazon.com, Inc., US
+DNS (net.LookupAddr): ec2-52-59-197-254.eu-central-1.compute.amazonaws.com
 ```
 
 ## Development
