@@ -13,9 +13,9 @@ import (
 )
 
 var outputPrefix = map[string]string{
-	"geo": "Geo (maxmind.com)   ",
-	"asn": "ASN (iptoasn.com)   ",
-	"dns": "DNS (net.LookupAddr)",
+	"geo": "Geo",
+	"asn": "ASN",
+	"dns": "DNS",
 }
 
 func main() {
@@ -30,11 +30,11 @@ func main() {
 		log.Fatalf("invalid IP address: %v\n", os.Args[1])
 	}
 
-	g := geodb.New()
-	if err := g.ForIP(ip); err != nil {
-		fmt.Printf("%s: %v\n", outputPrefix["geo"], err)
+	d := dns.New()
+	if err := d.ForIP(ip); err != nil {
+		fmt.Printf("%s: %v\n", outputPrefix["dns"], err)
 	} else {
-		fmt.Printf("%s: %v\n", outputPrefix["geo"], strings.Join(g.Location, ", "))
+		fmt.Printf("%s: %v\n", outputPrefix["dns"], strings.Join(d.Names, ", "))
 	}
 
 	a := asn.New()
@@ -44,10 +44,11 @@ func main() {
 		fmt.Printf("%s: %d, %s - %s, %s, %s\n", outputPrefix["asn"], a.Number, a.FirsIP, a.LastIP, a.Description, a.CountryCode)
 	}
 
-	d := dns.New()
-	if err := d.ForIP(ip); err != nil {
-		fmt.Printf("%s: %v\n", outputPrefix["dns"], err)
+	g := geodb.New()
+	if err := g.ForIP(ip); err != nil {
+		fmt.Printf("%s: %v\n", outputPrefix["geo"], err)
 	} else {
-		fmt.Printf("%s: %v\n", outputPrefix["dns"], strings.Join(d.Names, ", "))
+		fmt.Printf("%s: %v\n", outputPrefix["geo"], strings.Join(g.Location, ", "))
 	}
+
 }
