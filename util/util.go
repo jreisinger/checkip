@@ -1,4 +1,4 @@
-package geodb
+package util
 
 import (
 	"archive/tar"
@@ -10,7 +10,7 @@ import (
 	"path/filepath"
 )
 
-func downloadFile(url string) (r io.ReadCloser, err error) {
+func DownloadFile(url string) (r io.ReadCloser, err error) {
 	resp, err := http.Get(url)
 	if err != nil {
 		return nil, err
@@ -24,7 +24,7 @@ func downloadFile(url string) (r io.ReadCloser, err error) {
 	return resp.Body, nil
 }
 
-func extractFile(outFile string, r io.ReadCloser) error {
+func ExtractFile(outFile string, r io.ReadCloser) error {
 	defer r.Close() // let's close resp.Body
 
 	gzipReader, err := gzip.NewReader(r)

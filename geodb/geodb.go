@@ -7,6 +7,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/jreisinger/checkip/util"
 	"github.com/oschwald/geoip2-golang"
 )
 
@@ -41,11 +42,11 @@ func (g *GeoDB) Update() error {
 			return fmt.Errorf("%s is not present and environment variable GEOIP_LICENSE_KEY is not set", g.Filepath)
 		}
 
-		r, err := downloadFile(g.URL)
+		r, err := util.DownloadFile(g.URL)
 		if err != nil {
 			return err
 		}
-		if err := extractFile(g.Filepath, r); err != nil {
+		if err := util.ExtractFile(g.Filepath, r); err != nil {
 			return err
 		}
 
@@ -58,11 +59,11 @@ func (g *GeoDB) Update() error {
 			return nil
 		}
 
-		r, err := downloadFile(g.URL)
+		r, err := util.DownloadFile(g.URL)
 		if err != nil {
 			return err
 		}
-		if err := extractFile(g.Filepath, r); err != nil {
+		if err := util.ExtractFile(g.Filepath, r); err != nil {
 			return err
 		}
 	}
