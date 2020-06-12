@@ -8,7 +8,12 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"time"
 )
+
+func IsOlderThanOneWeek(t time.Time) bool {
+	return time.Now().Sub(t) > 7*24*time.Hour
+}
 
 func DownloadFile(url string) (r io.ReadCloser, err error) {
 	resp, err := http.Get(url)

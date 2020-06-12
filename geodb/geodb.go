@@ -5,7 +5,6 @@ import (
 	"log"
 	"net"
 	"os"
-	"time"
 
 	"github.com/jreisinger/checkip/util"
 	"github.com/oschwald/geoip2-golang"
@@ -24,10 +23,6 @@ func New() *GeoDB {
 	return &GeoDB{
 		Filepath: "/var/tmp/GeoLite2-City.mmdb",
 	}
-}
-
-func isOlderThanOneWeek(t time.Time) bool {
-	return time.Now().Sub(t) > 7*24*time.Hour
 }
 
 // Update downloads and creates database file if not present,
@@ -53,7 +48,7 @@ func (g *GeoDB) Update() error {
 		return nil // don't check ModTime if file does not exist
 	}
 
-	if isOlderThanOneWeek(file.ModTime()) {
+	if util.IsOlderThanOneWeek(file.ModTime()) {
 		if licenseKey == "" {
 			log.Printf("warning %s is outdated and environment variable GEOIP_LICENSE_KEY is not set", g.Filepath)
 			return nil
