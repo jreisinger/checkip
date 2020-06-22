@@ -15,20 +15,20 @@ Download the latest [release](https://github.com/jreisinger/checkip/releases) fo
 ## Usage examples
 
 ```
-> checkip 255.255.255.256 # you must supply a valid IP address
+$ checkip 255.255.255.256 # you must supply a valid IP address
 invalid IP address: 255.255.255.256
 
-> checkip 1.1.1.1
+$ checkip 1.1.1.1
 DNS: one.one.one.one.
 ASN: 7497, 1.1.1.1 - 1.1.1.1, CSTNET-AS-AP Computer Network Information Center, CN
 Geo: city unknown, Australia, AU
 
-> checkip $(dig +short google.com)
+$ checkip $(dig +short google.com)
 DNS: bud02s26-in-f14.1e100.net.
 ASN: 15169, 172.217.0.0 - 172.217.31.255, GOOGLE - Google LLC, US
 Geo: city unknown, United States, US
 
-> checkip $(curl -s util.reisinge.net/addr) # this will check your own IP address
+$ checkip $(curl -s util.reisinge.net/addr) # this will check your own IP address
 DNS: ec2-52-59-197-254.eu-central-1.compute.amazonaws.com.
 ASN: 16509, 52.56.0.0 - 52.60.255.255, AMAZON-02 - Amazon.com, Inc., US
 Geo: Frankfurt am Main, Germany, DE
