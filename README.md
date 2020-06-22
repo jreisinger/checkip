@@ -2,7 +2,7 @@
 
 # checkip
 
-CLI tool that finds out information about an IP address. Currently these types of information are supported:
+CLI tool that finds out information about an IP address. Currently these types of information are provided:
 
 * DNS name using [net.LookupAddr](https://golang.org/pkg/net/#LookupAddr).
 * ASN using [iptoasn](https://iptoasn.com/) API.
