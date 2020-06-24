@@ -1,14 +1,13 @@
+VERSION ?= dev
+
 test:
 	go clean -testcache && go test -cover ./...
 
-build: test
-	go build
-
 install: test
-	go install
+	go install -ldflags "-X main.Version=${VERSION}"
 
 release:
-	docker build -t checkip-releases -f Releases.Dockerfile .
+	docker build --build-arg version=${VERSION} -t checkip-releases -f Releases.Dockerfile .
 	docker create -ti --name checkip-releases checkip-releases sh
 	test -d releases || mkdir releases
 	docker cp checkip-releases:/releases/checkip_linux_amd64.tar.gz releases/

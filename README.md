@@ -40,5 +40,5 @@ Geo: Frankfurt am Main, Germany, DE
 vim main.go
 make install
 make release # you'll find releases in releases/ directory
-# if you push to GitHub Travis will build a release for you
+# Travis will build a release for you and publish it on GitHub
 ```

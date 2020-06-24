@@ -18,11 +18,18 @@ var outputPrefix = map[string]string{
 	"dns": "DNS",
 }
 
+var Version = "dev"
+
 func main() {
 	log.SetFlags(0) // no timestamp
 
 	if len(os.Args) != 2 {
-		log.Fatalf("usage: %v %s\n", os.Args[0], "IPADDR")
+		log.Fatalf("usage: %v %s\n", os.Args[0], "<IPADDR|version>")
+	}
+
+	if os.Args[1] == "version" {
+		fmt.Println(Version)
+		os.Exit(0)
 	}
 
 	ip := net.ParseIP(os.Args[1])

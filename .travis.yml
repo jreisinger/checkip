@@ -17,7 +17,7 @@ env:
 
 script:
   - "make test"
-  - "make release"
+  - "VERSION=$VERSION make release"
 
 before_deploy:
   - git config --local user.name "jreisinger"
