@@ -38,7 +38,10 @@ Geo: Frankfurt am Main, Germany, DE
 
 ```
 vim main.go
-make install
+[VERSION=<version>] make install
+
 make release # you'll find releases in releases/ directory
-# Travis will build a release for you and publish it on GitHub
 ```
+
+Builds are done inside Docker container. Once you push to GitHub Travis will
+try and build a release for you and publish it on GitHub.
