@@ -12,7 +12,7 @@ import (
 	"github.com/jreisinger/checkip/geodb"
 )
 
-var outputPrefix = map[string]string{
+var checkOutputPrefix = map[string]string{
 	"geo": "Geo",
 	"asn": "ASN",
 	"dns": "DNS",
@@ -37,25 +37,36 @@ func main() {
 		log.Fatalf("invalid IP address: %v\n", os.Args[1])
 	}
 
-	d := dns.New()
-	if err := d.ForIP(ip); err != nil {
-		fmt.Printf("%s: %v\n", outputPrefix["dns"], err)
-	} else {
-		fmt.Printf("%s: %v\n", outputPrefix["dns"], strings.Join(d.Names, ", "))
-	}
+	ch := make(chan string)
 
-	a := asn.New()
-	if err := a.ForIP(ip); err != nil {
-		fmt.Printf("%s: %v\n", outputPrefix["asn"], err)
-	} else {
-		fmt.Printf("%s: %d, %s - %s, %s, %s\n", outputPrefix["asn"], a.Number, a.FirstIP, a.LastIP, a.Description, a.CountryCode)
-	}
+	go func(ch chan string) {
+		d := dns.New()
+		if err := d.ForIP(ip); err != nil {
+			ch <- fmt.Sprintf("%s: %v\n", checkOutputPrefix["dns"], err)
+		} else {
+			ch <- fmt.Sprintf("%s: %v\n", checkOutputPrefix["dns"], strings.Join(d.Names, ", "))
+		}
+	}(ch)
 
-	g := geodb.New()
-	if err := g.ForIP(ip); err != nil {
-		fmt.Printf("%s: %v\n", outputPrefix["geo"], err)
-	} else {
-		fmt.Printf("%s: %v\n", outputPrefix["geo"], strings.Join(g.Location, ", "))
-	}
+	go func(ch chan string) {
+		a := asn.New()
+		if err := a.ForIP(ip); err != nil {
+			ch <- fmt.Sprintf("%s: %v\n", checkOutputPrefix["asn"], err)
+		} else {
+			ch <- fmt.Sprintf("%s: %d, %s - %s, %s, %s\n", checkOutputPrefix["asn"], a.Number, a.FirstIP, a.LastIP, a.Description, a.CountryCode)
+		}
+	}(ch)
 
+	go func(ch chan string) {
+		g := geodb.New()
+		if err := g.ForIP(ip); err != nil {
+			ch <- fmt.Sprintf("%s: %v\n", checkOutputPrefix["geo"], err)
+		} else {
+			ch <- fmt.Sprintf("%s: %v\n", checkOutputPrefix["geo"], strings.Join(g.Location, ", "))
+		}
+	}(ch)
+
+	for i := 0; i < len(checkOutputPrefix); i++ {
+		fmt.Printf("%s", <-ch)
+	}
 }
