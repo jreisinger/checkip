@@ -12,7 +12,7 @@ type AS struct {
 	CountryCode string `json:"as_country_code"`
 	Number      int    `json:"as_number"`
 	Description string `json:"as_description"`
-	FirsIP      net.IP `json:"first_ip"`
+	FirstIP     net.IP `json:"first_ip"`
 	LastIP      net.IP `json:"last_ip"`
 }
 

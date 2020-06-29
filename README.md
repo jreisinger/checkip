@@ -38,7 +38,7 @@ Geo: Frankfurt am Main, Germany, DE
 
 ```
 vim main.go
-[VERSION=<version>] make install # version defaults to "dev"
+make install # version defaults to "dev"
 
 make release # you'll find releases in releases/ directory
 ```
