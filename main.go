@@ -9,13 +9,13 @@ import (
 
 	"github.com/jreisinger/checkip/asn"
 	"github.com/jreisinger/checkip/dns"
-	"github.com/jreisinger/checkip/geodb"
+	"github.com/jreisinger/checkip/geo"
 )
 
 var checkOutputPrefix = map[string]string{
-	"geo": "Geo",
 	"asn": "ASN",
 	"dns": "DNS",
+	"geo": "Geo",
 }
 
 var Version = "dev"
@@ -58,7 +58,7 @@ func main() {
 	}(ch)
 
 	go func(ch chan string) {
-		g := geodb.New()
+		g := geo.New()
 		if err := g.ForIP(ip); err != nil {
 			ch <- fmt.Sprintf("%s: %v\n", checkOutputPrefix["geo"], err)
 		} else {

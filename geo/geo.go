@@ -1,4 +1,4 @@
-package geodb
+package geo
 
 import (
 	"fmt"
