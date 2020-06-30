@@ -19,7 +19,7 @@ func TestForIP(t *testing.T) {
 		ip := net.ParseIP(tp.ip)
 		d.ForIP(ip)
 		if d.Names[0] != tp.name {
-			t.Errorf("%s didn't resolve to %s but to %s", tp.ip, tp.name, d.Names[0])
+			t.Errorf("%s is expected to resolve to %s but resolved to %s", tp.ip, tp.name, d.Names[0])
 		}
 	}
 }
