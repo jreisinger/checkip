@@ -6,13 +6,20 @@ import (
 )
 
 func TestForIP(t *testing.T) {
-	a := New()
-	ip := net.ParseIP("1.1.1.1")
-	err := a.ForIP(ip)
-	if err != nil {
-		t.Errorf("error getting asn info: %v", err)
+	type testpair struct {
+		ip          string
+		countryCode string
 	}
-	if a.CountryCode != "CN" {
-		t.Errorf("expected country code waf CN, got %s", a.CountryCode)
+	testpairs := []testpair{
+		{"1.1.1.1", "CN"},
+		{"8.8.8.8", "US"},
+	}
+	for _, tp := range testpairs {
+		a := New()
+		ip := net.ParseIP(tp.ip)
+		a.ForIP(ip)
+		if a.CountryCode != tp.countryCode {
+			t.Errorf("country code for %s is not %s but %s", tp.ip, tp.countryCode, a.CountryCode)
+		}
 	}
 }
