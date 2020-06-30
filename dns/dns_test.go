@@ -6,13 +6,20 @@ import (
 )
 
 func TestForIP(t *testing.T) {
-	d := New()
-	ip := net.ParseIP("1.1.1.1")
-	err := d.ForIP(ip)
-	if err != nil {
-		t.Errorf("dns.ForIP doesn't work: %v", err)
+	type testpair struct {
+		ip   string
+		name string
 	}
-	if d.Names[0] != "one.one.one.one." {
-		t.Errorf("1.1.1.1 didn't resolve to one.one.one.one. but to %s", d.Names[0])
+	testpairs := []testpair{
+		{"1.1.1.1", "one.one.one.one."},
+		{"8.8.8.8", "dns.google."},
+	}
+	for _, tp := range testpairs {
+		d := New()
+		ip := net.ParseIP(tp.ip)
+		d.ForIP(ip)
+		if d.Names[0] != tp.name {
+			t.Errorf("%s didn't resolve to %s but to %s", tp.ip, tp.name, d.Names[0])
+		}
 	}
 }
