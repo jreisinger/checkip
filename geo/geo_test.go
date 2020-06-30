@@ -2,6 +2,7 @@ package geo
 
 import (
 	"net"
+	"os"
 	"testing"
 )
 
@@ -13,6 +14,9 @@ func TestNew(t *testing.T) {
 }
 
 func TestForIP(t *testing.T) {
+	if os.Getenv("GEOIP_LICENSE_KEY") == "" {
+		t.Skip("skipping test; GEOIP_LICENSE_KEY is not set")
+	}
 	type testpair struct {
 		ip    string
 		state string
