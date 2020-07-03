@@ -11,13 +11,15 @@ import (
 	"github.com/jreisinger/checkip/asn"
 	"github.com/jreisinger/checkip/dns"
 	"github.com/jreisinger/checkip/geo"
+	"github.com/jreisinger/checkip/threatcrowd"
 )
 
 var checkOutputPrefix = map[string]string{
-	"asn":       "ASN       ",
-	"dns":       "DNS       ",
-	"geo":       "GEO       ",
-	"abuseipdb": "AbuseIPDB ",
+	"asn":         "ASN         ",
+	"dns":         "DNS         ",
+	"geo":         "GEO         ",
+	"abuseipdb":   "AbuseIPDB   ",
+	"threatcrowd": "ThreatCrowd ",
 }
 
 var Version = "dev"
@@ -76,6 +78,22 @@ func main() {
 			abuseConfidenceScore := a.Data.AbuseConfidenceScore
 			domain := a.Data.Domain
 			ch <- fmt.Sprintf("%s malicious with %d%% confidence (%v)\n", checkOutputPrefix["abuseipdb"], abuseConfidenceScore, domain)
+		}
+	}(ch)
+
+	go func(ch chan string) {
+		// https://github.com/AlienVault-OTX/ApiV2#votes
+		votesMeaning := map[int]string{
+			-1: "most users have voted this malicious",
+			0:  "equal number of users have voted this malicious and not malicious",
+			1:  "most users have voted this not malicious",
+		}
+
+		t := threatcrowd.New()
+		if err := t.ForIP(ip); err != nil {
+			ch <- fmt.Sprintf("%s %v\n", checkOutputPrefix["threatcrowd"], err)
+		} else {
+			ch <- fmt.Sprintf("%s %v\n", checkOutputPrefix["threatcrowd"], votesMeaning[t.Votes])
 		}
 	}(ch)
 

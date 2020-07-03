@@ -8,6 +8,7 @@ CLI tool that finds out information about an IP address. Currently these types o
 * ASN using [iptoasn](https://iptoasn.com/) API.
 * DNS name using [net.LookupAddr](https://golang.org/pkg/net/#LookupAddr).
 * Confidence score that the IP address is malicious using [Abuse IP DB](https://www.abuseipdb.com). You need to [register](https://www.abuseipdb.com/register?plan=free) to get the API key (it's free).
+* Voting about whether the IP address is malicious or not using [ThreatCrowd](https://www.threatcrowd.org/).
 
 ## Installation
 
@@ -20,10 +21,11 @@ $ checkip 255.255.255.256 # you must supply a valid IP address
 invalid IP address: 255.255.255.256
 
 $ checkip 1.1.1.1
-GEO        city unknown, Australia, AU
-DNS        one.one.one.one.
-ASN        13335, 1.1.1.0 - 1.1.1.255, CLOUDFLARENET - Cloudflare, Inc., US
-AbuseIPDB  malicious with 0% confidence (cloudflare.com)
+GEO          city unknown | Australia | AU
+DNS          one.one.one.one.
+AbuseIPDB    malicious with 0% confidence (cloudflare.com)
+ASN          13335 | 1.1.1.0 - 1.1.1.255 | CLOUDFLARENET - Cloudflare, Inc. | US
+ThreatCrowd  most users have voted this malicious
 ```
 
 ## Development
