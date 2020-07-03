@@ -11,7 +11,7 @@ func TestForIP(t *testing.T) {
 		countryCode string
 	}
 	testpairs := []testpair{
-		{"1.1.1.1", "CN"},
+		{"1.1.1.1", "US"},
 		{"8.8.8.8", "US"},
 	}
 	for _, tp := range testpairs {
