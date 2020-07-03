@@ -46,7 +46,7 @@ func main() {
 		if err := d.ForIP(ip); err != nil {
 			ch <- fmt.Sprintf("%s %v\n", checkOutputPrefix["dns"], err)
 		} else {
-			ch <- fmt.Sprintf("%s %v\n", checkOutputPrefix["dns"], strings.Join(d.Names, ", "))
+			ch <- fmt.Sprintf("%s %v\n", checkOutputPrefix["dns"], strings.Join(d.Names, " | "))
 		}
 	}(ch)
 
@@ -55,7 +55,7 @@ func main() {
 		if err := a.ForIP(ip); err != nil {
 			ch <- fmt.Sprintf("%s %v\n", checkOutputPrefix["asn"], err)
 		} else {
-			ch <- fmt.Sprintf("%s %d, %s - %s, %s, %s\n", checkOutputPrefix["asn"], a.Number, a.FirstIP, a.LastIP, a.Description, a.CountryCode)
+			ch <- fmt.Sprintf("%s %d | %s - %s | %s | %s\n", checkOutputPrefix["asn"], a.Number, a.FirstIP, a.LastIP, a.Description, a.CountryCode)
 		}
 	}(ch)
 
@@ -64,7 +64,7 @@ func main() {
 		if err := g.ForIP(ip); err != nil {
 			ch <- fmt.Sprintf("%s %v\n", checkOutputPrefix["geo"], err)
 		} else {
-			ch <- fmt.Sprintf("%s %v\n", checkOutputPrefix["geo"], strings.Join(g.Location, ", "))
+			ch <- fmt.Sprintf("%s %v\n", checkOutputPrefix["geo"], strings.Join(g.Location, " | "))
 		}
 	}(ch)
 
