@@ -7,15 +7,17 @@ import (
 	"os"
 	"strings"
 
+	"github.com/jreisinger/checkip/abuseipdb"
 	"github.com/jreisinger/checkip/asn"
 	"github.com/jreisinger/checkip/dns"
 	"github.com/jreisinger/checkip/geo"
 )
 
 var checkOutputPrefix = map[string]string{
-	"asn": "ASN",
-	"dns": "DNS",
-	"geo": "Geo",
+	"asn":       "ASN       ",
+	"dns":       "DNS       ",
+	"geo":       "GEO       ",
+	"abuseipdb": "AbuseIPDB ",
 }
 
 var Version = "dev"
@@ -42,27 +44,38 @@ func main() {
 	go func(ch chan string) {
 		d := dns.New()
 		if err := d.ForIP(ip); err != nil {
-			ch <- fmt.Sprintf("%s: %v\n", checkOutputPrefix["dns"], err)
+			ch <- fmt.Sprintf("%s %v\n", checkOutputPrefix["dns"], err)
 		} else {
-			ch <- fmt.Sprintf("%s: %v\n", checkOutputPrefix["dns"], strings.Join(d.Names, ", "))
+			ch <- fmt.Sprintf("%s %v\n", checkOutputPrefix["dns"], strings.Join(d.Names, ", "))
 		}
 	}(ch)
 
 	go func(ch chan string) {
 		a := asn.New()
 		if err := a.ForIP(ip); err != nil {
-			ch <- fmt.Sprintf("%s: %v\n", checkOutputPrefix["asn"], err)
+			ch <- fmt.Sprintf("%s %v\n", checkOutputPrefix["asn"], err)
 		} else {
-			ch <- fmt.Sprintf("%s: %d, %s - %s, %s, %s\n", checkOutputPrefix["asn"], a.Number, a.FirstIP, a.LastIP, a.Description, a.CountryCode)
+			ch <- fmt.Sprintf("%s %d, %s - %s, %s, %s\n", checkOutputPrefix["asn"], a.Number, a.FirstIP, a.LastIP, a.Description, a.CountryCode)
 		}
 	}(ch)
 
 	go func(ch chan string) {
 		g := geo.New()
 		if err := g.ForIP(ip); err != nil {
-			ch <- fmt.Sprintf("%s: %v\n", checkOutputPrefix["geo"], err)
+			ch <- fmt.Sprintf("%s %v\n", checkOutputPrefix["geo"], err)
 		} else {
-			ch <- fmt.Sprintf("%s: %v\n", checkOutputPrefix["geo"], strings.Join(g.Location, ", "))
+			ch <- fmt.Sprintf("%s %v\n", checkOutputPrefix["geo"], strings.Join(g.Location, ", "))
+		}
+	}(ch)
+
+	go func(ch chan string) {
+		a := abuseipdb.New()
+		if err := a.ForIP(ip); err != nil {
+			ch <- fmt.Sprintf("%s %v\n", checkOutputPrefix["abuseipdb"], err)
+		} else {
+			abuseConfidenceScore := a.Data.AbuseConfidenceScore
+			domain := a.Data.Domain
+			ch <- fmt.Sprintf("%s malicious with %d%% confidence (%v)\n", checkOutputPrefix["abuseipdb"], abuseConfidenceScore, domain)
 		}
 	}(ch)
 
