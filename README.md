@@ -4,7 +4,7 @@
 
 CLI tool that finds out information about an IP address. Currently these types of information are provided:
 
-* Confidence score that the IP address is malicious using [Abuse IP DB](https://www.abuseipdb.com). You need to [sign up] to get the API key (it's free).
+* Confidence score that the IP address is malicious using [Abuse IP DB](https://www.abuseipdb.com). You need to [register](https://www.abuseipdb.com/register?plan=free) to get the API key (it's free).
 * ASN using [iptoasn](https://iptoasn.com/) API.
 * DNS name using [net.LookupAddr](https://golang.org/pkg/net/#LookupAddr).
 * Geographic location using [GeoLite2 City database](https://dev.maxmind.com/geoip/geoip2/geolite2/). Read [this](https://dev.maxmind.com/geoip/geoip2/geolite2/#Download_Access) for how to get the license key (it's free).
@@ -20,9 +20,10 @@ $ checkip 255.255.255.256 # you must supply a valid IP address
 invalid IP address: 255.255.255.256
 
 $ checkip 1.1.1.1
-Geo: city unknown, Australia, AU
-DNS: one.one.one.one.
-ASN: 7497, 1.1.1.1 - 1.1.1.1, CSTNET-AS-AP Computer Network Information Center, CN
+GEO        city unknown, Australia, AU
+DNS        one.one.one.one.
+ASN        13335, 1.1.1.0 - 1.1.1.255, CLOUDFLARENET - Cloudflare, Inc., US
+AbuseIPDB  malicious with 0% confidence (cloudflare.com)
 ```
 
 ## Development
