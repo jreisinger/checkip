@@ -10,8 +10,8 @@ import (
 	"github.com/oschwald/geoip2-golang"
 )
 
-// GeoDB represents MaxMind's GeoIP database.
-type GeoDB struct {
+// DB represents MaxMind's GeoIP database.
+type DB struct {
 	Filepath string
 	URL      string
 	DB       *geoip2.Reader
@@ -19,15 +19,15 @@ type GeoDB struct {
 }
 
 // New creates GeoDB with some defaults.
-func New() *GeoDB {
-	return &GeoDB{
+func New() *DB {
+	return &DB{
 		Filepath: "/var/tmp/GeoLite2-City.mmdb",
 	}
 }
 
 // Update downloads and creates database file if not present,
 // updates if file is older than a week.
-func (g *GeoDB) Update() error {
+func (g *DB) Update() error {
 	licenseKey := os.Getenv("GEOIP_LICENSE_KEY")
 	g.URL = "https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-City&license_key=" + licenseKey + "&suffix=tar.gz"
 	file, err := os.Stat(g.Filepath)
@@ -67,7 +67,7 @@ func (g *GeoDB) Update() error {
 }
 
 // Open loads database from file to memory.
-func (g *GeoDB) Open() error {
+func (g *DB) Open() error {
 	db, err := geoip2.Open(g.Filepath)
 	if err != nil {
 		return err
@@ -77,12 +77,12 @@ func (g *GeoDB) Open() error {
 }
 
 // Close closes database file.
-func (g *GeoDB) Close() {
+func (g *DB) Close() {
 	g.DB.Close()
 }
 
 // ForIP fills the geolocation data into the GeoDB struct.
-func (g *GeoDB) ForIP(ip net.IP) error {
+func (g *DB) ForIP(ip net.IP) error {
 	if err := g.Update(); err != nil {
 		return fmt.Errorf("can't update geo DB: %v", err)
 	}
