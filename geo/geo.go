@@ -34,7 +34,7 @@ func (g *DB) Update() error {
 
 	if os.IsNotExist(err) {
 		if licenseKey == "" {
-			return fmt.Errorf("%s is not present and environment variable GEOIP_LICENSE_KEY is not set", g.Filepath)
+			return fmt.Errorf("environment variable GEOIP_LICENSE_KEY is not set")
 		}
 
 		r, err := util.DownloadFile(g.URL)
@@ -50,7 +50,7 @@ func (g *DB) Update() error {
 
 	if util.IsOlderThanOneWeek(file.ModTime()) {
 		if licenseKey == "" {
-			log.Printf("warning %s is outdated and environment variable GEOIP_LICENSE_KEY is not set", g.Filepath)
+			log.Printf("environment variable GEOIP_LICENSE_KEY is not set")
 			return nil
 		}
 

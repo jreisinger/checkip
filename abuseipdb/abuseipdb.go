@@ -48,7 +48,7 @@ func New() *AbuseIPDB {
 func (a *AbuseIPDB) ForIP(ipaddr net.IP) error {
 	apiKey := os.Getenv("ABUSEIPDB_API_KEY")
 	if apiKey == "" {
-		return fmt.Errorf("environment variable ABUSEIPDB_API_KEY is not set")
+		return fmt.Errorf("can't call API: environment variable ABUSEIPDB_API_KEY is not set")
 	}
 
 	baseURL, err := url.Parse("https://api.abuseipdb.com/api/v2/check")
@@ -78,7 +78,7 @@ func (a *AbuseIPDB) ForIP(ipaddr net.IP) error {
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return fmt.Errorf("search abuseipdb failed: %s", resp.Status)
+		return fmt.Errorf("calling API: %s", resp.Status)
 	}
 
 	if err := json.NewDecoder(resp.Body).Decode(a); err != nil {
