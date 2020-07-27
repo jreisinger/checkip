@@ -22,6 +22,7 @@ var checkOutputPrefix = map[string]string{
 	"threatcrowd": "ThreatCrowd ",
 }
 
+// Version is the default version od checkip.
 var Version = "dev"
 
 func main() {
