@@ -9,6 +9,7 @@ CLI tool that finds out information about an IP address. Currently these types o
 * Voting about whether the IP address is malicious using [ThreatCrowd](https://www.threatcrowd.org/).
 * Geographic location using [GeoLite2 City database](https://dev.maxmind.com/geoip/geoip2/geolite2/). You need to [register](https://dev.maxmind.com/geoip/geoip2/geolite2/#Download_Access) to get the license key (it's free).
 * Confidence score that the IP address is malicious using [Abuse IP DB](https://www.abuseipdb.com). You need to [register](https://www.abuseipdb.com/register?plan=free) to get the API key (it's free).
+* [VirusTotal](https://developers.virustotal.com/v3.0/reference#ip-object) scanners reusults. You need to [register](https://www.virustotal.com/gui/join-us) to to get the API key (it's free).
 
 ## Installation
 
@@ -25,6 +26,7 @@ GEO          city unknown | Australia | AU
 DNS          one.one.one.one.
 ASN          13335 | 1.1.1.0 - 1.1.1.255 | CLOUDFLARENET - Cloudflare, Inc. | US
 ThreatCrowd  most users have voted this malicious
+VirusTotal   scannners results: 0 malicious, 0 suspicious, 82 harmless
 AbuseIPDB    malicious with 0% confidence | cloudflare.com
 ```
 

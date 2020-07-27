@@ -12,6 +12,7 @@ import (
 	"github.com/jreisinger/checkip/dns"
 	"github.com/jreisinger/checkip/geo"
 	"github.com/jreisinger/checkip/threatcrowd"
+	"github.com/jreisinger/checkip/virustotal"
 )
 
 var checkOutputPrefix = map[string]string{
@@ -20,6 +21,7 @@ var checkOutputPrefix = map[string]string{
 	"geo":         "GEO         ",
 	"abuseipdb":   "AbuseIPDB   ",
 	"threatcrowd": "ThreatCrowd ",
+	"virustotal":  "VirusTotal  ",
 }
 
 // Version is the default version od checkip.
@@ -95,6 +97,15 @@ func main() {
 			ch <- fmt.Sprintf("%s %v\n", checkOutputPrefix["threatcrowd"], err)
 		} else {
 			ch <- fmt.Sprintf("%s %v\n", checkOutputPrefix["threatcrowd"], votesMeaning[t.Votes])
+		}
+	}(ch)
+
+	go func(ch chan string) {
+		v := virustotal.New()
+		if err := v.ForIP(ip); err != nil {
+			ch <- fmt.Sprintf("%s %v\n", checkOutputPrefix["virustotal"], err)
+		} else {
+			ch <- fmt.Sprintf("%s scannners results: %d malicious, %d suspicious, %d harmless\n", checkOutputPrefix["virustotal"], v.Data.Attributes.LastAnalysisStats.Malicious, v.Data.Attributes.LastAnalysisStats.Suspicious, v.Data.Attributes.LastAnalysisStats.Harmless)
 		}
 	}(ch)
 
