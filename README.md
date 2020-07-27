@@ -23,9 +23,9 @@ invalid IP address: 255.255.255.256
 $ checkip 1.1.1.1
 GEO          city unknown | Australia | AU
 DNS          one.one.one.one.
-AbuseIPDB    malicious with 0% confidence (cloudflare.com)
 ASN          13335 | 1.1.1.0 - 1.1.1.255 | CLOUDFLARENET - Cloudflare, Inc. | US
 ThreatCrowd  most users have voted this malicious
+AbuseIPDB    malicious with 0% confidence | cloudflare.com
 ```
 
 ## Development

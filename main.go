@@ -78,7 +78,7 @@ func main() {
 		} else {
 			abuseConfidenceScore := a.Data.AbuseConfidenceScore
 			domain := a.Data.Domain
-			ch <- fmt.Sprintf("%s malicious with %d%% confidence (%v)\n", checkOutputPrefix["abuseipdb"], abuseConfidenceScore, domain)
+			ch <- fmt.Sprintf("%s malicious with %d%% confidence | %v\n", checkOutputPrefix["abuseipdb"], abuseConfidenceScore, domain)
 		}
 	}(ch)
 
