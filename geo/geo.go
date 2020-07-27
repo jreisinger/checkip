@@ -2,7 +2,6 @@ package geo
 
 import (
 	"fmt"
-	"log"
 	"net"
 	"os"
 
@@ -50,8 +49,7 @@ func (g *DB) Update() error {
 
 	if util.IsOlderThanOneWeek(file.ModTime()) {
 		if licenseKey == "" {
-			log.Printf("environment variable GEOIP_LICENSE_KEY is not set")
-			return nil
+			return fmt.Errorf("environment variable GEOIP_LICENSE_KEY is not set")
 		}
 
 		r, err := util.DownloadFile(g.URL)
@@ -84,11 +82,11 @@ func (g *DB) Close() {
 // ForIP fills the geolocation data into the GeoDB struct.
 func (g *DB) ForIP(ip net.IP) error {
 	if err := g.Update(); err != nil {
-		return fmt.Errorf("can't update geo DB: %v", err)
+		return fmt.Errorf("can't update DB: %v", err)
 	}
 
 	if err := g.Open(); err != nil {
-		return fmt.Errorf("can't load geo DB: %v", err)
+		return fmt.Errorf("can't load DB: %v", err)
 	}
 	defer g.Close()
 
