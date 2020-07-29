@@ -41,3 +41,10 @@ make release # you'll find releases in releases/ directory
 
 Builds are done inside Docker container. Once you push to GitHub Travis will
 try and build a release for you and publish it on GitHub.
+
+Check test coverage:
+
+```
+go test -coverprofile cover.out ./...
+go tool cover -html=cover.out
+```
