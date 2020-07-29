@@ -34,7 +34,7 @@ AbuseIPDB    malicious with 0% confidence | cloudflare.com
 
 ```
 vim main.go
-make install # version defaults to "dev"
+make install # version defaults to "dev" if VERSION envvar is not set
 
 make release # you'll find releases in releases/ directory
 ```

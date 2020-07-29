@@ -1,7 +1,7 @@
 VERSION ?= dev
 
 test:
-	go clean -testcache && go test -cover ./...
+	go clean -testcache && go test -race -cover ./...
 
 install: test
 	go install -ldflags "-X main.Version=${VERSION}"
