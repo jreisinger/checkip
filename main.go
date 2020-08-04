@@ -1,7 +1,6 @@
 package main
 
 import (
-	"flag"
 	"fmt"
 	"log"
 	"net"
@@ -29,25 +28,8 @@ var checkOutputPrefix = map[string]string{
 var Version = "dev"
 
 func main() {
-	log.SetFlags(0) // no timestamp
-
-	flag.Usage = func() {
-		fmt.Fprintf(flag.CommandLine.Output(), "%s [flags] <ipaddr>\n", os.Args[0])
-		flag.PrintDefaults()
-	}
-
-	version := flag.Bool("version", false, "version")
-
-	flag.Parse()
-
-	if *version {
-		fmt.Println(Version)
-		os.Exit(0)
-	}
-
-	if len(flag.Args()) != 1 {
-		log.Fatalf("missing IP address to check")
-	}
+	log.SetFlags(0) // no timestamp in error messages
+	handleFlags()
 
 	ip := net.ParseIP(os.Args[1])
 	if ip == nil {
