@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"log"
 	"net"
@@ -30,13 +31,22 @@ var Version = "dev"
 func main() {
 	log.SetFlags(0) // no timestamp
 
-	if len(os.Args) != 2 {
-		log.Fatalf("usage: %v %s\n", os.Args[0], "<IPADDR|version>")
+	flag.Usage = func() {
+		fmt.Fprintf(flag.CommandLine.Output(), "%s [flags] <ipaddr>\n", os.Args[0])
+		flag.PrintDefaults()
 	}
 
-	if os.Args[1] == "version" {
+	version := flag.Bool("version", false, "version")
+
+	flag.Parse()
+
+	if *version {
 		fmt.Println(Version)
 		os.Exit(0)
+	}
+
+	if len(flag.Args()) != 1 {
+		log.Fatalf("missing IP address to check")
 	}
 
 	ip := net.ParseIP(os.Args[1])
