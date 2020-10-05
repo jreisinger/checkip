@@ -7,9 +7,37 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"os/user"
 	"path/filepath"
 	"time"
+
+	"github.com/kylelemons/go-gypsy/yaml"
 )
+
+// GetConfigValue tries to get value for key first from an environment variable
+// then from a configuration file at $HOME/.checkip.yaml
+func GetConfigValue(key string) (string, error) {
+	var v string
+	if v = os.Getenv(key); v != "" {
+		return v, nil
+	}
+
+	usr, err := user.Current()
+    if err != nil {
+		return "", err
+    }
+    confFile := filepath.Join(usr.HomeDir, ".checkip.yaml")
+
+	cfg, err := yaml.ReadFile(confFile)
+	if err != nil {
+		return "", err
+	}
+	v, err = cfg.Get(key)
+	if err != nil {
+		return "", err
+	}
+	return v, nil
+}
 
 func IsOlderThanOneWeek(t time.Time) bool {
 	return time.Now().Sub(t) > 7*24*time.Hour

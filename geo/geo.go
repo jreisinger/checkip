@@ -27,15 +27,15 @@ func New() *DB {
 // Update downloads and creates database file if not present,
 // updates if file is older than a week.
 func (g *DB) Update() error {
-	licenseKey := os.Getenv("GEOIP_LICENSE_KEY")
+	licenseKey, err := util.GetConfigValue("GEOIP_LICENSE_KEY")
+	if err != nil {
+		return fmt.Errorf("can't call API: %w", err)
+	}
+
 	g.URL = "https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-City&license_key=" + licenseKey + "&suffix=tar.gz"
 	file, err := os.Stat(g.Filepath)
 
 	if os.IsNotExist(err) {
-		if licenseKey == "" {
-			return fmt.Errorf("environment variable GEOIP_LICENSE_KEY is not set")
-		}
-
 		r, err := util.DownloadFile(g.URL)
 		if err != nil {
 			return err

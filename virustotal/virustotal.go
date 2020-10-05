@@ -6,7 +6,8 @@ import (
 	"net"
 	"net/http"
 	"net/url"
-	"os"
+
+	"github.com/jreisinger/checkip/util"
 )
 
 // New creates VirusTotal.
@@ -16,9 +17,9 @@ func New() *VirusTotal {
 
 // ForIP fills in data for a given IP address.
 func (t *VirusTotal) ForIP(ipaddr net.IP) error {
-	apiKey := os.Getenv("VIRUSTOTAL_API_KEY")
-	if apiKey == "" {
-		return fmt.Errorf("can't call API: environment variable VIRUSTOTAL_API_KEY is not set")
+	apiKey, err := util.GetConfigValue("VIRUSTOTAL_API_KEY")
+	if err != nil {
+		return fmt.Errorf("can't call API: %w", err)
 	}
 
 	// curl --header "x-apikey:$VIRUSTOTAL_API_KEY" https://www.virustotal.com/api/v3/ip_addresses/1.1.1.1

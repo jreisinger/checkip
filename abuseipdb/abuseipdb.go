@@ -6,8 +6,9 @@ import (
 	"net"
 	"net/http"
 	"net/url"
-	"os"
 	"time"
+
+	"github.com/jreisinger/checkip/util"
 )
 
 // AbuseIPDB holds information about an IP address from abuseipdb.com database.
@@ -46,9 +47,9 @@ func New() *AbuseIPDB {
 // ForIP fills in AbuseIPDB data for a given IP address. See the AbuseIPDB API
 // documentation for more https://docs.abuseipdb.com/?shell#check-endpoint
 func (a *AbuseIPDB) ForIP(ipaddr net.IP) error {
-	apiKey := os.Getenv("ABUSEIPDB_API_KEY")
-	if apiKey == "" {
-		return fmt.Errorf("can't call API: environment variable ABUSEIPDB_API_KEY is not set")
+	apiKey, err := util.GetConfigValue("ABUSEIPDB_API_KEY")
+	if err != nil {
+		return fmt.Errorf("can't call API: %w", err)
 	}
 
 	baseURL, err := url.Parse("https://api.abuseipdb.com/api/v2/check")

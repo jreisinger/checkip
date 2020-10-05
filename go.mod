@@ -2,4 +2,7 @@ module github.com/jreisinger/checkip
 
 go 1.14
 
-require github.com/oschwald/geoip2-golang v1.4.0
+require (
+	github.com/kylelemons/go-gypsy v1.0.0
+	github.com/oschwald/geoip2-golang v1.4.0
+)
