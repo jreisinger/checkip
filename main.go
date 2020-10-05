@@ -129,7 +129,7 @@ func main() {
 			ch <- fmt.Sprintf("%s %v\n", formatErr["virustotal"], err)
 		} else {
 			f := format["virustotal"]
-			if v.Data.Attributes.LastAnalysisStats.Malicious > 0 {
+			if v.Data.Attributes.LastAnalysisStats.Malicious > 0 || v.Data.Attributes.LastAnalysisStats.Suspicious > 0 {
 				f = formatProb["virustotal"]
 			}
 			ch <- fmt.Sprintf("%s scannners results: %d malicious, %d suspicious, %d harmless\n", f, v.Data.Attributes.LastAnalysisStats.Malicious, v.Data.Attributes.LastAnalysisStats.Suspicious, v.Data.Attributes.LastAnalysisStats.Harmless)
