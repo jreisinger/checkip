@@ -11,6 +11,8 @@ CLI tool that finds out information about an IP address. Currently these types o
 * Confidence score that the IP address is malicious using [Abuse IP DB](https://www.abuseipdb.com). You need to [register](https://www.abuseipdb.com/register?plan=free) to get the API key (it's free).
 * [VirusTotal](https://developers.virustotal.com/v3.0/reference#ip-object) scanners reusults. You need to [register](https://www.virustotal.com/gui/join-us) to to get the API key (it's free).
 
+You can store LICENSE/API keys in `~/.checkip.yaml` or in environment variables.
+
 ## Installation
 
 Download the latest [release](https://github.com/jreisinger/checkip/releases) for your operating system and architecture.
