@@ -13,15 +13,38 @@ import (
 	"github.com/jreisinger/checkip/geo"
 	"github.com/jreisinger/checkip/threatcrowd"
 	"github.com/jreisinger/checkip/virustotal"
+
+	. "github.com/logrusorgru/aurora"
 )
 
-var checkOutputPrefix = map[string]string{
+// Standard print format.
+var format = map[string]string{
 	"asn":         "ASN         ",
 	"dns":         "DNS         ",
 	"geo":         "GEO         ",
 	"abuseipdb":   "AbuseIPDB   ",
 	"threatcrowd": "ThreatCrowd ",
 	"virustotal":  "VirusTotal  ",
+}
+
+// Error print format.
+var formatErr = map[string]string{
+	"asn":         fmt.Sprint(Gray(11, format["asn"])),
+	"dns":         fmt.Sprint(Gray(11, format["dns"])),
+	"geo":         fmt.Sprint(Gray(11, format["geo"])),
+	"abuseipdb":   fmt.Sprint(Gray(11, format["abuseipdb"])),
+	"threatcrowd": fmt.Sprint(Gray(11, format["threatcrowd"])),
+	"virustotal":  fmt.Sprint(Gray(11, format["virustotal"])),
+}
+
+// Problem print format.
+var formatProb = map[string]string{
+	"asn":         fmt.Sprint(Magenta(format["asn"])),
+	"dns":         fmt.Sprint(Magenta(format["dns"])),
+	"geo":         fmt.Sprint(Magenta(format["geo"])),
+	"abuseipdb":   fmt.Sprint(Magenta(format["abuseipdb"])),
+	"threatcrowd": fmt.Sprint(Magenta(format["threatcrowd"])),
+	"virustotal":  fmt.Sprint(Magenta(format["virustotal"])),
 }
 
 // Version is the default version od checkip.
@@ -41,38 +64,42 @@ func main() {
 	go func(ch chan string) {
 		d := dns.New()
 		if err := d.ForIP(ip); err != nil {
-			ch <- fmt.Sprintf("%s %v\n", checkOutputPrefix["dns"], err)
+			ch <- fmt.Sprintf("%s %v\n", formatErr["dns"], err)
 		} else {
-			ch <- fmt.Sprintf("%s %v\n", checkOutputPrefix["dns"], strings.Join(d.Names, " | "))
+			ch <- fmt.Sprintf("%s %v\n", format["dns"], strings.Join(d.Names, " | "))
 		}
 	}(ch)
 
 	go func(ch chan string) {
 		a := asn.New()
 		if err := a.ForIP(ip); err != nil {
-			ch <- fmt.Sprintf("%s %v\n", checkOutputPrefix["asn"], err)
+			ch <- fmt.Sprintf("%s %v\n", formatErr["asn"], err)
 		} else {
-			ch <- fmt.Sprintf("%s %d | %s - %s | %s | %s\n", checkOutputPrefix["asn"], a.Number, a.FirstIP, a.LastIP, a.Description, a.CountryCode)
+			ch <- fmt.Sprintf("%s %d | %s - %s | %s | %s\n", format["asn"], a.Number, a.FirstIP, a.LastIP, a.Description, a.CountryCode)
 		}
 	}(ch)
 
 	go func(ch chan string) {
 		g := geo.New()
 		if err := g.ForIP(ip); err != nil {
-			ch <- fmt.Sprintf("%s %v\n", checkOutputPrefix["geo"], err)
+			ch <- fmt.Sprintf("%s %v\n", formatErr["geo"], err)
 		} else {
-			ch <- fmt.Sprintf("%s %v\n", checkOutputPrefix["geo"], strings.Join(g.Location, " | "))
+			ch <- fmt.Sprintf("%s %v\n", format["geo"], strings.Join(g.Location, " | "))
 		}
 	}(ch)
 
 	go func(ch chan string) {
 		a := abuseipdb.New()
 		if err := a.ForIP(ip); err != nil {
-			ch <- fmt.Sprintf("%s %v\n", checkOutputPrefix["abuseipdb"], err)
+			ch <- fmt.Sprintf("%s %v\n", formatErr["abuseipdb"], err)
 		} else {
 			abuseConfidenceScore := a.Data.AbuseConfidenceScore
 			domain := a.Data.Domain
-			ch <- fmt.Sprintf("%s malicious with %d%% confidence | %v\n", checkOutputPrefix["abuseipdb"], abuseConfidenceScore, domain)
+			f := format["abuseipdb"]
+			if abuseConfidenceScore > 0 {
+				f = formatProb["abuseipdb"]
+			}
+			ch <- fmt.Sprintf("%s malicious with %d%% confidence | %v\n", f, abuseConfidenceScore, domain)
 		}
 	}(ch)
 
@@ -86,22 +113,30 @@ func main() {
 
 		t := threatcrowd.New()
 		if err := t.ForIP(ip); err != nil {
-			ch <- fmt.Sprintf("%s %v\n", checkOutputPrefix["threatcrowd"], err)
+			ch <- fmt.Sprintf("%s %v\n", formatErr["threatcrowd"], err)
 		} else {
-			ch <- fmt.Sprintf("%s %v\n", checkOutputPrefix["threatcrowd"], votesMeaning[t.Votes])
+			f := format["threatcrowd"]
+			if t.Votes < 0 {
+				f = formatProb["threatcrowd"]
+			}
+			ch <- fmt.Sprintf("%s %v\n", f, votesMeaning[t.Votes])
 		}
 	}(ch)
 
 	go func(ch chan string) {
 		v := virustotal.New()
 		if err := v.ForIP(ip); err != nil {
-			ch <- fmt.Sprintf("%s %v\n", checkOutputPrefix["virustotal"], err)
+			ch <- fmt.Sprintf("%s %v\n", formatErr["virustotal"], err)
 		} else {
-			ch <- fmt.Sprintf("%s scannners results: %d malicious, %d suspicious, %d harmless\n", checkOutputPrefix["virustotal"], v.Data.Attributes.LastAnalysisStats.Malicious, v.Data.Attributes.LastAnalysisStats.Suspicious, v.Data.Attributes.LastAnalysisStats.Harmless)
+			f := format["virustotal"]
+			if v.Data.Attributes.LastAnalysisStats.Malicious > 0 {
+				f = formatProb["virustotal"]
+			}
+			ch <- fmt.Sprintf("%s scannners results: %d malicious, %d suspicious, %d harmless\n", f, v.Data.Attributes.LastAnalysisStats.Malicious, v.Data.Attributes.LastAnalysisStats.Suspicious, v.Data.Attributes.LastAnalysisStats.Harmless)
 		}
 	}(ch)
 
-	for i := 0; i < len(checkOutputPrefix); i++ {
+	for i := 0; i < len(format); i++ {
 		fmt.Printf("%s", <-ch)
 	}
 }
