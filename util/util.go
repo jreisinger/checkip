@@ -23,10 +23,10 @@ func GetConfigValue(key string) (string, error) {
 	}
 
 	usr, err := user.Current()
-    if err != nil {
+	if err != nil {
 		return "", err
-    }
-    confFile := filepath.Join(usr.HomeDir, ".checkip.yaml")
+	}
+	confFile := filepath.Join(usr.HomeDir, ".checkip.yaml")
 
 	cfg, err := yaml.ReadFile(confFile)
 	if err != nil {
@@ -55,6 +55,27 @@ func DownloadFile(url string) (r io.ReadCloser, err error) {
 	}
 
 	return resp.Body, nil
+}
+
+func ExtractGzFile(outFilename string, r io.ReadCloser) error {
+	defer r.Close() // let's close resp.Body
+
+	gzipReader, err := gzip.NewReader(r)
+	if err != nil {
+		return err
+	}
+
+	outFile, err := os.Create(outFilename)
+	if err != nil {
+		return nil
+	}
+	defer outFile.Close()
+
+	if _, err := io.Copy(outFile, gzipReader); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func ExtractFile(outFile string, r io.ReadCloser) error {

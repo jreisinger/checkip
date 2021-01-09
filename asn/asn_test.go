@@ -17,9 +17,10 @@ func TestForIP(t *testing.T) {
 	for _, tp := range testpairs {
 		a := New()
 		ip := net.ParseIP(tp.ip)
-		a.ForIP(ip)
-		if a.CountryCode != tp.countryCode {
-			t.Errorf("country code for %s is expected to be %s but is %s", tp.ip, tp.countryCode, a.CountryCode)
+		err := a.ForIP(ip)
+		if a.CountryCode != tp.countryCode || err != nil {
+			t.Errorf("country code for %s is expected to be %s but is %s with %v",
+				tp.ip, tp.countryCode, a.CountryCode, err)
 		}
 	}
 }
