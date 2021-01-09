@@ -5,9 +5,6 @@
 CLI tool that finds out information about an IP address. 
 
 ```
-$ checkip 255.255.255.256 # you must supply a valid IP address
-invalid IP address: 255.255.255.256
-
 $ checkip 1.1.1.1
 GEO          city unknown | Australia | AU
 DNS          one.one.one.one.
