@@ -8,18 +8,18 @@ import (
 	"github.com/oschwald/geoip2-golang"
 )
 
-// DB represents MaxMind's GeoIP database.
-type DB struct {
+// Geo represents MaxMind's GeoIP database.
+type Geo struct {
 	Location []string
 }
 
 // New creates GeoDB with some defaults.
-func New() *DB {
-	return &DB{}
+func New() *Geo {
+	return &Geo{}
 }
 
 // ForIP fills the geolocation data into the GeoDB struct.
-func (g *DB) ForIP(ip net.IP) error {
+func (g *Geo) ForIP(ip net.IP) error {
 	licenseKey, err := util.GetConfigValue("GEOIP_LICENSE_KEY")
 	if err != nil {
 		return fmt.Errorf("getting licence key: %w", err)
