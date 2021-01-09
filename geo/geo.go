@@ -28,7 +28,7 @@ func (g *Geo) ForIP(ip net.IP) error {
 	file := "/var/tmp/GeoLite2-City.mmdb"
 	url := "https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-City&license_key=" + licenseKey + "&suffix=tar.gz"
 
-	if err := util.Update(file, url); err != nil {
+	if err := util.Update(file, url, "tgz"); err != nil {
 		return fmt.Errorf("can't update DB file: %v", err)
 	}
 

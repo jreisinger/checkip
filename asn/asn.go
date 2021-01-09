@@ -31,7 +31,7 @@ func (a *AS) ForIP(ipaddr net.IP) error {
 	file := "/var/tmp/ip2asn-combined.tsv"
 	url := "https://iptoasn.com/data/ip2asn-combined.tsv.gz"
 
-	if err := util.Update(file, url); err != nil {
+	if err := util.Update(file, url, "gz"); err != nil {
 		return fmt.Errorf("can't update %s from %s: %v", file, url, err)
 	}
 

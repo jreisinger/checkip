@@ -57,7 +57,24 @@ func DownloadFile(url string) (r io.ReadCloser, err error) {
 	return resp.Body, nil
 }
 
-func ExtractGzFile(outFilename string, r io.ReadCloser) error {
+// ExtractFile decompress r into filename. Supported formats are gz and tgz.
+func ExtractFile(filename string, r io.ReadCloser, compressFmt string) error {
+	switch compressFmt {
+	case "gz":
+		if err := extractGzFile(filename, r); err != nil {
+			return err
+		}
+	case "tgz":
+		if err := extractTgzFile(filename, r); err != nil {
+			return err
+		}
+	default:
+		return fmt.Errorf("don't know ho to extract a %s file", compressFmt)
+	}
+	return nil
+}
+
+func extractGzFile(outFilename string, r io.ReadCloser) error {
 	defer r.Close() // let's close resp.Body
 
 	gzipReader, err := gzip.NewReader(r)
@@ -78,7 +95,7 @@ func ExtractGzFile(outFilename string, r io.ReadCloser) error {
 	return nil
 }
 
-func ExtractFile(outFile string, r io.ReadCloser) error {
+func extractTgzFile(outFile string, r io.ReadCloser) error {
 	defer r.Close() // let's close resp.Body
 
 	gzipReader, err := gzip.NewReader(r)
@@ -113,8 +130,8 @@ func ExtractFile(outFile string, r io.ReadCloser) error {
 }
 
 // Update downloads and creates file from url if not present, updates if file is
-// older than a week.
-func Update(filepath, url string) error {
+// older than a week. compressFmt is the compression format of the file to download.
+func Update(filepath, url string, compressFmt string) error {
 	file, err := os.Stat(filepath)
 
 	if os.IsNotExist(err) {
@@ -122,7 +139,7 @@ func Update(filepath, url string) error {
 		if err != nil {
 			return err
 		}
-		if err := ExtractGzFile(filepath, r); err != nil {
+		if err := ExtractFile(filepath, r, compressFmt); err != nil {
 			return err
 		}
 
@@ -134,7 +151,7 @@ func Update(filepath, url string) error {
 		if err != nil {
 			return err
 		}
-		if err := ExtractGzFile(filepath, r); err != nil {
+		if err := ExtractFile(filepath, r, compressFmt); err != nil {
 			return err
 		}
 	}
