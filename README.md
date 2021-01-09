@@ -2,7 +2,7 @@
 
 # checkip
 
-CLI tool that finds out information about an IP address. 
+`checkip` is a CLI tool that finds out information about an IP address. 
 
 ```
 $ checkip 1.1.1.1
