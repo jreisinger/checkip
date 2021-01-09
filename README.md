@@ -7,7 +7,7 @@ CLI tool that finds out information about an IP address. Currently these types o
 * ASN using [iptoasn](https://iptoasn.com/) TSV file. (API was phased out on December 31, 2020.)
 * DNS name using [net.LookupAddr](https://golang.org/pkg/net/#LookupAddr).
 * Voting about whether the IP address is malicious using [ThreatCrowd](https://www.threatcrowd.org/).
-
+---
 * Geographic location using [GeoLite2 City database](https://dev.maxmind.com/geoip/geoip2/geolite2/). You need to [register](https://dev.maxmind.com/geoip/geoip2/geolite2/#Download_Access) to get the license key (it's free).
 * Confidence score that the IP address is malicious using [Abuse IP DB](https://www.abuseipdb.com). You need to [register](https://www.abuseipdb.com/register?plan=free) to get the API key (it's free).
 * [VirusTotal](https://developers.virustotal.com/v3.0/reference#ip-object) scanners reusults. You need to [register](https://www.virustotal.com/gui/join-us) to to get the API key (it's free).
