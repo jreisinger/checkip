@@ -16,8 +16,8 @@ VirusTotal   scannners results: 0 malicious, 0 suspicious, 82 harmless
 
 Currently these types of information are provided:
 
-* ASN using [iptoasn](https://iptoasn.com/) TSV file. (API was phased out on December 31, 2020.)
-* DNS name using [net.LookupAddr](https://golang.org/pkg/net/#LookupAddr).
+* ASN data using TSV file from [iptoasn](https://iptoasn.com/).
+* DNS name using [net.LookupAddr](https://golang.org/pkg/net/#LookupAddr) Go function.
 * [ThreatCrowd](https://www.threatcrowd.org/) voting about whether the IP address is malicious.
 ---
 * [AbuseIPDB](https://www.abuseipdb.com) confidence score that the IP address is malicious. You need to [register](https://www.abuseipdb.com/register?plan=free) to get the API key (it's free).
@@ -29,7 +29,6 @@ You can store LICENSE/API keys in `~/.checkip.yaml` or in environment variables.
 ## Installation
 
 Download the latest [release](https://github.com/jreisinger/checkip/releases) for your operating system and architecture. Or clone the repo and run `make install`.
-
 
 ## Development
 
