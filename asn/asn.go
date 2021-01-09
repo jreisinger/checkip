@@ -41,8 +41,9 @@ func (a *AS) ForIP(ipaddr net.IP) error {
 	return nil
 }
 
-func (a *AS) search(ipaddr net.IP, filename string) error {
-	tsv, err := os.Open(filename)
+// search searches the ippadrr in tsvFile and if found fills in AS data.
+func (a *AS) search(ipaddr net.IP, tsvFile string) error {
+	tsv, err := os.Open(tsvFile)
 	if err != nil {
 		return err
 	}
@@ -70,8 +71,8 @@ func (a *AS) search(ipaddr net.IP, filename string) error {
 	return nil
 }
 
-func isBetween(ipAddr, firstIpAddr, lastIpAddr net.IP) bool {
-	if bytes.Compare(ipAddr, firstIpAddr) >= 0 && bytes.Compare(ipAddr, lastIpAddr) <= 0 {
+func isBetween(ipAddr, firstIPAddr, lastIPAddr net.IP) bool {
+	if bytes.Compare(ipAddr, firstIPAddr) >= 0 && bytes.Compare(ipAddr, lastIPAddr) <= 0 {
 		return true
 	}
 	return false
