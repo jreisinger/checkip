@@ -2,7 +2,22 @@
 
 # checkip
 
-CLI tool that finds out information about an IP address. Currently these types of information are provided:
+CLI tool that finds out information about an IP address. 
+
+```
+$ checkip 255.255.255.256 # you must supply a valid IP address
+invalid IP address: 255.255.255.256
+
+$ checkip 1.1.1.1
+GEO          city unknown | Australia | AU
+DNS          one.one.one.one.
+ASN          13335 | 1.1.1.0 - 1.1.1.255 | CLOUDFLARENET - Cloudflare, Inc. | US
+ThreatCrowd  most users have voted this malicious
+VirusTotal   scannners results: 0 malicious, 0 suspicious, 82 harmless
+AbuseIPDB    malicious with 0% confidence | cloudflare.com
+```
+
+Currently these types of information are provided:
 
 * ASN using [iptoasn](https://iptoasn.com/) TSV file. (API was phased out on December 31, 2020.)
 * DNS name using [net.LookupAddr](https://golang.org/pkg/net/#LookupAddr).
@@ -18,20 +33,6 @@ You can store LICENSE/API keys in `~/.checkip.yaml` or in environment variables.
 
 Download the latest [release](https://github.com/jreisinger/checkip/releases) for your operating system and architecture. Or clone the repo and run `make install`.
 
-## Usage
-
-```
-$ checkip 255.255.255.256 # you must supply a valid IP address
-invalid IP address: 255.255.255.256
-
-$ checkip 1.1.1.1
-GEO          city unknown | Australia | AU
-DNS          one.one.one.one.
-ASN          13335 | 1.1.1.0 - 1.1.1.255 | CLOUDFLARENET - Cloudflare, Inc. | US
-ThreatCrowd  most users have voted this malicious
-VirusTotal   scannners results: 0 malicious, 0 suspicious, 82 harmless
-AbuseIPDB    malicious with 0% confidence | cloudflare.com
-```
 
 ## Development
 
