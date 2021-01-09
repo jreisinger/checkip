@@ -3,7 +3,6 @@ package geo
 import (
 	"fmt"
 	"net"
-	"os"
 
 	"github.com/jreisinger/checkip/util"
 	"github.com/oschwald/geoip2-golang"
@@ -11,86 +10,35 @@ import (
 
 // DB represents MaxMind's GeoIP database.
 type DB struct {
-	Filepath string
-	URL      string
-	DB       *geoip2.Reader
 	Location []string
 }
 
 // New creates GeoDB with some defaults.
 func New() *DB {
-	return &DB{
-		Filepath: "/var/tmp/GeoLite2-City.mmdb",
-	}
-}
-
-// Update downloads and creates database file if not present,
-// updates if file is older than a week.
-func (g *DB) Update() error {
-	licenseKey, err := util.GetConfigValue("GEOIP_LICENSE_KEY")
-	if err != nil {
-		return fmt.Errorf("can't call API: %w", err)
-	}
-
-	g.URL = "https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-City&license_key=" + licenseKey + "&suffix=tar.gz"
-	file, err := os.Stat(g.Filepath)
-
-	if os.IsNotExist(err) {
-		r, err := util.DownloadFile(g.URL)
-		if err != nil {
-			return err
-		}
-		if err := util.ExtractFile(g.Filepath, r); err != nil {
-			return err
-		}
-
-		return nil // don't check ModTime if file does not exist
-	}
-
-	if util.IsOlderThanOneWeek(file.ModTime()) {
-		if licenseKey == "" {
-			return fmt.Errorf("environment variable GEOIP_LICENSE_KEY is not set")
-		}
-
-		r, err := util.DownloadFile(g.URL)
-		if err != nil {
-			return err
-		}
-		if err := util.ExtractFile(g.Filepath, r); err != nil {
-			return err
-		}
-	}
-
-	return nil
-}
-
-// Open loads database from file to memory.
-func (g *DB) Open() error {
-	db, err := geoip2.Open(g.Filepath)
-	if err != nil {
-		return err
-	}
-	g.DB = db
-	return nil
-}
-
-// Close closes database file.
-func (g *DB) Close() {
-	g.DB.Close()
+	return &DB{}
 }
 
 // ForIP fills the geolocation data into the GeoDB struct.
 func (g *DB) ForIP(ip net.IP) error {
-	if err := g.Update(); err != nil {
-		return fmt.Errorf("can't update DB: %v", err)
+	licenseKey, err := util.GetConfigValue("GEOIP_LICENSE_KEY")
+	if err != nil {
+		return fmt.Errorf("getting licence key: %w", err)
 	}
 
-	if err := g.Open(); err != nil {
-		return fmt.Errorf("can't load DB: %v", err)
-	}
-	defer g.Close()
+	file := "/var/tmp/GeoLite2-City.mmdb"
+	url := "https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-City&license_key=" + licenseKey + "&suffix=tar.gz"
 
-	record, err := g.DB.City(ip)
+	if err := util.Update(file, url); err != nil {
+		return fmt.Errorf("can't update DB file: %v", err)
+	}
+
+	db, err := geoip2.Open(file)
+	if err != nil {
+		return fmt.Errorf("can't load DB file: %v", err)
+	}
+	defer db.Close()
+
+	record, err := db.City(ip)
 	if err != nil {
 		return err
 	}

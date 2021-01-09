@@ -30,7 +30,8 @@ func New() *AS {
 func (a *AS) ForIP(ipaddr net.IP) error {
 	file := "/var/tmp/ip2asn-combined.tsv"
 	url := "https://iptoasn.com/data/ip2asn-combined.tsv.gz"
-	if err := update(file, url); err != nil {
+
+	if err := util.Update(file, url); err != nil {
 		return fmt.Errorf("can't update %s from %s: %v", file, url, err)
 	}
 
@@ -76,34 +77,4 @@ func isBetween(ipAddr, firstIPAddr, lastIPAddr net.IP) bool {
 		return true
 	}
 	return false
-}
-
-// update downloads and creates file from url if not present, updates if file is
-// older than a week.
-func update(filepath, url string) error {
-	file, err := os.Stat(filepath)
-
-	if os.IsNotExist(err) {
-		r, err := util.DownloadFile(url)
-		if err != nil {
-			return err
-		}
-		if err := util.ExtractGzFile(filepath, r); err != nil {
-			return err
-		}
-
-		return nil // don't check ModTime if file does not exist
-	}
-
-	if util.IsOlderThanOneWeek(file.ModTime()) {
-		r, err := util.DownloadFile(url)
-		if err != nil {
-			return err
-		}
-		if err := util.ExtractGzFile(filepath, r); err != nil {
-			return err
-		}
-	}
-
-	return nil
 }

@@ -111,3 +111,33 @@ func ExtractFile(outFile string, r io.ReadCloser) error {
 	}
 	return nil
 }
+
+// Update downloads and creates file from url if not present, updates if file is
+// older than a week.
+func Update(filepath, url string) error {
+	file, err := os.Stat(filepath)
+
+	if os.IsNotExist(err) {
+		r, err := DownloadFile(url)
+		if err != nil {
+			return err
+		}
+		if err := ExtractGzFile(filepath, r); err != nil {
+			return err
+		}
+
+		return nil // don't check ModTime if file does not exist
+	}
+
+	if IsOlderThanOneWeek(file.ModTime()) {
+		r, err := DownloadFile(url)
+		if err != nil {
+			return err
+		}
+		if err := ExtractGzFile(filepath, r); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}

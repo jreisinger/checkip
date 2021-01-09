@@ -6,13 +6,6 @@ import (
 	"testing"
 )
 
-func TestNew(t *testing.T) {
-	g := New()
-	if g.Filepath != "/var/tmp/GeoLite2-City.mmdb" {
-		t.Errorf("default geodb path is wrong: %s", g.Filepath)
-	}
-}
-
 func TestForIP(t *testing.T) {
 	if os.Getenv("GEOIP_LICENSE_KEY") == "" {
 		t.Skip("skipping test; GEOIP_LICENSE_KEY is not set")
