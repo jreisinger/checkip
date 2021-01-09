@@ -6,22 +6,22 @@
 
 ```
 $ checkip 1.1.1.1
-GEO          city unknown | Australia | AU
-DNS          one.one.one.one.
 ASN          13335 | 1.1.1.0 - 1.1.1.255 | CLOUDFLARENET - Cloudflare, Inc. | US
+DNS          one.one.one.one.
 ThreatCrowd  most users have voted this malicious
-VirusTotal   scannners results: 0 malicious, 0 suspicious, 82 harmless
 AbuseIPDB    malicious with 0% confidence | cloudflare.com
+GEO          city unknown | Australia | AU
+VirusTotal   scannners results: 0 malicious, 0 suspicious, 82 harmless
 ```
 
 Currently these types of information are provided:
 
 * ASN using [iptoasn](https://iptoasn.com/) TSV file. (API was phased out on December 31, 2020.)
 * DNS name using [net.LookupAddr](https://golang.org/pkg/net/#LookupAddr).
-* Voting about whether the IP address is malicious using [ThreatCrowd](https://www.threatcrowd.org/).
+* [ThreatCrowd](https://www.threatcrowd.org/) voting about whether the IP address is malicious.
 ---
-* Geographic location using [GeoLite2 City database](https://dev.maxmind.com/geoip/geoip2/geolite2/). You need to [register](https://dev.maxmind.com/geoip/geoip2/geolite2/#Download_Access) to get the license key (it's free).
-* Confidence score that the IP address is malicious using [Abuse IP DB](https://www.abuseipdb.com). You need to [register](https://www.abuseipdb.com/register?plan=free) to get the API key (it's free).
+* [Abuse IP DB](https://www.abuseipdb.com) confidence score that the IP address is malicious. You need to [register](https://www.abuseipdb.com/register?plan=free) to get the API key (it's free).
+* GEOgraphic location using [GeoLite2 City database](https://dev.maxmind.com/geoip/geoip2/geolite2/). You need to [register](https://dev.maxmind.com/geoip/geoip2/geolite2/#Download_Access) to get the license key (it's free).
 * [VirusTotal](https://developers.virustotal.com/v3.0/reference#ip-object) scanners reusults. You need to [register](https://www.virustotal.com/gui/join-us) to to get the API key (it's free).
 
 You can store LICENSE/API keys in `~/.checkip.yaml` or in environment variables.
