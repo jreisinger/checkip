@@ -14,6 +14,11 @@ GEO          city unknown | Australia | AU
 VirusTotal   scannners results: 0 malicious, 0 suspicious, 82 harmless
 ```
 
+## Features
+
+* Necessary files (ASN, GEO) are downloaded and updated in the background.
+* Output is colored to improve readability.
+
 Currently these types of information are provided:
 
 * ASN data using TSV file from [iptoasn](https://iptoasn.com/).
@@ -21,8 +26,8 @@ Currently these types of information are provided:
 * [ThreatCrowd](https://www.threatcrowd.org/) voting about whether the IP address is malicious.
 ---
 * [AbuseIPDB](https://www.abuseipdb.com) confidence score that the IP address is malicious. You need to [register](https://www.abuseipdb.com/register?plan=free) to get the API key (it's free).
-* GEOgraphic location using [GeoLite2 City database](https://dev.maxmind.com/geoip/geoip2/geolite2/). You need to [register](https://dev.maxmind.com/geoip/geoip2/geolite2/#Download_Access) to get the license key (it's free).
-* [VirusTotal](https://developers.virustotal.com/v3.0/reference#ip-object) scanners reusults. You need to [register](https://www.virustotal.com/gui/join-us) to to get the API key (it's free).
+* GEOgraphic location using [GeoLite2 City database](https://dev.maxmind.com/geoip/geoip2/geolite2/) file. You need to [register](https://dev.maxmind.com/geoip/geoip2/geolite2/#Download_Access) to get the license key (it's free).
+* [VirusTotal](https://developers.virustotal.com/v3.0/reference#ip-object) scanners results. You need to [register](https://www.virustotal.com/gui/join-us) to to get the API key (it's free).
 
 You can store LICENSE/API keys in `~/.checkip.yaml` or in environment variables.
 
