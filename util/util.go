@@ -39,11 +39,11 @@ func GetConfigValue(key string) (string, error) {
 	return v, nil
 }
 
-func IsOlderThanOneWeek(t time.Time) bool {
+func isOlderThanOneWeek(t time.Time) bool {
 	return time.Now().Sub(t) > 7*24*time.Hour
 }
 
-func DownloadFile(url string) (r io.ReadCloser, err error) {
+func downloadFile(url string) (r io.ReadCloser, err error) {
 	resp, err := http.Get(url)
 	if err != nil {
 		return nil, err
@@ -135,7 +135,7 @@ func Update(filepath, url string, compressFmt string) error {
 	file, err := os.Stat(filepath)
 
 	if os.IsNotExist(err) {
-		r, err := DownloadFile(url)
+		r, err := downloadFile(url)
 		if err != nil {
 			return err
 		}
@@ -146,8 +146,8 @@ func Update(filepath, url string, compressFmt string) error {
 		return nil // don't check ModTime if file does not exist
 	}
 
-	if IsOlderThanOneWeek(file.ModTime()) {
-		r, err := DownloadFile(url)
+	if isOlderThanOneWeek(file.ModTime()) {
+		r, err := downloadFile(url)
 		if err != nil {
 			return err
 		}
