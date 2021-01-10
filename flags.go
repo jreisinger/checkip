@@ -8,7 +8,6 @@ import (
 )
 
 func handleFlags() {
-
 	flag.Usage = func() {
 		fmt.Fprintf(flag.CommandLine.Output(), "%s [flags] <ipaddr>\n", os.Args[0])
 		flag.PrintDefaults()
