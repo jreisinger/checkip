@@ -1,11 +1,11 @@
-package asn
+package check
 
 import (
 	"net"
 	"testing"
 )
 
-func TestForIP(t *testing.T) {
+func TestASNCheck(t *testing.T) {
 	type testpair struct {
 		ip          string
 		countryCode string
@@ -16,9 +16,9 @@ func TestForIP(t *testing.T) {
 		{"8.8.8.8", "US", "GOOGLE - Google LLC"},
 	}
 	for _, tp := range testpairs {
-		a := New()
+		a := &AS{}
 		ip := net.ParseIP(tp.ip)
-		err := a.ForIP(ip)
+		_, err := a.Check(ip)
 		if a.CountryCode != tp.countryCode || err != nil {
 			t.Errorf("country code for %s was expected to be '%s' but is '%s' with %v",
 				tp.ip, tp.countryCode, a.CountryCode, err)

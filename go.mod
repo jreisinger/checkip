@@ -1,6 +1,6 @@
 module github.com/jreisinger/checkip
 
-go 1.14
+go 1.15
 
 require (
 	github.com/kylelemons/go-gypsy v1.0.0

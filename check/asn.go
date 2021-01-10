@@ -1,4 +1,4 @@
-package asn
+package check
 
 import (
 	"bufio"
@@ -21,25 +21,30 @@ type AS struct {
 	Description string
 }
 
-// New creates AS.
-func New() *AS {
-	return &AS{}
-}
-
-// ForIP fills in AS data for a given IP address.
-func (a *AS) ForIP(ipaddr net.IP) error {
+// Check fills in AS data for a given IP address.
+func (a *AS) Check(ipaddr net.IP) (bool, error) {
 	file := "/var/tmp/ip2asn-combined.tsv"
 	url := "https://iptoasn.com/data/ip2asn-combined.tsv.gz"
 
 	if err := util.Update(file, url, "gz"); err != nil {
-		return fmt.Errorf("can't update %s from %s: %v", file, url, err)
+		return false, fmt.Errorf("can't update %s from %s: %v", file, url, err)
 	}
 
 	if err := a.search(ipaddr, file); err != nil {
-		return fmt.Errorf("searching %s in %s: %v", ipaddr, file, err)
+		return false, fmt.Errorf("searching %s in %s: %v", ipaddr, file, err)
 	}
 
-	return nil
+	return true, nil
+}
+
+// Name returns the name of the check.
+func (a *AS) Name() string {
+	return fmt.Sprint("ASN")
+}
+
+// String returns the output of the check.
+func (a *AS) String() string {
+	return fmt.Sprintf("%d | %s - %s | %s | %s", a.Number, a.FirstIP, a.LastIP, a.Description, a.CountryCode)
 }
 
 // search searches the ippadrr in tsvFile and if found fills in AS data.
