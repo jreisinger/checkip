@@ -1,4 +1,4 @@
-package abuseipdb
+package check
 
 import (
 	"encoding/json"
@@ -39,22 +39,17 @@ type AbuseIPDB struct {
 	} `json:"data"`
 }
 
-// New creates AS.
-func New() *AbuseIPDB {
-	return &AbuseIPDB{}
-}
-
-// ForIP fills in AbuseIPDB data for a given IP address. See the AbuseIPDB API
+// Check fills in AbuseIPDB data for a given IP address. See the AbuseIPDB API
 // documentation for more https://docs.abuseipdb.com/?shell#check-endpoint
-func (a *AbuseIPDB) ForIP(ipaddr net.IP) error {
+func (a *AbuseIPDB) Check(ipaddr net.IP) (bool, error) {
 	apiKey, err := util.GetConfigValue("ABUSEIPDB_API_KEY")
 	if err != nil {
-		return fmt.Errorf("can't call API: %w", err)
+		return false, fmt.Errorf("can't call API: %w", err)
 	}
 
 	baseURL, err := url.Parse("https://api.abuseipdb.com/api/v2/check")
 	if err != nil {
-		return err
+		return false, err
 	}
 
 	// Add GET paramaters.
@@ -64,7 +59,7 @@ func (a *AbuseIPDB) ForIP(ipaddr net.IP) error {
 
 	req, err := http.NewRequest("GET", baseURL.String(), nil)
 	if err != nil {
-		return err
+		return false, err
 	}
 
 	// Set request headers.
@@ -74,17 +69,30 @@ func (a *AbuseIPDB) ForIP(ipaddr net.IP) error {
 
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
-		return err
+		return false, err
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return fmt.Errorf("calling API: %s", resp.Status)
+		return false, fmt.Errorf("calling API: %s", resp.Status)
 	}
 
 	if err := json.NewDecoder(resp.Body).Decode(a); err != nil {
-		return err
+		return false, err
+	}
+	if a.Data.AbuseConfidenceScore > 0 {
+		return false, nil
 	}
 
-	return nil
+	return true, nil
+}
+
+// Name returns the name of the check.
+func (a *AbuseIPDB) Name() string {
+	return fmt.Sprint("AbuseIPDB")
+}
+
+// String returns the output of the check.
+func (a *AbuseIPDB) String() string {
+	return fmt.Sprintf("malicious with %d%% confidence | %v", a.Data.AbuseConfidenceScore, a.Data.Domain)
 }

@@ -1,4 +1,4 @@
-package virustotal
+package check
 
 // VirusTotal holds information about an IP address from https://developers.virustotal.com/v3.0/reference#ip-object
 type VirusTotal struct {
@@ -633,7 +633,7 @@ type VirusTotal struct {
 				Harmless  int `json:"harmless"`
 				Malicious int `json:"malicious"`
 			} `json:"total_votes"`
-			WhoisDate int       `json:"whois_date"`
+			WhoisDate int `json:"whois_date"`
 		} `json:"attributes"`
 		ID    string `json:"id"`
 		Links struct {

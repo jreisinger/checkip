@@ -1,15 +1,11 @@
-package geo
+package check
 
 import (
 	"net"
-	"os"
 	"testing"
 )
 
-func TestForIP(t *testing.T) {
-	if os.Getenv("GEOIP_LICENSE_KEY") == "" {
-		t.Skip("skipping test; GEOIP_LICENSE_KEY is not set")
-	}
+func TestGeoCheck(t *testing.T) {
 	type testpair struct {
 		ip    string
 		state string
@@ -19,9 +15,9 @@ func TestForIP(t *testing.T) {
 		{"8.8.8.8", "United States"},
 	}
 	for _, tp := range testpairs {
-		g := New()
+		g := &Geo{}
 		ip := net.ParseIP(tp.ip)
-		g.ForIP(ip)
+		g.Check(ip)
 		if g.Location[1] != tp.state {
 			t.Errorf("%s is expected to be in %s but is in %s", tp.ip, tp.state, g.Location[1])
 		}
