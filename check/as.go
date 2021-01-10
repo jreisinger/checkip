@@ -39,7 +39,7 @@ func (a *AS) Check(ipaddr net.IP) (bool, error) {
 
 // Name returns the name of the check.
 func (a *AS) Name() string {
-	return fmt.Sprint("ASN")
+	return fmt.Sprint("AS")
 }
 
 // String returns the output of the check.

@@ -18,7 +18,7 @@ type Checker interface {
 // Run runs a Checker against and IP address and returns the result over a
 // channel.
 func Run(chkr Checker, ipaddr net.IP, ch chan string) {
-	format := "%-15s %s\n"
+	format := "%-11s %s\n"
 	ok, err := chkr.Check(ipaddr)
 	if err != nil {
 		ch <- fmt.Sprintf(format, Gray(11, chkr.Name()), Gray(11, err))
