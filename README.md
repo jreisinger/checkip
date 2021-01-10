@@ -17,7 +17,9 @@ VirusTotal  scannners results: 0 malicious, 0 suspicious, 82 harmless
 ## Features
 
 * Necessary files (AS, GEO) are automatically downloaded and updated in the background.
+* Checks are done concurrently to save time.
 * Output is colored to improve readability.
+* It's easy to add new checks.
 
 Currently these types of information are provided:
 
