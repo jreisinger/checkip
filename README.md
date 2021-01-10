@@ -44,7 +44,7 @@ make install # version defaults to "dev" if VERSION envvar is not set
 make release # you'll find releases in releases/ directory
 ```
 
-Builds are done inside Docker container. Once you push to GitHub Travis will
+Builds are done inside Docker container. When you push to GitHub Travis CI will
 try and build a release for you and publish it on GitHub.
 
 Check test coverage:
