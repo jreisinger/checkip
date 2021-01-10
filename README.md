@@ -6,22 +6,22 @@
 
 ```
 $ checkip 1.1.1.1
-ASN          13335 | 1.1.1.0 - 1.1.1.255 | CLOUDFLARENET - Cloudflare, Inc. | US
-DNS          one.one.one.one.
-ThreatCrowd  most users have voted this malicious
-AbuseIPDB    malicious with 0% confidence | cloudflare.com
-GEO          city unknown | Australia | AU
-VirusTotal   scannners results: 0 malicious, 0 suspicious, 82 harmless
+AS          13335 | 1.1.1.0 - 1.1.1.255 | CLOUDFLARENET - Cloudflare, Inc. | US
+DNS         one.one.one.one.
+ThreatCrowd most users have voted this malicious
+AbuseIPDB   malicious with 0% confidence | cloudflare.com
+GEO         city unknown | Australia | AU
+VirusTotal  scannners results: 0 malicious, 0 suspicious, 82 harmless
 ```
 
 ## Features
 
-* Necessary files (ASN, GEO) are downloaded and updated in the background.
+* Necessary files (AS, GEO) are automatically downloaded and updated in the background.
 * Output is colored to improve readability.
 
 Currently these types of information are provided:
 
-* ASN data using TSV file from [iptoasn](https://iptoasn.com/).
+* AS data using TSV file from [iptoasn](https://iptoasn.com/).
 * DNS name using [net.LookupAddr](https://golang.org/pkg/net/#LookupAddr) Go function.
 * [ThreatCrowd](https://www.threatcrowd.org/) voting about whether the IP address is malicious.
 ---
