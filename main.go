@@ -9,7 +9,7 @@ import (
 	"github.com/jreisinger/checkip/check"
 )
 
-// Version is the default version od checkip.
+// Version is the default version of checkip.
 var Version = "dev"
 
 func main() {
@@ -23,12 +23,12 @@ func main() {
 
 	ch := make(chan string)
 	checkers := []check.Checker{
+		&check.AS{},
 		&check.DNS{},
 		&check.ThreatCrowd{},
-		&check.VirusTotal{},
-		&check.Geo{},
-		&check.AS{},
 		&check.AbuseIPDB{},
+		&check.Geo{},
+		&check.VirusTotal{},
 	}
 	for _, chk := range checkers {
 		go check.Run(chk, ipaddr, ch)
