@@ -3,9 +3,16 @@ package check
 import (
 	"net"
 	"testing"
+
+	"github.com/jreisinger/checkip/util"
 )
 
 func TestGeoCheck(t *testing.T) {
+	// This is needed for the tests not to fail on travis-ci.org.
+	if v, _ := util.GetConfigValue("GEOIP_LICENSE_KEY"); v == "" {
+		t.Skip("skipping test; GEOIP_LICENSE_KEY is not set")
+	}
+
 	type testpair struct {
 		ip    string
 		state string
