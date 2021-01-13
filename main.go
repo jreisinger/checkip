@@ -22,7 +22,7 @@ func main() {
 	}
 
 	ch := make(chan string)
-	checkers := []check.Checker{
+	checks := []check.Check{
 		&check.AS{},
 		&check.DNS{},
 		&check.ThreatCrowd{},
@@ -30,10 +30,10 @@ func main() {
 		&check.Geo{},
 		&check.VirusTotal{},
 	}
-	for _, chk := range checkers {
+	for _, chk := range checks {
 		go check.Run(chk, ipaddr, ch)
 	}
-	for range checkers {
+	for range checks {
 		fmt.Print(<-ch)
 	}
 }

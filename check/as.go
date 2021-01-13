@@ -21,9 +21,9 @@ type AS struct {
 	Description string
 }
 
-// Check fills in AS data for a given IP address. The data is taken from a TSV
+// Do fills in AS data for a given IP address. The data is taken from a TSV
 // file ip2asn-combined downloaded from iptoasn.com.
-func (a *AS) Check(ipaddr net.IP) (bool, error) {
+func (a *AS) Do(ipaddr net.IP) (bool, error) {
 	file := "/var/tmp/ip2asn-combined.tsv"
 	url := "https://iptoasn.com/data/ip2asn-combined.tsv.gz"
 
@@ -43,7 +43,7 @@ func (a *AS) Name() string {
 	return fmt.Sprint("AS")
 }
 
-// String returns the output of the check.
+// String returns the result of the check.
 func (a *AS) String() string {
 	return fmt.Sprintf("%d | %s - %s | %s | %s",
 		a.Number, a.FirstIP, a.LastIP, a.Description, a.CountryCode)

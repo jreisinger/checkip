@@ -11,8 +11,8 @@ type DNS struct {
 	Names []string
 }
 
-// Check looks up the DNS names for the given IP address.
-func (d *DNS) Check(ipaddr net.IP) (bool, error) {
+// Do looks up the DNS names for the given IP address.
+func (d *DNS) Do(ipaddr net.IP) (bool, error) {
 	names, err := net.LookupAddr(ipaddr.String())
 	if err != nil {
 		return false, err
@@ -26,7 +26,7 @@ func (d *DNS) Name() string {
 	return fmt.Sprint("DNS")
 }
 
-// String returns the output of the check.
+// String returns the result of the check.
 func (d *DNS) String() string {
 	return fmt.Sprintf("%s", strings.Join(d.Names, " | "))
 }

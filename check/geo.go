@@ -14,8 +14,8 @@ type Geo struct {
 	Location []string
 }
 
-// Check fills in the geolocation data.
-func (g *Geo) Check(ip net.IP) (bool, error) {
+// Do fills in the geolocation data.
+func (g *Geo) Do(ip net.IP) (bool, error) {
 	licenseKey, err := util.GetConfigValue("GEOIP_LICENSE_KEY")
 	if err != nil {
 		return false, fmt.Errorf("getting licence key: %w", err)
@@ -65,7 +65,7 @@ func (g *Geo) Name() string {
 	return fmt.Sprint("GEO")
 }
 
-// String returns the output of the check.
+// String returns the result of the check.
 func (g *Geo) String() string {
 	return fmt.Sprintf("%s", strings.Join(g.Location, " | "))
 }

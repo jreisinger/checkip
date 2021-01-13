@@ -29,9 +29,9 @@ type ThreatCrowd struct {
 	Permalink  string        `json:"permalink"`
 }
 
-// Check retrieves information about the IP address from the ThreatCrowd API. If
+// Do retrieves information about the IP address from the ThreatCrowd API. If
 // the IP address is voted malicious it returns false.
-func (t *ThreatCrowd) Check(ipaddr net.IP) (bool, error) {
+func (t *ThreatCrowd) Do(ipaddr net.IP) (bool, error) {
 	// curl https://www.threatcrowd.org/searchApi/v2/ip/report/?ip=188.40.75.132
 
 	baseURL, err := url.Parse("https://www.threatcrowd.org/searchApi/v2/ip/report")
@@ -75,7 +75,7 @@ func (t *ThreatCrowd) Name() string {
 	return fmt.Sprint("ThreatCrowd")
 }
 
-// String returns the output of the check.
+// String returns the result of the check.
 func (t *ThreatCrowd) String() string {
 
 	return fmt.Sprintf("%s", votesMeaning[t.Votes])

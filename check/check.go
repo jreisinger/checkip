@@ -8,25 +8,24 @@ import (
 	. "github.com/logrusorgru/aurora"
 )
 
-// Checker represents an IP address checker.
-type Checker interface {
-	Check(addr net.IP) (bool, error)
+// Check represents an IP address checker.
+type Check interface {
+	Do(addr net.IP) (bool, error)
 	Name() string
-	String() string // output
+	String() string // result of the check
 }
 
-// Run runs a Checker against and IP address and returns the result over a
-// channel.
-func Run(chkr Checker, ipaddr net.IP, ch chan string) {
+// Run runs a check of an IP address and returns the result over a channel.
+func Run(chk Check, ipaddr net.IP, ch chan string) {
 	format := "%-11s %s\n"
-	ok, err := chkr.Check(ipaddr)
+	ok, err := chk.Do(ipaddr)
 	if err != nil {
-		ch <- fmt.Sprintf(format, Gray(11, chkr.Name()), Gray(11, err))
+		ch <- fmt.Sprintf(format, Gray(11, chk.Name()), Gray(11, err))
 		return
 	}
 	if ok {
-		ch <- fmt.Sprintf(format, chkr.Name(), chkr)
+		ch <- fmt.Sprintf(format, chk.Name(), chk)
 	} else {
-		ch <- fmt.Sprintf(format, Magenta(chkr.Name()), Magenta(chkr))
+		ch <- fmt.Sprintf(format, Magenta(chk.Name()), Magenta(chk))
 	}
 }

@@ -18,7 +18,7 @@ func TestASNCheck(t *testing.T) {
 	for _, tp := range testpairs {
 		a := &AS{}
 		ip := net.ParseIP(tp.ip)
-		_, err := a.Check(ip)
+		_, err := a.Do(ip)
 		if a.CountryCode != tp.countryCode || err != nil {
 			t.Errorf("country code for %s was expected to be '%s' but is '%s' with %v",
 				tp.ip, tp.countryCode, a.CountryCode, err)

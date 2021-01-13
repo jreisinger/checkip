@@ -39,9 +39,9 @@ type AbuseIPDB struct {
 	} `json:"data"`
 }
 
-// Check fills in AbuseIPDB data for a given IP address. See the AbuseIPDB API
+// Do fills in AbuseIPDB data for a given IP address. See the AbuseIPDB API
 // documentation for more https://docs.abuseipdb.com/?shell#check-endpoint
-func (a *AbuseIPDB) Check(ipaddr net.IP) (bool, error) {
+func (a *AbuseIPDB) Do(ipaddr net.IP) (bool, error) {
 	apiKey, err := util.GetConfigValue("ABUSEIPDB_API_KEY")
 	if err != nil {
 		return false, fmt.Errorf("can't call API: %w", err)
@@ -92,7 +92,7 @@ func (a *AbuseIPDB) Name() string {
 	return fmt.Sprint("AbuseIPDB")
 }
 
-// String returns the output of the check.
+// String returns the result of the check.
 func (a *AbuseIPDB) String() string {
 	return fmt.Sprintf("malicious with %d%% confidence | %v", a.Data.AbuseConfidenceScore, a.Data.Domain)
 }

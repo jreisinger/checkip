@@ -10,9 +10,9 @@ import (
 	"github.com/jreisinger/checkip/util"
 )
 
-// Check fills in data for a given IP address from virustotal API. It returns
+// Do fills in data for a given IP address from virustotal API. It returns
 // false if the IP address is considered malicious.
-func (vt *VirusTotal) Check(ipaddr net.IP) (bool, error) {
+func (vt *VirusTotal) Do(ipaddr net.IP) (bool, error) {
 	apiKey, err := util.GetConfigValue("VIRUSTOTAL_API_KEY")
 	if err != nil {
 		return false, fmt.Errorf("can't call API: %w", err)
@@ -60,7 +60,7 @@ func (vt *VirusTotal) Name() string {
 	return fmt.Sprint("VirusTotal")
 }
 
-// String returns the output of the check.
+// String returns the result of the check.
 func (vt *VirusTotal) String() string {
 	return fmt.Sprintf("scannners results: %d malicious, %d suspicious, %d harmless", vt.Data.Attributes.LastAnalysisStats.Malicious, vt.Data.Attributes.LastAnalysisStats.Suspicious, vt.Data.Attributes.LastAnalysisStats.Harmless)
 }

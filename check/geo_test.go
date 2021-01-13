@@ -24,7 +24,7 @@ func TestGeoCheck(t *testing.T) {
 	for _, tp := range testpairs {
 		g := &Geo{}
 		ip := net.ParseIP(tp.ip)
-		g.Check(ip)
+		g.Do(ip)
 		if g.Location[1] != tp.state {
 			t.Errorf("%s is expected to be in %s but is in %s", tp.ip, tp.state, g.Location[1])
 		}
