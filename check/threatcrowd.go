@@ -10,30 +10,21 @@ import (
 
 // https://github.com/AlienVault-OTX/ApiV2#votes
 var votesMeaning = map[int]string{
-	-1: "most users have voted this malicious",
-	0:  "equal number of users have voted this malicious and not malicious",
-	1:  "most users have voted this not malicious",
+	-1: "voted malicious",
+	0:  "voted neutral",
+	1:  "voted harmless",
 }
 
 // ThreatCrowd holds information about an IP address from
 // https://www.threatcrowd.org voting.
 type ThreatCrowd struct {
-	ResponseCode string `json:"response_code"`
-	Resolutions  []struct {
-		LastResolved string `json:"last_resolved"`
-		Domain       string `json:"domain"`
-	} `json:"resolutions"`
-	Hashes     []string      `json:"hashes"`
-	References []interface{} `json:"references"`
-	Votes      int           `json:"votes"`
-	Permalink  string        `json:"permalink"`
+	Votes int `json:"votes"`
 }
 
-// Do retrieves information about the IP address from the ThreatCrowd API. If
-// the IP address is voted malicious it returns false.
+// Do retrieves information about an IP address from the ThreatCrowd API:
+// https://www.threatcrowd.org/searchApi/v2/ip/report. If the IP address is
+// voted malicious it returns false.
 func (t *ThreatCrowd) Do(ipaddr net.IP) (bool, error) {
-	// curl https://www.threatcrowd.org/searchApi/v2/ip/report/?ip=188.40.75.132
-
 	baseURL, err := url.Parse("https://www.threatcrowd.org/searchApi/v2/ip/report")
 	if err != nil {
 		return false, err
