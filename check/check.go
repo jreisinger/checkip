@@ -20,12 +20,12 @@ func Run(chk Check, ipaddr net.IP, ch chan string) {
 	format := "%-11s %s\n"
 	ok, err := chk.Do(ipaddr)
 	if err != nil {
-		ch <- fmt.Sprintf(format, Gray(11, chk.Name()), Gray(11, err))
+		ch <- fmt.Sprintf(format, Gray(11, chk.Name()), err)
 		return
 	}
 	if ok {
 		ch <- fmt.Sprintf(format, chk.Name(), chk)
 	} else {
-		ch <- fmt.Sprintf(format, Magenta(chk.Name()), Magenta(chk))
+		ch <- fmt.Sprintf(format, Magenta(chk.Name()), chk)
 	}
 }
