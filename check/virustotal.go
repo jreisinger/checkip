@@ -10,8 +10,23 @@ import (
 	"github.com/jreisinger/checkip/util"
 )
 
-// Do fills in data for a given IP address from virustotal API. It returns
-// false if the IP address is considered malicious.
+// VirusTotal holds information about an IP address from https://developers.virustotal.com/v3.0/reference#ip-object
+type VirusTotal struct {
+	Data struct {
+		Attributes struct {
+			LastAnalysisStats struct {
+				Harmless   int `json:"harmless"`
+				Malicious  int `json:"malicious"`
+				Suspicious int `json:"suspicious"`
+				Timeout    int `json:"timeout"`
+				Undetected int `json:"undetected"`
+			} `json:"last_analysis_stats"`
+		} `json:"attributes"`
+	} `json:"data"`
+}
+
+// Do fills in data for a given IP address from virustotal API. It returns false
+// if the IP address is considered malicious or suspicious by some analysis.
 func (vt *VirusTotal) Do(ipaddr net.IP) (bool, error) {
 	apiKey, err := util.GetConfigValue("VIRUSTOTAL_API_KEY")
 	if err != nil {
@@ -62,5 +77,8 @@ func (vt *VirusTotal) Name() string {
 
 // String returns the result of the check.
 func (vt *VirusTotal) String() string {
-	return fmt.Sprintf("scannners results: %d malicious, %d suspicious, %d harmless", vt.Data.Attributes.LastAnalysisStats.Malicious, vt.Data.Attributes.LastAnalysisStats.Suspicious, vt.Data.Attributes.LastAnalysisStats.Harmless)
+	return fmt.Sprintf("analysis stats: %d malicious, %d suspicious, %d harmless",
+		vt.Data.Attributes.LastAnalysisStats.Malicious,
+		vt.Data.Attributes.LastAnalysisStats.Suspicious,
+		vt.Data.Attributes.LastAnalysisStats.Harmless)
 }
