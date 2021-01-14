@@ -14,11 +14,11 @@ import (
 
 // AS holds information about an Autonomous System.
 type AS struct {
+	Number      int
 	FirstIP     net.IP
 	LastIP      net.IP
-	CountryCode string
-	Number      int
 	Description string
+	CountryCode string
 }
 
 // Do fills in AS data for a given IP address. The data is taken from a TSV
