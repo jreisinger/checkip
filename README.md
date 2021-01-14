@@ -9,9 +9,9 @@ $ checkip 1.1.1.1
 AS          13335 | 1.1.1.0 - 1.1.1.255 | CLOUDFLARENET - Cloudflare, Inc. | US
 DNS         one.one.one.one.
 ThreatCrowd most users have voted this malicious
-AbuseIPDB   malicious with 0% confidence | cloudflare.com
+AbuseIPDB   reported malicious 8 times (32% confidence) | cloudflare.com | Content Delivery Network
 GEO         city unknown | Australia | AU
-VirusTotal  scannners results: 0 malicious, 0 suspicious, 82 harmless
+VirusTotal  analysis stats: 0 malicious, 2 suspicious, 87 harmless
 ```
 
 ## Features
