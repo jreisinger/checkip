@@ -5,13 +5,12 @@
 `checkip` is a CLI tool that finds out information about an IP address. 
 
 ```
-$ checkip 1.1.1.1
 AS          13335 | 1.1.1.0 - 1.1.1.255 | CLOUDFLARENET - Cloudflare, Inc. | US
 DNS         one.one.one.one.
-ThreatCrowd most users have voted this malicious
-AbuseIPDB   reported malicious 8 times (32% confidence) | cloudflare.com | Content Delivery Network
+ThreatCrowd voted malicious by most users
+AbuseIPDB   9 reports, 32% confidence | cloudflare.com | Content Delivery Network
 GEO         city unknown | Australia | AU
-VirusTotal  analysis results: 0 malicious, 2 suspicious, 87 harmless
+VirusTotal  0 malicious, 2 suspicious, 87 harmless analysis results
 ```
 
 ## Features
