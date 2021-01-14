@@ -10,9 +10,9 @@ import (
 
 // https://github.com/AlienVault-OTX/ApiV2#votes
 var votesMeaning = map[int]string{
-	-1: "voted malicious",
+	-1: "voted malicious by most users",
 	0:  "voted neutral",
-	1:  "voted harmless",
+	1:  "voted harmless by most users",
 }
 
 // ThreatCrowd holds information about an IP address from
