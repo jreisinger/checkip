@@ -61,7 +61,7 @@ func downloadFile(url string) (r io.ReadCloser, err error) {
 }
 
 // ExtractFile decompress r into filename. Supported compression formats are gz
-// and tgz.
+// and tgz. Empty string means no compression.
 func ExtractFile(filename string, r io.ReadCloser, compressFmt string) error {
 	switch compressFmt {
 	case "gz":
@@ -72,9 +72,29 @@ func ExtractFile(filename string, r io.ReadCloser, compressFmt string) error {
 		if err := extractTgzFile(filename, r); err != nil {
 			return err
 		}
+	case "":
+		if err := storeFile(filename, r); err != nil {
+			return err
+		}
 	default:
 		return fmt.Errorf("don't know ho to extract a %s file", compressFmt)
 	}
+	return nil
+}
+
+func storeFile(outFilename string, r io.ReadCloser) error {
+	defer r.Close() // let's close resp.Body
+
+	outFile, err := os.Create(outFilename)
+	if err != nil {
+		return nil
+	}
+	defer outFile.Close()
+
+	if _, err := io.Copy(outFile, r); err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -135,7 +155,7 @@ func extractTgzFile(outFile string, r io.ReadCloser) error {
 
 // Update updates file from url if the file is older than a week. If file does
 // not exist it downloads and creates it. compressFmt is the compression format
-// of the file to download; gz or tgz.
+// of the file to download; gz or tgz. Empty string means no compression.
 func Update(file, url string, compressFmt string) error {
 	f, err := os.Stat(file)
 
