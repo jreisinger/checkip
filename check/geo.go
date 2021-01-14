@@ -18,7 +18,7 @@ type Geo struct {
 func (g *Geo) Do(ip net.IP) (bool, error) {
 	licenseKey, err := util.GetConfigValue("GEOIP_LICENSE_KEY")
 	if err != nil {
-		return false, fmt.Errorf("getting licence key: %w", err)
+		return false, fmt.Errorf("can't download DB: %w", err)
 	}
 
 	file := "/var/tmp/GeoLite2-City.mmdb"
