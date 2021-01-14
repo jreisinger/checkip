@@ -51,13 +51,13 @@ func (ip *IPsum) search(ipaddr net.IP, tsvFile string) error {
 		if strings.HasPrefix(line, "#") { // skip comments
 			continue
 		}
-		fields := strings.Split(line, "\t")
-		if ipaddr.Equal(net.ParseIP(fields[0])) {
-			continue
-		}
-		ip.NumOfBlackists, err = strconv.Atoi(fields[1])
-		if err != nil {
-			return err
+		fields := strings.Fields(line)
+		if ipaddr.Equal(net.ParseIP(fields[0])) { // IP address found
+			ip.NumOfBlackists, err = strconv.Atoi(fields[1])
+			if err != nil {
+				return err
+			}
+			break
 		}
 	}
 	if s.Err() != nil {
