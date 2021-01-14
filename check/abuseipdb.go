@@ -6,7 +6,6 @@ import (
 	"net"
 	"net/http"
 	"net/url"
-	"time"
 
 	"github.com/jreisinger/checkip/util"
 )
@@ -14,33 +13,16 @@ import (
 // AbuseIPDB holds information about an IP address from abuseipdb.com database.
 type AbuseIPDB struct {
 	Data struct {
-		IPAddress            string        `json:"ipAddress"`
-		IsPublic             bool          `json:"isPublic"`
-		IPVersion            int           `json:"ipVersion"`
-		IsWhitelisted        bool          `json:"isWhitelisted"`
-		AbuseConfidenceScore int           `json:"abuseConfidenceScore"`
-		CountryCode          string        `json:"countryCode"`
-		UsageType            string        `json:"usageType"`
-		Isp                  string        `json:"isp"`
-		Domain               string        `json:"domain"`
-		Hostnames            []interface{} `json:"hostnames"`
-		CountryName          string        `json:"countryName"`
-		TotalReports         int           `json:"totalReports"`
-		NumDistinctUsers     int           `json:"numDistinctUsers"`
-		LastReportedAt       time.Time     `json:"lastReportedAt"`
-		Reports              []struct {
-			ReportedAt          time.Time `json:"reportedAt"`
-			Comment             string    `json:"comment"`
-			Categories          []int     `json:"categories"`
-			ReporterID          int       `json:"reporterId"`
-			ReporterCountryCode string    `json:"reporterCountryCode"`
-			ReporterCountryName string    `json:"reporterCountryName"`
-		} `json:"reports"`
+		AbuseConfidenceScore int    `json:"abuseConfidenceScore"`
+		UsageType            string `json:"usageType"`
+		Domain               string `json:"domain"`
+		TotalReports         int    `json:"totalReports"`
 	} `json:"data"`
 }
 
-// Do fills in AbuseIPDB data for a given IP address. See the AbuseIPDB API
-// documentation for more https://docs.abuseipdb.com/?shell#check-endpoint
+// Do fills in AbuseIPDB data for a given IP address. Its get the data from
+// https://api.abuseipdb.com/api/v2/check
+// (https://docs.abuseipdb.com/#check-endpoint).
 func (a *AbuseIPDB) Do(ipaddr net.IP) (bool, error) {
 	apiKey, err := util.GetConfigValue("ABUSEIPDB_API_KEY")
 	if err != nil {
@@ -80,7 +62,8 @@ func (a *AbuseIPDB) Do(ipaddr net.IP) (bool, error) {
 	if err := json.NewDecoder(resp.Body).Decode(a); err != nil {
 		return false, err
 	}
-	if a.Data.AbuseConfidenceScore > 0 {
+
+	if a.Data.AbuseConfidenceScore > 25 {
 		return false, nil
 	}
 
@@ -94,5 +77,6 @@ func (a *AbuseIPDB) Name() string {
 
 // String returns the result of the check.
 func (a *AbuseIPDB) String() string {
-	return fmt.Sprintf("malicious with %d%% confidence | %v", a.Data.AbuseConfidenceScore, a.Data.Domain)
+	return fmt.Sprintf("reported malicious %d times with %d%% confidence | %v | %v",
+		a.Data.TotalReports, a.Data.AbuseConfidenceScore, a.Data.Domain, a.Data.UsageType)
 }
