@@ -21,8 +21,9 @@ type AS struct {
 	CountryCode string
 }
 
-// Do fills in AS data for a given IP address. The data is taken from a TSV
-// file ip2asn-combined downloaded from iptoasn.com.
+// Do fills in AS data for a given IP address. The data is taken from a TSV file
+// ip2asn-combined downloaded from iptoasn.com. The ile is created or updated as
+// needed.
 func (a *AS) Do(ipaddr net.IP) (bool, error) {
 	file := "/var/tmp/ip2asn-combined.tsv"
 	url := "https://iptoasn.com/data/ip2asn-combined.tsv.gz"
