@@ -10,7 +10,8 @@ import (
 	"github.com/jreisinger/checkip/util"
 )
 
-// VirusTotal holds information about an IP address from https://developers.virustotal.com/v3.0/reference#ip-object
+// VirusTotal holds information about an IP address from virustotal.com. See
+// https://developers.virustotal.com/v3.0/reference#ip-object for details.
 type VirusTotal struct {
 	Data struct {
 		Attributes struct {
