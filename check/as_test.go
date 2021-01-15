@@ -5,27 +5,20 @@ import (
 	"testing"
 )
 
-func TestASNCheck(t *testing.T) {
-	type testpair struct {
-		ip          string
-		countryCode string
-		description string
-	}
-	testpairs := []testpair{
-		{"1.1.1.1", "US", "CLOUDFLARENET - Cloudflare, Inc."},
-		{"8.8.8.8", "US", "GOOGLE - Google LLC"},
-	}
-	for _, tp := range testpairs {
+func TestAS(t *testing.T) {
+	testIPs := []string{"1.1.1.1", "8.8.8.8"}
+	for _, ip := range testIPs {
 		a := &AS{}
-		ip := net.ParseIP(tp.ip)
+		ip := net.ParseIP(ip)
 		_, err := a.Do(ip)
-		if a.CountryCode != tp.countryCode || err != nil {
-			t.Errorf("country code for %s was expected to be '%s' but is '%s' with %v",
-				tp.ip, tp.countryCode, a.CountryCode, err)
+		if err != nil {
+			t.Errorf("checking %s: %v", ip, err)
 		}
-		if a.Description != tp.description || err != nil {
-			t.Errorf("description for %s was expected to be '%s' but is '%s' with %v",
-				tp.ip, tp.description, a.Description, err)
+		if a.CountryCode == "" {
+			t.Errorf("country code for %s is empty", ip)
+		}
+		if a.Description == "" {
+			t.Errorf("description for %s is empty", ip)
 		}
 	}
 }
