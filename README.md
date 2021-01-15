@@ -10,7 +10,7 @@ AS          13335 | 1.1.1.0 - 1.1.1.255 | CLOUDFLARENET - Cloudflare, Inc. | US
 DNS         one.one.one.one.
 ThreatCrowd voted malicious by most users
 IPsum       found on 1 blacklist
-OTX         threat score 2 | activities: Malicious Host - 1 | seen: 2020-06-01 - 2020-07-02
+OTX         threat score 3 | seen 2013-02-12 - 2018-08-08
 AbuseIPDB   9 reports, 32% confidence | cloudflare.com | Content Delivery Network
 GEO         city unknown | Australia | AU
 VirusTotal  0 malicious, 2 suspicious, 87 harmless analysis results
@@ -29,7 +29,7 @@ Currently these types of information are provided:
 * DNS name using [net.LookupAddr](https://golang.org/pkg/net/#LookupAddr) Go function.
 * [ThreatCrowd](https://www.threatcrowd.org/) voting about whether the IP address is malicious.
 * Blacklists the IP address is found on according to [IPsum](https://github.com/stamparm/ipsum).
-* Threat reputation from [OTX API](https://otx.alienvault.com/api).
+* Threat score from [OTX API](https://otx.alienvault.com/api).
 ---
 * [AbuseIPDB](https://www.abuseipdb.com) reports that the IP address is malicious. You need to [register](https://www.abuseipdb.com/register?plan=free) to get the API key (it's free).
 * GEOgraphic location using [GeoLite2 City database](https://dev.maxmind.com/geoip/geoip2/geolite2/) file. You need to [register](https://dev.maxmind.com/geoip/geoip2/geolite2/#Download_Access) to get the license key (it's free).

@@ -7,17 +7,15 @@ import (
 	"net"
 	"net/http"
 	"net/url"
-	"strings"
 	"time"
 )
 
 // OTX holds IP address reputation data from otx.alienvault.com.
 type OTX struct {
 	Reputation struct {
-		ThreatScore int         `json:"threat_score"`
-		Counts      interface{} `json:"counts"`
-		FirstSeen   string      `json:"first_seen"`
-		LastSeen    string      `json:"last_seen"`
+		ThreatScore int    `json:"threat_score"`
+		FirstSeen   string `json:"first_seen"`
+		LastSeen    string `json:"last_seen"`
 	} `json:"reputation"`
 }
 
@@ -63,21 +61,17 @@ func (otx *OTX) Name() string {
 
 // String returns the result of the check.
 func (otx *OTX) String() string {
-	counts := otx.Reputation.Counts.(map[string]interface{})
-	var activities []string
-	for activity, n := range counts {
-		activities = append(activities, activity+" - "+fmt.Sprint(n))
-	}
-
-	return fmt.Sprintf("threat score %d | activities: %s | seen: %s - %s",
+	return fmt.Sprintf("threat score %d | seen %s - %s",
 		otx.Reputation.ThreatScore,
-		strings.Join(activities, ", "),
 		parseTime(otx.Reputation.FirstSeen),
 		parseTime(otx.Reputation.LastSeen),
 	)
 }
 
 func parseTime(value string) string {
+	if value == "" {
+		return "n/a"
+	}
 	inlayout := "2006-01-02T15:04:05"
 	outlayout := "2006-01-02"
 	t, err := time.Parse(inlayout, value)
