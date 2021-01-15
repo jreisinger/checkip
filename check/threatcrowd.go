@@ -11,7 +11,7 @@ import (
 // https://github.com/AlienVault-OTX/ApiV2#votes
 var votesMeaning = map[int]string{
 	-1: "voted malicious by most users",
-	0:  "voted neutral",
+	0:  "voted malicious/harmless by equal number of users",
 	1:  "voted harmless by most users",
 }
 
