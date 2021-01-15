@@ -9,7 +9,7 @@ import (
 	"github.com/oschwald/geoip2-golang"
 )
 
-// Geo holds geographic location from MaxMind's GeoIP database.
+// Geo holds geographic position of an IP address from MaxMind's GeoIP database.
 type Geo struct {
 	Location []string
 }
@@ -62,7 +62,7 @@ func (g *Geo) Do(ip net.IP) (bool, error) {
 
 // Name returns the name of the check.
 func (g *Geo) Name() string {
-	return fmt.Sprint("GEO")
+	return fmt.Sprint("Geolocation")
 }
 
 // String returns the result of the check.
