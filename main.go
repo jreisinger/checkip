@@ -30,6 +30,7 @@ func main() {
 		&check.Geo{},
 		&check.VirusTotal{},
 		&check.IPsum{},
+		&check.OTX{},
 	}
 	for _, chk := range checks {
 		go check.Run(chk, ipaddr, ch)
