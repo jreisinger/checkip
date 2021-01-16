@@ -21,17 +21,15 @@ Download the latest [release](https://github.com/jreisinger/checkip/releases)
 for your operating system and architecture. Copy it to your `bin` folder (or
 some other folder on your `PATH`) and make it executable.
 
+Or the same spelled out in Bash:
+
 ```
-# Choose your system and architecture.
 export SYS=linux  # or darwin
 export ARCH=amd64
-
 export REPO=checkip
 export REPOURL=https://github.com/jreisinger/$REPO
-
-# Download the binary and make it executable.
-curl -L $REPOURL/releases/latest/download/checkip-$SYS-$ARCH -o ~/bin/checkip
-chmod u+x ~/bin/checkip
+curl -L $REPOURL/releases/latest/download/$REPO-$SYS-$ARCH -o $HOME/bin/$REPO
+chmod u+x ~/bin/$REPO
 ```
 
 ## Features
