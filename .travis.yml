@@ -16,7 +16,6 @@ env:
   - VERSION="0.$TRAVIS_BUILD_NUMBER"
 
 script:
-  - "make test"
   - "VERSION=$VERSION make release"
 
 before_deploy:
