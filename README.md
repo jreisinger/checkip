@@ -46,12 +46,10 @@ You can store LICENSE/API keys in `~/.checkip.yaml` or in environment variables.
 ```
 vim main.go
 make install # version defaults to "dev" if VERSION envvar is not set
-
-make release # you'll find releases in releases/ directory
 ```
 
-Builds are done inside Docker container. When you push to GitHub Travis CI will
-try and build a release for you and publish it on GitHub.
+When you push to GitHub Travis CI will try and build a release for you and
+publish it on GitHub. (Builds are done inside Docker container.)
 
 Check test coverage:
 
