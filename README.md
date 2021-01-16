@@ -32,27 +32,27 @@ curl -L $REPOURL/releases/latest/download/$REPO-$SYS-$ARCH -o $HOME/bin/$REPO
 chmod u+x ~/bin/$REPO
 ```
 
+For some checks (see below) to work you need a LICENSE/API key in `~/.checkip.yaml` or in environment variables.
+
 ## Features
 
 * Easy to install since it's a single binary.
-* Necessary files (AS, GEO, IPsum) are automatically downloaded and updated in the background.
+* Necessary files are automatically downloaded and updated in the background.
 * Checks are done concurrently to save time.
 * Output is colored to improve readability.
 * It's easy to add new checks.
 
 Currently these types of information are provided:
 
-* AS data using TSV file from [iptoasn](https://iptoasn.com/).
-* DNS name using [net.LookupAddr](https://golang.org/pkg/net/#LookupAddr) Go function.
+* Autonomous system (AS) data using TSV file from [iptoasn](https://iptoasn.com/).
+* DNS names using [net.LookupAddr](https://golang.org/pkg/net/#LookupAddr) Go function.
 * [ThreatCrowd](https://www.threatcrowd.org/) voting about whether the IP address is malicious.
-* Blacklists the IP address is found on according to [IPsum](https://github.com/stamparm/ipsum).
-* Threat score from [OTX API](https://otx.alienvault.com/api).
+* Blacklists the IP address is found on according to [IPsum](https://github.com/stamparm/ipsum) file.
+* Threat score from [OTX](https://otx.alienvault.com/).
 ---
 * [AbuseIPDB](https://www.abuseipdb.com) reports that the IP address is malicious. You need to [register](https://www.abuseipdb.com/register?plan=free) to get the API key (it's free).
-* GEOgraphic location using [GeoLite2 City database](https://dev.maxmind.com/geoip/geoip2/geolite2/) file. You need to [register](https://dev.maxmind.com/geoip/geoip2/geolite2/#Download_Access) to get the license key (it's free).
+* Geographic location using [GeoLite2 City database](https://dev.maxmind.com/geoip/geoip2/geolite2/) file. You need to [register](https://dev.maxmind.com/geoip/geoip2/geolite2/#Download_Access) to get the license key (it's free).
 * [VirusTotal](https://developers.virustotal.com/v3.0/reference#ip-object) analysis results. You need to [register](https://www.virustotal.com/gui/join-us) to to get the API key (it's free).
-
-You can store LICENSE/API keys in `~/.checkip.yaml` or in environment variables.
 
 ## Development
 
