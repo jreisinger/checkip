@@ -60,9 +60,9 @@ func downloadFile(url string) (r io.ReadCloser, err error) {
 	return resp.Body, nil
 }
 
-// ExtractFile decompress r into filename. Supported compression formats are gz
+// extractFile decompress r into filename. Supported compression formats are gz
 // and tgz. Empty string means no compression.
-func ExtractFile(filename string, r io.ReadCloser, compressFmt string) error {
+func extractFile(filename string, r io.ReadCloser, compressFmt string) error {
 	switch compressFmt {
 	case "gz":
 		if err := extractGzFile(filename, r); err != nil {
@@ -164,7 +164,7 @@ func Update(file, url string, compressFmt string) error {
 		if err != nil {
 			return err
 		}
-		if err := ExtractFile(file, r, compressFmt); err != nil {
+		if err := extractFile(file, r, compressFmt); err != nil {
 			return err
 		}
 
@@ -176,7 +176,7 @@ func Update(file, url string, compressFmt string) error {
 		if err != nil {
 			return err
 		}
-		if err := ExtractFile(file, r, compressFmt); err != nil {
+		if err := extractFile(file, r, compressFmt); err != nil {
 			return err
 		}
 	}
