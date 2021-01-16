@@ -15,9 +15,13 @@ AbuseIPDB   23 reports, 46% confidence | cloudflare.com | Content Delivery Netwo
 Geolocation city unknown | Australia | AU
 VirusTotal  0 malicious, 1 suspicious, 89 harmless analysis results
 ```
+## Installation
+
+Download the latest [release](https://github.com/jreisinger/checkip/releases) for your operating system and architecture.
 
 ## Features
 
+* Easy to install since it's a single binary.
 * Necessary files (AS, GEO, IPsum) are automatically downloaded and updated in the background.
 * Checks are done concurrently to save time.
 * Output is colored to improve readability.
@@ -36,10 +40,6 @@ Currently these types of information are provided:
 * [VirusTotal](https://developers.virustotal.com/v3.0/reference#ip-object) analysis results. You need to [register](https://www.virustotal.com/gui/join-us) to to get the API key (it's free).
 
 You can store LICENSE/API keys in `~/.checkip.yaml` or in environment variables.
-
-## Installation
-
-Download the latest [release](https://github.com/jreisinger/checkip/releases) for your operating system and architecture. Or clone the repo and run `make install`.
 
 ## Development
 
