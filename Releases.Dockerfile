@@ -7,8 +7,5 @@ RUN go test ./...
 RUN mkdir /releases
 
 ARG version=dev
-RUN GOOS=linux GOARCH=amd64 go build -ldflags "-X main.Version=$version" -o /releases/checkip
-RUN rm /releases/checkip
-
-RUN GOOS=darwin GOARCH=amd64 go build -ldflags "-X main.Version=$version" -o /releases/checkip
-RUN rm /releases/checkip
+RUN GOOS=linux GOARCH=amd64 go build -ldflags "-X main.Version=$version" -o /releases/checkip_linux_amd64
+RUN GOOS=darwin GOARCH=amd64 go build -ldflags "-X main.Version=$version" -o /releases/checkip_darwin_amd64

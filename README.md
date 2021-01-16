@@ -49,7 +49,8 @@ make install # version defaults to "dev" if VERSION envvar is not set
 ```
 
 When you push to GitHub Travis CI will try and build a release for you and
-publish it on GitHub. (Builds are done inside Docker container.)
+publish it on GitHub. (Builds are done inside Docker container. To build a
+release locally: `make release`)
 
 Check test coverage:
 
