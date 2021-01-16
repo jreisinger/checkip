@@ -17,15 +17,20 @@ VirusTotal  0 malicious, 1 suspicious, 89 harmless analysis results
 ```
 ## Installation
 
-Download the latest [release](https://github.com/jreisinger/checkip/releases) to your `bin` folder (or some other folder on your `PATH`) and make it executable:
+Download the latest [release](https://github.com/jreisinger/checkip/releases)
+for your operating system and architecture. Copy it to your `bin` folder (or
+some other folder on your `PATH`) and make it executable.
 
 ```
 # Choose your system and architecture.
 export SYS=linux  # or darwin
 export ARCH=amd64
 
+export REPO=checkip
+export REPOURL=https://github.com/jreisinger/$REPO
+
 # Download the binary and make it executable.
-curl -L https://github.com/jreisinger/checkip/releases/latest/download/checkip_${SYS}_${ARCH} -o ~/bin/checkip
+curl -L $REPOURL/releases/latest/download/checkip-$SYS-$ARCH -o ~/bin/checkip
 chmod u+x ~/bin/checkip
 ```
 

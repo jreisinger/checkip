@@ -27,6 +27,6 @@ deploy:
   provider: releases
   api_key: $GITHUB_TOKEN
   file:
-    - "releases/checkip_linux_amd64"
-    - "releases/checkip_darwin_amd64"
+    - "releases/checkip-linux-amd64"
+    - "releases/checkip-darwin-amd64"
   skip_cleanup: true
