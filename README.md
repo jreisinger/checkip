@@ -21,7 +21,7 @@ Download the latest [release](https://github.com/jreisinger/checkip/releases)
 for your operating system and architecture. Copy it to your `bin` folder (or
 some other folder on your `PATH`) and make it executable.
 
-Or the same spelled out in Bash:
+The same spelled out in Bash:
 
 ```
 export SYS=linux  # or darwin
