@@ -17,8 +17,6 @@ VirusTotal  0 malicious, 1 suspicious, 89 harmless analysis results
 ```
 ## Installation
 
-Download the latest [release](https://github.com/jreisinger/checkip/releases) for your operating system and architecture.
-
 Download the latest [release](https://github.com/jreisinger/runp/releases) to your `bin` folder (or some other folder on your `PATH`) and make it executable:
 
 ```
