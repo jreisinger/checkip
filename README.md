@@ -15,9 +15,9 @@ AbuseIPDB   23 reports, 46% confidence | cloudflare.com | Content Delivery Netwo
 Geolocation city unknown | Australia | AU
 VirusTotal  0 malicious, 1 suspicious, 89 harmless analysis results
 
-$ checkip -check geo,dns 1.1.1.1
-Geolocation city unknown | Australia | AU
+$ checkip -check dns,otx 1.1.1.1
 DNS name    one.one.one.one.
+OTX         threat score 0 | seen n/a - n/a
 ```
 ## Installation
 
