@@ -6,7 +6,7 @@
 
 ```
 $ checkip 1.1.1.1
-AS info     13335 | 1.1.1.0 - 1.1.1.255 | CLOUDFLARENET - Cloudflare, Inc. | US
+AS          13335 | 1.1.1.0 - 1.1.1.255 | CLOUDFLARENET - Cloudflare, Inc. | US
 DNS name    one.one.one.one.
 ThreatCrowd voted malicious by most users
 IPsum       found on 0 blacklists

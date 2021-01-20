@@ -66,14 +66,26 @@ func (a *checksToRun) String() string {
 func (a *checksToRun) Set(value string) error {
 	checks := strings.Split(value, ",")
 	for _, chk := range checks {
-		chk = strings.TrimSpace(chk)
-		_, ok := availableChecks[chk]
+		name, ok := isAvailable(chk)
 		if !ok {
 			log.Fatalf("unknown check: %s\n", chk)
 		}
-		*a = append(*a, availableChecks[chk])
+		*a = append(*a, availableChecks[name])
 	}
 	return nil
+}
+
+func isAvailable(check string) (string, bool) {
+	check = strings.TrimSpace(check)
+	check = strings.ToLower(check)
+
+	for chk := range availableChecks {
+		if strings.HasPrefix(chk, check) {
+			return chk, true
+		}
+	}
+
+	return "", false
 }
 
 func boolValue(v *bool) bool {
