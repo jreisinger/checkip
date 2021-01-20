@@ -23,9 +23,9 @@ type Flags struct {
 func ParseFlags() (Flags, error) {
 	f := flag.NewFlagSet(os.Args[0], flag.ContinueOnError)
 
-	Version := f.Bool("version", false, "version")
+	Version := f.Bool("version", false, "print version")
 	var ChecksToRun checksToRun
-	f.Var(&ChecksToRun, "checks", "run only selected `checks`")
+	f.Var(&ChecksToRun, "check", "run only selected check(s): `check[,...]`")
 
 	f.Usage = func() {
 		fmt.Fprintf(flag.CommandLine.Output(), "%s [flags] <ipaddr>\n", os.Args[0])
