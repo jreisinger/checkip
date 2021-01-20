@@ -14,6 +14,10 @@ OTX         threat score 0 | seen n/a - n/a
 AbuseIPDB   23 reports, 46% confidence | cloudflare.com | Content Delivery Network
 Geolocation city unknown | Australia | AU
 VirusTotal  0 malicious, 1 suspicious, 89 harmless analysis results
+
+$ checkip -check geo,dns 1.1.1.1
+Geolocation city unknown | Australia | AU
+DNS name    one.one.one.one.
 ```
 ## Installation
 
@@ -40,6 +44,7 @@ For some checks (see below) to work you need a LICENSE/API key in `~/.checkip.ya
 * Necessary files are automatically downloaded and updated in the background.
 * Checks are done concurrently to save time.
 * Output is colored to improve readability.
+* You can run only selected check(s).
 * It's easy to add new checks.
 
 Currently these types of information are provided:
