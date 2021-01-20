@@ -11,15 +11,15 @@ import (
 // Version is the default version of checkip.
 var Version = "dev"
 
-var availableChecks = map[string]check.Check{
-	"as":          &check.AS{},
-	"dns":         &check.DNS{},
-	"threatcrowd": &check.ThreatCrowd{},
-	"abusedb":     &check.AbuseIPDB{},
-	"geo":         &check.Geo{},
-	"virustotal":  &check.VirusTotal{},
-	"ipsum":       &check.IPsum{},
-	"otx":         &check.OTX{},
+var availableChecks = []check.Check{
+	&check.AbuseIPDB{},
+	&check.AS{},
+	&check.DNS{},
+	&check.Geo{},
+	&check.IPsum{},
+	&check.OTX{},
+	&check.ThreatCrowd{},
+	&check.VirusTotal{},
 }
 
 func main() {
@@ -38,7 +38,7 @@ func main() {
 
 	checks := flags.ChecksToRun
 
-	// No -checks means run all available checks.
+	// No -checks flag means run all available checks.
 	if len(checks) == 0 {
 		for _, chk := range availableChecks {
 			checks = append(checks, chk)

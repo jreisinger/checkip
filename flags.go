@@ -64,28 +64,28 @@ func (a *checksToRun) String() string {
 }
 
 func (a *checksToRun) Set(value string) error {
-	checks := strings.Split(value, ",")
-	for _, chk := range checks {
-		name, ok := isAvailable(chk)
+	requestedCheckNames := strings.Split(value, ",")
+	for _, reqChkName := range requestedCheckNames {
+		chk, ok := isAvailable(reqChkName)
 		if !ok {
-			log.Fatalf("unknown check: %s\n", chk)
+			log.Fatalf("unknown check: %s\n", reqChkName)
 		}
-		*a = append(*a, availableChecks[name])
+		*a = append(*a, chk)
 	}
 	return nil
 }
 
-func isAvailable(check string) (string, bool) {
-	check = strings.TrimSpace(check)
-	check = strings.ToLower(check)
+func isAvailable(checkName string) (check.Check, bool) {
+	checkName = strings.TrimSpace(checkName)
+	checkName = strings.ToLower(checkName)
 
-	for chk := range availableChecks {
-		if strings.HasPrefix(chk, check) {
+	for _, chk := range availableChecks {
+		if strings.HasPrefix(strings.ToLower(chk.Name()), checkName) {
 			return chk, true
 		}
 	}
 
-	return "", false
+	return nil, false
 }
 
 func boolValue(v *bool) bool {
