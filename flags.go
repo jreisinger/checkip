@@ -65,13 +65,13 @@ func (a *checksToRun) String() string {
 
 func (a *checksToRun) Set(value string) error {
 	checks := strings.Split(value, ",")
-	for i := range checks {
-		checks[i] = strings.TrimSpace(checks[i])
-		_, ok := availableChecks[checks[i]]
+	for _, chk := range checks {
+		chk = strings.TrimSpace(chk)
+		_, ok := availableChecks[chk]
 		if !ok {
-			log.Fatalf("unknown check: %s\n", checks[i])
+			log.Fatalf("unknown check: %s\n", chk)
 		}
-		*a = append(*a, availableChecks[checks[i]])
+		*a = append(*a, availableChecks[chk])
 	}
 	return nil
 }
