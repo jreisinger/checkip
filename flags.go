@@ -56,7 +56,7 @@ func ParseFlags() (Flags, error) {
 }
 
 // checksToRun can be used multiple times and can take multiple values separated
-// by a comma
+// by a comma. It contains the checks to run selected via -check.
 type checksToRun []check.Check
 
 func (a *checksToRun) String() string {
