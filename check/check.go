@@ -29,3 +29,18 @@ func Run(chk Check, ipaddr net.IP, ch chan string) {
 		ch <- fmt.Sprintf(format, Magenta(chk.Name()), chk)
 	}
 }
+
+// GetAvailable returns all available checks.
+func GetAvailable() []Check {
+	availableChecks := []Check{
+		&AbuseIPDB{},
+		&AS{},
+		&DNS{},
+		&Geo{},
+		&IPsum{},
+		&OTX{},
+		&ThreatCrowd{},
+		&VirusTotal{},
+	}
+	return availableChecks
+}

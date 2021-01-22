@@ -79,7 +79,7 @@ func isAvailable(checkName string) (check.Check, bool) {
 	checkName = strings.TrimSpace(checkName)
 	checkName = strings.ToLower(checkName)
 
-	for _, chk := range availableChecks {
+	for _, chk := range check.GetAvailable() {
 		if strings.HasPrefix(strings.ToLower(chk.Name()), checkName) {
 			return chk, true
 		}

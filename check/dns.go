@@ -23,11 +23,7 @@ func (d *DNS) Do(ipaddr net.IP) (bool, error) {
 
 // Name returns the name of the check.
 func (d *DNS) Name() string {
-	name := "DNS name"
-	if len(d.Names) > 1 {
-		name += "s"
-	}
-	return fmt.Sprint(name)
+	return fmt.Sprint("DNS")
 }
 
 // String returns the result of the check.

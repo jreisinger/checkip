@@ -61,7 +61,7 @@ You can also use environment variables with the same names as in the config file
 
 Currently these checks (types of information) are available:
 
-* Autonomous system (AS) data using TSV file from [iptoasn](https://iptoasn.com/).
+* AS (Autonomous System) data using TSV file from [iptoasn](https://iptoasn.com/).
 * DNS names using [net.LookupAddr](https://golang.org/pkg/net/#LookupAddr) Go function.
 * [ThreatCrowd](https://www.threatcrowd.org/) voting about whether the IP address is malicious.
 * Blacklists the IP address is found on according to [IPsum](https://github.com/stamparm/ipsum) file.

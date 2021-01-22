@@ -11,17 +11,6 @@ import (
 // Version is the default version of checkip.
 var Version = "dev"
 
-var availableChecks = []check.Check{
-	&check.AbuseIPDB{},
-	&check.AS{},
-	&check.DNS{},
-	&check.Geo{},
-	&check.IPsum{},
-	&check.OTX{},
-	&check.ThreatCrowd{},
-	&check.VirusTotal{},
-}
-
 func main() {
 	log.SetPrefix(os.Args[0] + ": ") // prefix program name
 	log.SetFlags(0)                  // no timestamp in error messages
@@ -40,7 +29,7 @@ func main() {
 
 	// No -checks flag means run all available checks.
 	if len(checks) == 0 {
-		for _, chk := range availableChecks {
+		for _, chk := range check.GetAvailable() {
 			checks = append(checks, chk)
 		}
 	}
