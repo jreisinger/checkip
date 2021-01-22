@@ -74,6 +74,10 @@ func (a *checksToRun) Set(value string) error {
 }
 
 func isAvailable(checkName string) (check.Check, bool) {
+	if checkName == "" {
+		return nil, false
+	}
+
 	checkName = strings.TrimSpace(checkName)
 	checkName = strings.ToLower(checkName)
 
