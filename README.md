@@ -28,12 +28,12 @@ some other folder on your `PATH`) and make it executable.
 The same spelled out in Bash:
 
 ```
-export SYS=linux  # or darwin
+export SYS=linux # or darwin
 export ARCH=amd64
 export REPO=checkip
 export REPOURL=https://github.com/jreisinger/$REPO
 curl -L $REPOURL/releases/latest/download/$REPO-$SYS-$ARCH -o $HOME/bin/$REPO
-chmod u+x ~/bin/$REPO
+chmod u+x $HOME/bin/$REPO
 ```
 
 ## Config File
@@ -53,13 +53,13 @@ You can also use environment variables with the same names as in the config file
 ## Features
 
 * Easy to install since it's a single binary.
-* Necessary files are automatically downloaded and updated in the background.
+* Files necessary for some checks are automatically downloaded and updated in the background.
 * Checks are done concurrently to save time.
 * Output is colored to improve readability.
-* You can run only selected check(s).
+* You can select which checks you want to run.
 * It's easy to add new checks.
 
-Currently these types of information are provided:
+Currently these checks (types of information) are available:
 
 * Autonomous system (AS) data using TSV file from [iptoasn](https://iptoasn.com/).
 * DNS names using [net.LookupAddr](https://golang.org/pkg/net/#LookupAddr) Go function.
