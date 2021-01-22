@@ -7,7 +7,7 @@
 ```
 $ checkip 1.1.1.1
 AS          13335 | 1.1.1.0 - 1.1.1.255 | CLOUDFLARENET - Cloudflare, Inc. | US
-DNS name    one.one.one.one.
+DNS         one.one.one.one.
 ThreatCrowd voted malicious by most users
 IPsum       found on 0 blacklists
 OTX         threat score 0 | seen n/a - n/a
@@ -16,7 +16,7 @@ Geolocation city unknown | Australia | AU
 VirusTotal  0 malicious, 1 suspicious, 89 harmless analysis results
 
 $ checkip -check dns,otx 1.1.1.1
-DNS name    one.one.one.one.
+DNS         one.one.one.one.
 OTX         threat score 0 | seen n/a - n/a
 ```
 ## Installation

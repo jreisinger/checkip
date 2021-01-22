@@ -62,7 +62,7 @@ func (g *Geo) Do(ip net.IP) (bool, error) {
 
 // Name returns the name of the check.
 func (g *Geo) Name() string {
-	return fmt.Sprint("Geo")
+	return fmt.Sprint("Geolocation")
 }
 
 // String returns the result of the check.
