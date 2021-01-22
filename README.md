@@ -36,7 +36,19 @@ curl -L $REPOURL/releases/latest/download/$REPO-$SYS-$ARCH -o $HOME/bin/$REPO
 chmod u+x ~/bin/$REPO
 ```
 
-For some checks (see below) to work you need a LICENSE/API key in `~/.checkip.yaml` or in environment variables.
+## Config File
+
+For some checks (see below) to work you need to register and get a
+LICENSE/API key. Then create a `$HOME/.checkip.yaml` using your editor of
+choice. Provide your API/license keys using the following template:
+
+```
+ABUSEIPDB_API_KEY: aaaaaaaabbbbbbbbccccccccddddddddeeeeeeeeffffffff11111111222222223333333344444444
+GEOIP_LICENSE_KEY: abcdef1234567890
+VIRUSTOTAL_API_KEY: aaaaaaaabbbbbbbbccccccccddddddddeeeeeeeeffffffff1111111122222222
+```
+
+You can also use environment variables with the same names as in the config file.
 
 ## Features
 
@@ -58,16 +70,6 @@ Currently these types of information are provided:
 * [AbuseIPDB](https://www.abuseipdb.com) reports that the IP address is malicious. You need to [register](https://www.abuseipdb.com/register?plan=free) to get the API key (it's free).
 * Geographic location using [GeoLite2 City database](https://dev.maxmind.com/geoip/geoip2/geolite2/) file. You need to [register](https://dev.maxmind.com/geoip/geoip2/geolite2/#Download_Access) to get the license key (it's free).
 * [VirusTotal](https://developers.virustotal.com/v3.0/reference#ip-object) analysis results. You need to [register](https://www.virustotal.com/gui/join-us) to to get the API key (it's free).
-
-## Config File
-If you have registered with any of the above third party services, create a
-`~/.checkip.yaml` using your editor of choice. Provide your API/license keys
-using the following template:
-```
-ABUSEIPDB_API_KEY: aaaaaaaabbbbbbbbccccccccddddddddeeeeeeeeffffffff11111111222222223333333344444444
-GEOIP_LICENSE_KEY: abcdef1234567890
-VIRUSTOTAL_API_KEY: aaaaaaaabbbbbbbbccccccccddddddddeeeeeeeeffffffff1111111122222222
-```
 
 ## Development
 
