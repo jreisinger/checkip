@@ -13,7 +13,7 @@ var Version = "dev"
 
 func main() {
 	log.SetPrefix(os.Args[0] + ": ") // prefix program name
-	log.SetFlags(0)                  // no timestamp in error messages
+	log.SetFlags(0)                  // no timestamp
 
 	flags, err := ParseFlags()
 	if err != nil {
@@ -25,20 +25,17 @@ func main() {
 		os.Exit(0)
 	}
 
-	checks := flags.ChecksToRun
+	checks := check.GetAvailable()
 
-	// No -checks flag means run all available checks.
-	if len(checks) == 0 {
-		for _, chk := range check.GetAvailable() {
-			checks = append(checks, chk)
-		}
+	if len(flags.ChecksToRun) > 0 {
+		checks = flags.ChecksToRun
 	}
 
-	ch := make(chan string)
+	chn := make(chan string)
 	for _, chk := range checks {
-		go check.Run(chk, flags.IPaddr, ch)
+		go check.Run(chk, flags.IPaddr, chn)
 	}
 	for range checks {
-		fmt.Print(<-ch)
+		fmt.Print(<-chn)
 	}
 }
