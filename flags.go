@@ -11,8 +11,7 @@ import (
 	"github.com/jreisinger/checkip/check"
 )
 
-// Flags are all the available CLI flags (options). I use a struct instead of
-// separate variables to keep all flags in one place.
+// Flags are all the available CLI flags (including arguments).
 type Flags struct {
 	Version     bool
 	ChecksToRun checksToRun
@@ -21,11 +20,12 @@ type Flags struct {
 
 // ParseFlags validates the flags and parses them into Flags.
 func ParseFlags() (Flags, error) {
+	var flags Flags
+
 	f := flag.NewFlagSet(os.Args[0], flag.ContinueOnError)
 
-	Version := f.Bool("version", false, "print version")
-	var ChecksToRun checksToRun
-	f.Var(&ChecksToRun, "check", "run only selected check(s): `check[,...]`")
+	f.BoolVar(&flags.Version, "version", false, "print version")
+	f.Var(&flags.ChecksToRun, "check", "run `check[,...]` instead of all checks")
 
 	f.Usage = func() {
 		fmt.Fprintf(flag.CommandLine.Output(), "%s [flags] <ipaddr>\n", os.Args[0])
@@ -34,22 +34,20 @@ func ParseFlags() (Flags, error) {
 
 	err := f.Parse(os.Args[1:])
 	if err != nil {
-		return Flags{}, err
+		return flags, err
+	}
+
+	if flags.Version {
+		return flags, nil
 	}
 
 	if len(f.Args()) == 0 {
-		return Flags{}, fmt.Errorf("missing IP address to check")
+		return flags, fmt.Errorf("missing IP address to check")
 	}
 
-	IPaddr := net.ParseIP(f.Args()[0])
-	if IPaddr == nil {
-		return Flags{}, fmt.Errorf("invalid IP address: %v", f.Args()[0])
-	}
-
-	flags := Flags{
-		Version:     boolValue(Version),
-		ChecksToRun: ChecksToRun,
-		IPaddr:      IPaddr,
+	flags.IPaddr = net.ParseIP(f.Args()[0])
+	if flags.IPaddr == nil {
+		return flags, fmt.Errorf("invalid IP address: %v", f.Args()[0])
 	}
 
 	return flags, err
@@ -86,11 +84,4 @@ func isAvailable(checkName string) (check.Check, bool) {
 	}
 
 	return nil, false
-}
-
-func boolValue(v *bool) bool {
-	if !*v {
-		return false
-	}
-	return *v
 }
