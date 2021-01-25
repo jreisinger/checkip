@@ -82,7 +82,7 @@ func (vt *VirusTotal) Name() string {
 
 // String returns the result of the check.
 func (vt *VirusTotal) String() string {
-	return fmt.Sprintf("%d malicious, %d harmless analysis results | %d malicious, %d harmless community votes",
+	return fmt.Sprintf("%d malicious, %d harmless analysis results | %d malicious, %d harmless votes",
 		vt.Data.Attributes.LastAnalysisStats.Malicious,
 		vt.Data.Attributes.LastAnalysisStats.Harmless,
 		vt.Data.Attributes.TotalVotes.Malicious,

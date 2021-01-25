@@ -10,14 +10,14 @@ AS          13335 | 1.1.1.0 - 1.1.1.255 | CLOUDFLARENET - Cloudflare, Inc. | US
 DNS         one.one.one.one.
 ThreatCrowd voted malicious by most users
 IPsum       found on 0 blacklists
-OTX         threat score 0 | seen n/a - n/a
-AbuseIPDB   23 reports, 46% confidence | cloudflare.com | Content Delivery Network
+OTX         threat score 0 | seen date unknown - date unknown
+AbuseIPDB   165 reports, 89% confidence | cloudflare.com | Content Delivery Network
 Geolocation city unknown | Australia | AU
-VirusTotal  0 malicious, 1 suspicious, 89 harmless analysis results
+VirusTotal  0 malicious, 89 harmless analysis results | 5 malicious, 19 harmless votes
 
 $ checkip -check dns,otx 1.1.1.1
 DNS         one.one.one.one.
-OTX         threat score 0 | seen n/a - n/a
+OTX         threat score 0 | seen date unknown - date unknown
 ```
 ## Installation
 
