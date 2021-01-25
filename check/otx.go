@@ -80,7 +80,7 @@ func (otx *OTX) String() string {
 
 func parseTime(value string) string {
 	if value == "" {
-		return "n/a"
+		return "date unknown"
 	}
 	inlayout := "2006-01-02T15:04:05"
 	outlayout := "2006-01-02"
