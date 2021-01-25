@@ -71,7 +71,7 @@ func (otx *OTX) String() string {
 		}
 	}
 
-	return fmt.Sprintf("threat score %d | seen %s - %s",
+	return fmt.Sprintf("threat score %d (seen %s - %s)",
 		otx.Reputation.ThreatScore,
 		parseTime(otx.Reputation.FirstSeen),
 		parseTime(otx.Reputation.LastSeen),
