@@ -22,6 +22,10 @@ type VirusTotal struct {
 				Timeout    int `json:"timeout"`
 				Undetected int `json:"undetected"`
 			} `json:"last_analysis_stats"`
+			TotalVotes struct {
+				Harmless  int
+				Malicious int
+			} `json:"total_votes"`
 		} `json:"attributes"`
 	} `json:"data"`
 }
@@ -64,7 +68,7 @@ func (vt *VirusTotal) Do(ipaddr net.IP) (bool, error) {
 	}
 
 	if vt.Data.Attributes.LastAnalysisStats.Malicious > 0 ||
-		vt.Data.Attributes.LastAnalysisStats.Suspicious > 0 {
+		vt.Data.Attributes.TotalVotes.Malicious > 0 {
 		return false, nil
 	}
 
@@ -78,8 +82,10 @@ func (vt *VirusTotal) Name() string {
 
 // String returns the result of the check.
 func (vt *VirusTotal) String() string {
-	return fmt.Sprintf("%d malicious, %d suspicious, %d harmless analysis results",
+	return fmt.Sprintf("%d malicious, %d harmless analysis results | %d malicious, %d harmless community votes",
 		vt.Data.Attributes.LastAnalysisStats.Malicious,
-		vt.Data.Attributes.LastAnalysisStats.Suspicious,
-		vt.Data.Attributes.LastAnalysisStats.Harmless)
+		vt.Data.Attributes.LastAnalysisStats.Harmless,
+		vt.Data.Attributes.TotalVotes.Malicious,
+		vt.Data.Attributes.TotalVotes.Harmless,
+	)
 }
