@@ -67,5 +67,5 @@ func (g *Geo) Name() string {
 
 // String returns the result of the check.
 func (g *Geo) String() string {
-	return fmt.Sprintf("%s", strings.Join(g.Location, " | "))
+	return fmt.Sprintf("%s", strings.Join(g.Location, ", "))
 }
