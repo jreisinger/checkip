@@ -6,18 +6,27 @@
 
 ```
 $ checkip 1.1.1.1
-AS          13335 | 1.1.1.0 - 1.1.1.255 | CLOUDFLARENET - Cloudflare, Inc. | US
+AS          13335, 1.1.1.0 - 1.1.1.255, CLOUDFLARENET - Cloudflare, Inc.
 DNS         one.one.one.one.
 ThreatCrowd voted malicious by most users
 IPsum       found on 0 blacklists
-OTX         threat score 0 | seen date unknown - date unknown
-AbuseIPDB   165 reports, 89% confidence | cloudflare.com | Content Delivery Network
-Geolocation city unknown | Australia | AU
-VirusTotal  0 malicious, 89 harmless analysis results | 5 malicious, 19 harmless votes
+OTX         threat score 0 (seen date unknown - date unknown)
+AbuseIPDB   reported abusive 165 times with 89% confidence (cloudflare.com, Content Delivery Network)
+Geolocation city unknown, Australia, AU
+VirusTotal  0 malicious, 89 harmless analysis results
+$ checkip 1.1.1.1
+AS          13335, 1.1.1.0 - 1.1.1.255, CLOUDFLARENET - Cloudflare, Inc.
+DNS         one.one.one.one.
+ThreatCrowd voted malicious by most users
+IPsum       found on 0 blacklists
+OTX         threat score 0 (seen date unknown - date unknown)
+AbuseIPDB   reported abusive 165 times with 89% confidence (cloudflare.com, Content Delivery Network)
+Geolocation city unknown, Australia, AU
+VirusTotal  0 malicious, 2 suspicious, 89 harmless analysis results
 
 $ checkip -check dns,otx 1.1.1.1
 DNS         one.one.one.one.
-OTX         threat score 0 | seen date unknown - date unknown
+OTX         threat score 0 (seen date unknown - date unknown)
 ```
 ## Installation
 
