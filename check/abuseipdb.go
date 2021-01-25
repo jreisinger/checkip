@@ -77,10 +77,9 @@ func (a *AbuseIPDB) Name() string {
 
 // String returns the result of the check.
 func (a *AbuseIPDB) String() string {
-	return fmt.Sprintf("reported abusive %d times with %d%% confidence (%s, %s)",
+	return fmt.Sprintf("reported abusive %d times with %d%% confidence (%s)",
 		a.Data.TotalReports,
 		a.Data.AbuseConfidenceScore,
 		a.Data.Domain,
-		a.Data.UsageType,
 	)
 }
