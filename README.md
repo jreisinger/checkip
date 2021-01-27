@@ -7,18 +7,19 @@
 ```
 $ checkip 1.1.1.1
 AS          13335, 1.1.1.0 - 1.1.1.255, CLOUDFLARENET - Cloudflare, Inc.
+AbuseIPDB   reported abusive 170 times with 88% confidence (cloudflare.com)
 DNS         one.one.one.one.
-ThreatCrowd voted malicious by most users
+Geolocation city unknown, Australia, AU
 IPsum       found on 0 blacklists
 OTX         threat score 0 (seen date unknown - date unknown)
-AbuseIPDB   reported abusive 165 times with 89% confidence (cloudflare.com)
-Geolocation city unknown, Australia, AU
-VirusTotal  0 malicious, 2 suspicious, 89 harmless analysis results
+ThreatCrowd voted malicious by most users
+VirusTotal  1 malicious, 2 suspicious, 87 harmless analysis results
 
-$ checkip -check dns,otx 1.1.1.1
-DNS         one.one.one.one.
-OTX         threat score 0 (seen date unknown - date unknown)
+$ checkip -check geo,ipsum 1.1.1.1
+Geolocation city unknown, Australia, AU
+IPsum       found on 0 blacklists
 ```
+
 ## Installation
 
 Download the latest [release](https://github.com/jreisinger/checkip/releases)
@@ -63,13 +64,12 @@ You can also use environment variables with the same names as in the config file
 Currently these checks (types of information) are available:
 
 * AS (Autonomous System) data using TSV file from [iptoasn](https://iptoasn.com/).
+* [AbuseIPDB](https://www.abuseipdb.com) reports that the IP address is malicious. You need to [register](https://www.abuseipdb.com/register?plan=free) to get the API key (it's free).
 * DNS names using [net.LookupAddr](https://golang.org/pkg/net/#LookupAddr) Go function.
-* [ThreatCrowd](https://www.threatcrowd.org/) voting about whether the IP address is malicious.
+* Geographic location using [GeoLite2 City database](https://dev.maxmind.com/geoip/geoip2/geolite2/) file. You need to [register](https://dev.maxmind.com/geoip/geoip2/geolite2/#Download_Access) to get the license key (it's free).
 * Blacklists the IP address is found on according to [IPsum](https://github.com/stamparm/ipsum) file.
 * Threat score from [OTX](https://otx.alienvault.com/).
----
-* [AbuseIPDB](https://www.abuseipdb.com) reports that the IP address is malicious. You need to [register](https://www.abuseipdb.com/register?plan=free) to get the API key (it's free).
-* Geographic location using [GeoLite2 City database](https://dev.maxmind.com/geoip/geoip2/geolite2/) file. You need to [register](https://dev.maxmind.com/geoip/geoip2/geolite2/#Download_Access) to get the license key (it's free).
+* [ThreatCrowd](https://www.threatcrowd.org/) voting about whether the IP address is malicious.
 * [VirusTotal](https://developers.virustotal.com/v3.0/reference#ip-object) analysis results. You need to [register](https://www.virustotal.com/gui/join-us) to to get the API key (it's free).
 
 ## Development
