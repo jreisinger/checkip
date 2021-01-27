@@ -57,6 +57,7 @@ You can also use environment variables with the same names as in the config file
 * Checks are done concurrently to save time.
 * Output is colored to improve readability.
 * You can select which checks you want to run.
+* Return non-zero exit code when one or more checkers think the IP address is not OK.
 * It's easy to add new checks.
 
 Currently these checks (types of information) are available:

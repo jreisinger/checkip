@@ -16,7 +16,7 @@ type Check interface {
 }
 
 // Run runs a check of an IP address and returns the result over a channel.
-func Run(chk Check, ipaddr net.IP, ch chan string) {
+func Run(chk Check, ipaddr net.IP, ch chan string, countNotOK *int) {
 	format := "%-11s %s\n"
 	ok, err := chk.Do(ipaddr)
 	if err != nil {
@@ -26,6 +26,7 @@ func Run(chk Check, ipaddr net.IP, ch chan string) {
 	if ok {
 		ch <- fmt.Sprintf(format, chk.Name(), chk)
 	} else {
+		*countNotOK++
 		ch <- fmt.Sprintf(format, Magenta(chk.Name()), chk)
 	}
 }
