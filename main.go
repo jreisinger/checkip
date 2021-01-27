@@ -31,18 +31,7 @@ func main() {
 		checks = flags.ChecksToRun
 	}
 
-	// How many checkers think the IP address is malicious.
-	var countNotOK int
-
-	chn := make(chan string)
-	for _, chk := range checks {
-		go check.Run(chk, flags.IPaddr, chn, &countNotOK)
-	}
-	for range checks {
-		fmt.Print(<-chn)
-	}
-
-	if countNotOK > 0 {
-		os.Exit(1)
-	}
+	var countNotOK int // this many checkers think the IP address is not OK
+	check.RunAndPrint(checks, flags.IPaddr, &countNotOK)
+	os.Exit(countNotOK)
 }

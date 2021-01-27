@@ -4,6 +4,7 @@ package check
 import (
 	"fmt"
 	"net"
+	"sort"
 
 	. "github.com/logrusorgru/aurora"
 )
@@ -15,19 +16,41 @@ type Check interface {
 	String() string // result of the check
 }
 
-// Run runs a check of an IP address and returns the result over a channel.
-func Run(chk Check, ipaddr net.IP, ch chan string, countNotOK *int) {
-	format := "%-11s %s\n"
+// RunAndFormat runs a check of an IP address and returns formated result over a
+// channel. countNotOK holds the number of checkers that think the IP address is
+// not OK.
+func RunAndFormat(chk Check, ipaddr net.IP, ch chan string, countNotOK *int) {
+	format := "%-11s %s"
 	ok, err := chk.Do(ipaddr)
 	if err != nil {
-		ch <- fmt.Sprintf(format, Gray(11, chk.Name()), err)
+		ch <- fmt.Sprintf(format, chk.Name(), Gray(11, err))
 		return
 	}
 	if ok {
 		ch <- fmt.Sprintf(format, chk.Name(), chk)
 	} else {
 		*countNotOK++
-		ch <- fmt.Sprintf(format, Magenta(chk.Name()), chk)
+		ch <- fmt.Sprintf(format, chk.Name(), Magenta(chk))
+	}
+}
+
+// RunAndPrint runs concurrent checks of an IP address and prints sorted
+// results. countNotOK holds the number of checkers that think the IP address is
+// not OK.
+func RunAndPrint(checks []Check, ipaddr net.IP, countNotOK *int) {
+	var results []string
+
+	chn := make(chan string)
+	for _, chk := range checks {
+		go RunAndFormat(chk, ipaddr, chn, countNotOK)
+	}
+	for range checks {
+		results = append(results, <-chn)
+	}
+
+	sort.Strings(results)
+	for _, result := range results {
+		fmt.Println(result)
 	}
 }
 
