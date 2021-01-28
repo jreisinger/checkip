@@ -34,7 +34,8 @@ func (otx *OTX) Do(ipaddr net.IP) (bool, error) {
 		return false, err
 	}
 
-	resp, err := http.DefaultClient.Do(req)
+	client := NewHTTPClient(5 * time.Second)
+	resp, err := client.Do(req)
 	if err != nil {
 		return false, err
 	}

@@ -6,6 +6,7 @@ import (
 	"net"
 	"net/http"
 	"net/url"
+	"time"
 
 	"github.com/jreisinger/checkip/util"
 )
@@ -53,7 +54,8 @@ func (vt *VirusTotal) Do(ipaddr net.IP) (bool, error) {
 	// Set request headers.
 	req.Header.Set("x-apikey", apiKey)
 
-	resp, err := http.DefaultClient.Do(req)
+	client := NewHTTPClient(5 * time.Second)
+	resp, err := client.Do(req)
 	if err != nil {
 		return false, err
 	}

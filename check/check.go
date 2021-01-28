@@ -4,7 +4,9 @@ package check
 import (
 	"fmt"
 	"net"
+	"net/http"
 	"sort"
+	"time"
 
 	. "github.com/logrusorgru/aurora"
 )
@@ -67,4 +69,11 @@ func GetAvailable() []Check {
 		&VirusTotal{},
 	}
 	return availableChecks
+}
+
+// NewHTTPClient creates an HTTP client. Clients and Transports are safe for
+// concurrent use by multiple goroutines and for efficiency should only be
+// created once and re-used. See https://golang.org/pkg/net/http/ for more.
+func NewHTTPClient(timeout time.Duration) *http.Client {
+	return &http.Client{Timeout: timeout}
 }
