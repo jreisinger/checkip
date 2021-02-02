@@ -6,14 +6,15 @@
 
 ```
 $ checkip 1.1.1.1
-AS          13335, 1.1.1.0 - 1.1.1.255, CLOUDFLARENET - Cloudflare, Inc.
-AbuseIPDB   reported abusive 170 times with 88% confidence (cloudflare.com)
+AS          38726, 1.1.1.0 - 1.1.1.3, VTCDIGICOM-AS-VN VTC DIGICOM
+AbuseIPDB   reported abusive 173 times with 88% confidence (cloudflare.com)
 DNS         one.one.one.one.
 Geolocation city unknown, Australia, AU
 IPsum       found on 0 blacklists
 OTX         threat score 0 (seen date unknown - date unknown)
+Shodan      OS: n/a, open ports: 53 ( )
 ThreatCrowd voted malicious by most users
-VirusTotal  1 malicious, 2 suspicious, 87 harmless analysis results
+VirusTotal  0 malicious, 2 suspicious, 88 harmless analysis results
 
 $ checkip -check geo,ipsum 1.1.1.1
 Geolocation city unknown, Australia, AU
@@ -69,6 +70,7 @@ Currently these checks (types of information) are available:
 * Geographic location using [GeoLite2 City database](https://dev.maxmind.com/geoip/geoip2/geolite2/) file. You need to [register](https://dev.maxmind.com/geoip/geoip2/geolite2/#Download_Access) to get the license key (it's free).
 * Blacklists the IP address is found on according to [IPsum](https://github.com/stamparm/ipsum) file.
 * Threat score from [OTX](https://otx.alienvault.com/).
+* [Shodan](https://www.shodan.io/) scan data. You need to [register](https://account.shodan.io/register) to get the API key (it's free).
 * [ThreatCrowd](https://www.threatcrowd.org/) voting about whether the IP address is malicious.
 * [VirusTotal](https://developers.virustotal.com/v3.0/reference#ip-object) analysis results. You need to [register](https://www.virustotal.com/gui/join-us) to to get the API key (it's free).
 

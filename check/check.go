@@ -65,6 +65,7 @@ func GetAvailable() []Check {
 		&Geo{},
 		&IPsum{},
 		&OTX{},
+		&Shodan{},
 		&ThreatCrowd{},
 		&VirusTotal{},
 	}
