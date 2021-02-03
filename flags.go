@@ -28,7 +28,7 @@ func ParseFlags() (Flags, error) {
 	f.Var(&flags.ChecksToRun, "check", "run only `<check>[,<check>,...]` instead of all checks")
 
 	f.Usage = func() {
-		fmt.Fprintf(flag.CommandLine.Output(), "%s [flags] <ipaddr>[ <addrr> ...]\n", os.Args[0])
+		fmt.Fprintf(flag.CommandLine.Output(), "%s [flags] <ipaddr>[ <ipaddr> ...]\n", os.Args[0])
 		f.PrintDefaults()
 	}
 
@@ -48,7 +48,7 @@ func ParseFlags() (Flags, error) {
 	for _, arg := range f.Args() {
 		addr := net.ParseIP(arg)
 		if addr == nil {
-			return flags, fmt.Errorf("invalid IP address: %v", f.Args()[0])
+			return flags, fmt.Errorf("invalid IP address: %v", arg)
 		}
 		flags.IPaddrs = append(flags.IPaddrs, addr)
 	}
