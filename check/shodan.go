@@ -51,7 +51,16 @@ func (s *Shodan) Do(ipaddr net.IP) (bool, error) {
 }
 
 func (s *Shodan) isNotOK() bool {
-	return s.Os != "" || s.gotPortInfo()
+	return s.gotServiceVersion()
+}
+
+func (s *Shodan) gotServiceVersion() bool {
+	for _, d := range s.Data {
+		if d.Version != "" {
+			return true
+		}
+	}
+	return false
 }
 
 // Name returns the name of the check.
@@ -61,26 +70,27 @@ func (s *Shodan) Name() string {
 
 // String returns the result of the check.
 func (s *Shodan) String() string {
-	os := "n/a"
+	os := "OS unknown"
 	if s.Os != "" {
-		os = util.Highlight(os)
+		os = s.Os
 	}
 
-	portData := joinPortData(s.Data)
-	if s.gotPortInfo() {
-		portData = util.Highlight(portData)
-	}
-
-	return fmt.Sprintf("OS: %s, open ports: %s", os, portData)
-}
-
-func (s *Shodan) gotPortInfo() bool {
+	portInfo := []string{}
 	for _, d := range s.Data {
-		if d.Product != "" || d.Version != "" {
-			return true
+		product := d.Product
+		if product == "" {
+			product = "service unknown"
 		}
+		version := d.Version
+		if version != "" {
+			version = util.Highlight(version)
+		} else {
+			version = "version unknown"
+		}
+		portInfo = append(portInfo, fmt.Sprintf("%d (%s, %s)", d.Port, product, version))
 	}
-	return false
+
+	return fmt.Sprintf("%s, open ports: %s", os, strings.Join(portInfo, ", "))
 }
 
 func joinPortData(ds data) string {
