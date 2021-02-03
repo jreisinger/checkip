@@ -6,6 +6,7 @@ import (
 	"net"
 	"net/http"
 	"sort"
+	"sync"
 	"time"
 
 	"github.com/jreisinger/checkip/util"
@@ -45,9 +46,13 @@ func run(chk Check, ipaddr net.IP, ch chan checkResult) {
 	ch <- result
 }
 
+// CountNotOK is the numbers of checks that say that an IP address is not ok.
+var CountNotOK int
+
 // RunAndPrint runs concurrent checks of an IP address and prints sorted
-// results. It returns the number of checks that say the IP address is not OK.
-func RunAndPrint(checks []Check, ipaddr net.IP) (countNotOK int) {
+// results. It updates CountNotOK when a check says the IP address is not OK.
+func RunAndPrint(checks []Check, ipaddr net.IP, wg *sync.WaitGroup) {
+	defer wg.Done()
 	var results []checkResult
 
 	chn := make(chan checkResult)
@@ -58,6 +63,7 @@ func RunAndPrint(checks []Check, ipaddr net.IP) (countNotOK int) {
 		results = append(results, <-chn)
 	}
 
+	fmt.Printf("----------- %15s ----------\n", ipaddr)
 	sort.Sort(byName(results))
 	for _, r := range results {
 		format := "%s %s"
@@ -66,12 +72,10 @@ func RunAndPrint(checks []Check, ipaddr net.IP) (countNotOK int) {
 			s = fmt.Sprintf(format, util.Lowlight(fmt.Sprintf("%-11s", r.name)), util.Lowlight(fmt.Sprintf("%s", r.err)))
 		} else if r.notOK {
 			s = fmt.Sprintf(format, util.Highlight(fmt.Sprintf("%-11s", r.name)), r.msg)
-			countNotOK++
+			CountNotOK++
 		}
 		fmt.Println(s)
 	}
-
-	return countNotOK
 }
 
 // GetAvailable returns all available checks.

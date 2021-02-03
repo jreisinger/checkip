@@ -15,7 +15,7 @@ import (
 type Flags struct {
 	Version     bool
 	ChecksToRun checksToRun
-	IPaddr      net.IP
+	IPaddrs     []net.IP
 }
 
 // ParseFlags validates the flags and parses them into Flags.
@@ -28,7 +28,7 @@ func ParseFlags() (Flags, error) {
 	f.Var(&flags.ChecksToRun, "check", "run only `<check>[,<check>,...]` instead of all checks")
 
 	f.Usage = func() {
-		fmt.Fprintf(flag.CommandLine.Output(), "%s [flags] <ipaddr>\n", os.Args[0])
+		fmt.Fprintf(flag.CommandLine.Output(), "%s [flags] <ipaddr>[ <addrr> ...]\n", os.Args[0])
 		f.PrintDefaults()
 	}
 
@@ -45,9 +45,12 @@ func ParseFlags() (Flags, error) {
 		return flags, fmt.Errorf("missing IP address to check")
 	}
 
-	flags.IPaddr = net.ParseIP(f.Args()[0])
-	if flags.IPaddr == nil {
-		return flags, fmt.Errorf("invalid IP address: %v", f.Args()[0])
+	for _, arg := range f.Args() {
+		addr := net.ParseIP(arg)
+		if addr == nil {
+			return flags, fmt.Errorf("invalid IP address: %v", f.Args()[0])
+		}
+		flags.IPaddrs = append(flags.IPaddrs, addr)
 	}
 
 	return flags, err
