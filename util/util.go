@@ -12,7 +12,7 @@ import (
 	"time"
 
 	"github.com/kylelemons/go-gypsy/yaml"
-	. "github.com/logrusorgru/aurora"
+	"github.com/logrusorgru/aurora"
 )
 
 // GetConfigValue tries to get value for key first from an environment variable
@@ -185,10 +185,12 @@ func Update(file, url string, compressFmt string) error {
 	return nil
 }
 
+// Highlight makes string more visible.
 func Highlight(s string) string {
-	return fmt.Sprintf("%s", Magenta(s))
+	return fmt.Sprintf("%s", aurora.Magenta(s))
 }
 
+// Lowlight makes string less visible.
 func Lowlight(s string) string {
-	return fmt.Sprintf("%s", Gray(11, s))
+	return fmt.Sprintf("%s", aurora.Gray(11, s))
 }

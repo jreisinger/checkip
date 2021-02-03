@@ -8,15 +8,8 @@ import (
 	"net/url"
 	"time"
 
-	. "github.com/logrusorgru/aurora"
+	"github.com/jreisinger/checkip/util"
 )
-
-// https://github.com/AlienVault-OTX/ApiV2#votes
-var votesMeaning = map[int]string{
-	-1: fmt.Sprintf("voted %s by most users", Magenta("malicious")),
-	0:  "voted malicious/harmless by equal number of users",
-	1:  "voted harmless by most users",
-}
 
 // ThreatCrowd holds information about an IP address from
 // https://www.threatcrowd.org voting.
@@ -76,6 +69,12 @@ func (t *ThreatCrowd) Name() string {
 
 // String returns the result of the check.
 func (t *ThreatCrowd) String() string {
+	// https://github.com/AlienVault-OTX/ApiV2#votes
+	votesMeaning := map[int]string{
+		-1: fmt.Sprintf("voted %s by most users", util.Highlight("malicious")),
+		0:  "voted malicious/harmless by equal number of users",
+		1:  "voted harmless by most users",
+	}
 
 	return fmt.Sprintf("%s", votesMeaning[t.Votes])
 }
