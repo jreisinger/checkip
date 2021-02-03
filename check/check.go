@@ -8,7 +8,7 @@ import (
 	"sort"
 	"time"
 
-	. "github.com/logrusorgru/aurora"
+	"github.com/jreisinger/checkip/util"
 )
 
 // Check represents an IP address checker.
@@ -18,41 +18,58 @@ type Check interface {
 	String() string // result of the check
 }
 
-// runAndFormat runs a check of an IP address and returns formated result over a
-// channel. countNotOK holds the number of checkers that think the IP address is
-// not OK.
-func runAndFormat(chk Check, ipaddr net.IP, ch chan string, countNotOK *int) {
-	format := "%-11s %s"
+type checkResult struct {
+	name  string
+	msg   string
+	notOK bool
+	err   error
+}
+
+type byName []checkResult
+
+func (r byName) Len() int           { return len(r) }
+func (r byName) Swap(i, j int)      { r[j], r[i] = r[i], r[j] }
+func (r byName) Less(i, j int) bool { return r[i].name < r[j].name }
+
+func run(chk Check, ipaddr net.IP, ch chan checkResult) {
+	var result checkResult
+	result.name = chk.Name()
 	ok, err := chk.Do(ipaddr)
+	result.msg = chk.String()
 	if err != nil {
-		ch <- fmt.Sprintf(format, chk.Name(), Gray(11, err))
-		return
+		result.err = err
 	}
-	if ok {
-		ch <- fmt.Sprintf(format, chk.Name(), chk)
-	} else {
-		*countNotOK++
-		ch <- fmt.Sprintf(format, chk.Name(), chk)
+	if !ok {
+		result.notOK = true
 	}
+	ch <- result
 }
 
 // RunAndPrint runs concurrent checks of an IP address and prints sorted
 // results. countNotOK holds the number of checkers that think the IP address is
 // not OK.
 func RunAndPrint(checks []Check, ipaddr net.IP, countNotOK *int) {
-	var results []string
+	var results []checkResult
 
-	chn := make(chan string)
+	chn := make(chan checkResult)
 	for _, chk := range checks {
-		go runAndFormat(chk, ipaddr, chn, countNotOK)
+		go run(chk, ipaddr, chn)
 	}
 	for range checks {
 		results = append(results, <-chn)
 	}
 
-	sort.Strings(results)
-	for _, result := range results {
-		fmt.Println(result)
+	sort.Sort(byName(results))
+	for _, r := range results {
+		format := "%s %s"
+		s := fmt.Sprintf(format, fmt.Sprintf("%-11s", r.name), r.msg)
+		if r.err != nil {
+			s = fmt.Sprintf(format, util.Lowlight(fmt.Sprintf("%-11s", r.name)), util.Lowlight(fmt.Sprintf("%s", r.err)))
+		} else if r.notOK {
+			s = fmt.Sprintf(format, util.Highlight(fmt.Sprintf("%-11s", r.name)), r.msg)
+			*countNotOK++
+		}
+		fmt.Println(s)
 	}
 }
 

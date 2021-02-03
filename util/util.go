@@ -188,3 +188,7 @@ func Update(file, url string, compressFmt string) error {
 func Highlight(s string) string {
 	return fmt.Sprintf("%s", Magenta(s))
 }
+
+func Lowlight(s string) string {
+	return fmt.Sprintf("%s", Gray(11, s))
+}
