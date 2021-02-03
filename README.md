@@ -7,12 +7,12 @@
 ```
 $ checkip 1.1.1.1
 AS          38726, 1.1.1.0 - 1.1.1.3, VTCDIGICOM-AS-VN VTC DIGICOM
-AbuseIPDB   reported abusive 173 times with 88% confidence (cloudflare.com)
+AbuseIPDB   reported abusive 173 times with 91% confidence (cloudflare.com)
 DNS         one.one.one.one.
 Geolocation city unknown, Australia, AU
 IPsum       found on 0 blacklists
 OTX         threat score 0 (seen date unknown - date unknown)
-Shodan      OS: n/a, open ports: 53 ( )
+Shodan      OS unknown, open ports: 53 (service unknown, version unknown)
 ThreatCrowd voted malicious by most users
 VirusTotal  0 malicious, 2 suspicious, 88 harmless analysis results
 
@@ -48,6 +48,7 @@ choice. Provide your API/license keys using the following template:
 ABUSEIPDB_API_KEY: aaaaaaaabbbbbbbbccccccccddddddddeeeeeeeeffffffff11111111222222223333333344444444
 GEOIP_LICENSE_KEY: abcdef1234567890
 VIRUSTOTAL_API_KEY: aaaaaaaabbbbbbbbccccccccddddddddeeeeeeeeffffffff1111111122222222
+SHODAN_API_KEY: aaaabbbbccccddddeeeeffff11112222
 ```
 
 You can also use environment variables with the same names as in the config file.
