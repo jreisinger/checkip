@@ -92,9 +92,9 @@ func (vt *VirusTotal) String() string {
 	if vt.isNotOK() {
 		malicious = util.Highlight(malicious)
 	}
-	return fmt.Sprintf("%s malicious, %d suspicious, %d harmless analysis results",
-		malicious,
-		vt.Data.Attributes.LastAnalysisStats.Suspicious,
+	return fmt.Sprintf("%d harmless, %d suspicious, %s malicious analysis results",
 		vt.Data.Attributes.LastAnalysisStats.Harmless,
+		vt.Data.Attributes.LastAnalysisStats.Suspicious,
+		malicious,
 	)
 }
