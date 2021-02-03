@@ -6,6 +6,7 @@ import (
 	"net"
 	"net/http"
 	"net/url"
+	"strconv"
 	"time"
 
 	"github.com/jreisinger/checkip/util"
@@ -69,11 +70,15 @@ func (vt *VirusTotal) Do(ipaddr net.IP) (bool, error) {
 		return false, err
 	}
 
-	if vt.Data.Attributes.LastAnalysisStats.Malicious > 0 {
+	if vt.isNotOK() {
 		return false, nil
 	}
 
 	return true, nil
+}
+
+func (vt *VirusTotal) isNotOK() bool {
+	return vt.Data.Attributes.LastAnalysisStats.Malicious > 0
 }
 
 // Name returns the name of the check.
@@ -83,8 +88,12 @@ func (vt *VirusTotal) Name() string {
 
 // String returns the result of the check.
 func (vt *VirusTotal) String() string {
-	return fmt.Sprintf("%d malicious, %d suspicious, %d harmless analysis results",
-		vt.Data.Attributes.LastAnalysisStats.Malicious,
+	malicious := strconv.Itoa(vt.Data.Attributes.LastAnalysisStats.Malicious)
+	if vt.isNotOK() {
+		malicious = util.Highlight(malicious)
+	}
+	return fmt.Sprintf("%s malicious, %d suspicious, %d harmless analysis results",
+		malicious,
 		vt.Data.Attributes.LastAnalysisStats.Suspicious,
 		vt.Data.Attributes.LastAnalysisStats.Harmless,
 	)

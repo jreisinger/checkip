@@ -43,7 +43,15 @@ func (s *Shodan) Do(ipaddr net.IP) (bool, error) {
 		return false, err
 	}
 
+	if s.isNotOK() {
+		return false, nil
+	}
+
 	return true, nil
+}
+
+func (s *Shodan) isNotOK() bool {
+	return s.Os != "" || s.gotPortInfo()
 }
 
 // Name returns the name of the check.
@@ -53,13 +61,29 @@ func (s *Shodan) Name() string {
 
 // String returns the result of the check.
 func (s *Shodan) String() string {
-	if s.Os == "" {
-		s.Os = "n/a"
+	os := "n/a"
+	if s.Os != "" {
+		os = util.Highlight(os)
 	}
-	return fmt.Sprintf("OS: %s, open ports: %s", s.Os, joinData(s.Data))
+
+	portData := joinPortData(s.Data)
+	if s.gotPortInfo() {
+		portData = util.Highlight(portData)
+	}
+
+	return fmt.Sprintf("OS: %s, open ports: %s", os, portData)
 }
 
-func joinData(ds data) string {
+func (s *Shodan) gotPortInfo() bool {
+	for _, d := range s.Data {
+		if d.Product != "" || d.Version != "" {
+			return true
+		}
+	}
+	return false
+}
+
+func joinPortData(ds data) string {
 	var ss []string
 	for _, d := range ds {
 		s := fmt.Sprintf("%d (%s %s)", d.Port, d.Product, d.Version)

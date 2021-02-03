@@ -14,7 +14,7 @@ import (
 // IPsum counts on how many blacklists the IP address was found according to
 // https://github.com/stamparm/ipsum.
 type IPsum struct {
-	NumOfBlackists int
+	NumOfBlacklists int
 }
 
 // Do fills in the date into IPsum. If the IP address is found on at least 3
@@ -31,11 +31,15 @@ func (ip *IPsum) Do(ipaddr net.IP) (bool, error) {
 		return false, fmt.Errorf("searching %s in %s: %v", ipaddr, file, err)
 	}
 
-	if ip.NumOfBlackists > 2 {
+	if ip.isNotOK() {
 		return false, nil
 	}
 
 	return true, nil
+}
+
+func (ip *IPsum) isNotOK() bool {
+	return ip.NumOfBlacklists > 2
 }
 
 // search searches the ippadrr in tsvFile and if found fills in IPsum data.
@@ -53,7 +57,7 @@ func (ip *IPsum) search(ipaddr net.IP, tsvFile string) error {
 		}
 		fields := strings.Fields(line)
 		if ipaddr.Equal(net.ParseIP(fields[0])) { // IP address found
-			ip.NumOfBlackists, err = strconv.Atoi(fields[1])
+			ip.NumOfBlacklists, err = strconv.Atoi(fields[1])
 			if err != nil {
 				return err
 			}
@@ -74,9 +78,12 @@ func (ip *IPsum) Name() string {
 
 // String returns the result of the check.
 func (ip *IPsum) String() string {
-	format := "found on %d blacklist"
-	if ip.NumOfBlackists != 1 {
-		format += "s"
+	s := fmt.Sprintf("found on %d blacklist", ip.NumOfBlacklists)
+	if ip.isNotOK() {
+		s = fmt.Sprintf("found on %s blacklist", util.Highlight(strconv.Itoa(ip.NumOfBlacklists)))
 	}
-	return fmt.Sprintf(format, ip.NumOfBlackists)
+	if ip.NumOfBlacklists != 1 {
+		s += "s"
+	}
+	return fmt.Sprintf(s)
 }

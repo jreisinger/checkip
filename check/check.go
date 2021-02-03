@@ -18,10 +18,10 @@ type Check interface {
 	String() string // result of the check
 }
 
-// RunAndFormat runs a check of an IP address and returns formated result over a
+// runAndFormat runs a check of an IP address and returns formated result over a
 // channel. countNotOK holds the number of checkers that think the IP address is
 // not OK.
-func RunAndFormat(chk Check, ipaddr net.IP, ch chan string, countNotOK *int) {
+func runAndFormat(chk Check, ipaddr net.IP, ch chan string, countNotOK *int) {
 	format := "%-11s %s"
 	ok, err := chk.Do(ipaddr)
 	if err != nil {
@@ -32,7 +32,7 @@ func RunAndFormat(chk Check, ipaddr net.IP, ch chan string, countNotOK *int) {
 		ch <- fmt.Sprintf(format, chk.Name(), chk)
 	} else {
 		*countNotOK++
-		ch <- fmt.Sprintf(format, chk.Name(), Magenta(chk))
+		ch <- fmt.Sprintf(format, chk.Name(), chk)
 	}
 }
 
@@ -44,7 +44,7 @@ func RunAndPrint(checks []Check, ipaddr net.IP, countNotOK *int) {
 
 	chn := make(chan string)
 	for _, chk := range checks {
-		go RunAndFormat(chk, ipaddr, chn, countNotOK)
+		go runAndFormat(chk, ipaddr, chn, countNotOK)
 	}
 	for range checks {
 		results = append(results, <-chn)

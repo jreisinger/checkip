@@ -7,7 +7,10 @@ import (
 	"net"
 	"net/http"
 	"net/url"
+	"strconv"
 	"time"
+
+	"github.com/jreisinger/checkip/util"
 )
 
 // OTX holds IP address reputation data from otx.alienvault.com.
@@ -49,11 +52,15 @@ func (otx *OTX) Do(ipaddr net.IP) (bool, error) {
 		return false, err
 	}
 
-	if otx.Reputation.ThreatScore > 2 {
+	if otx.isNotOK() {
 		return false, nil
 	}
 
 	return true, nil
+}
+
+func (otx *OTX) isNotOK() bool {
+	return otx.Reputation.ThreatScore > 2
 }
 
 // Name returns the name of the check.
@@ -72,8 +79,13 @@ func (otx *OTX) String() string {
 		}
 	}
 
-	return fmt.Sprintf("threat score %d (seen %s - %s)",
-		otx.Reputation.ThreatScore,
+	score := strconv.Itoa(otx.Reputation.ThreatScore)
+	if otx.isNotOK() {
+		score = util.Highlight(score)
+	}
+
+	return fmt.Sprintf("threat score %s (seen %s - %s)",
+		score,
 		parseTime(otx.Reputation.FirstSeen),
 		parseTime(otx.Reputation.LastSeen),
 	)

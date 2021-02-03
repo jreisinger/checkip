@@ -7,11 +7,13 @@ import (
 	"net/http"
 	"net/url"
 	"time"
+
+	. "github.com/logrusorgru/aurora"
 )
 
 // https://github.com/AlienVault-OTX/ApiV2#votes
 var votesMeaning = map[int]string{
-	-1: "voted malicious by most users",
+	-1: fmt.Sprintf("voted %s by most users", Magenta("malicious")),
 	0:  "voted malicious/harmless by equal number of users",
 	1:  "voted harmless by most users",
 }
@@ -55,12 +57,16 @@ func (t *ThreatCrowd) Do(ipaddr net.IP) (bool, error) {
 		return false, err
 	}
 
-	// https://github.com/AlienVault-OTX/ApiV2#votes
-	if t.Votes < 0 {
+	if t.isNotOK() {
 		return false, nil
 	}
 
 	return true, nil
+}
+
+func (t *ThreatCrowd) isNotOK() bool {
+	// https://github.com/AlienVault-OTX/ApiV2#votes
+	return t.Votes < 0
 }
 
 // Name returns the name of the check.

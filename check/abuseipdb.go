@@ -6,6 +6,7 @@ import (
 	"net"
 	"net/http"
 	"net/url"
+	"strconv"
 	"time"
 
 	"github.com/jreisinger/checkip/util"
@@ -65,11 +66,15 @@ func (a *AbuseIPDB) Do(ipaddr net.IP) (bool, error) {
 		return false, err
 	}
 
-	if a.Data.AbuseConfidenceScore > 25 {
+	if a.isNotOK() {
 		return false, nil
 	}
 
 	return true, nil
+}
+
+func (a *AbuseIPDB) isNotOK() bool {
+	return a.Data.AbuseConfidenceScore > 25
 }
 
 // Name returns the name of the check.
@@ -79,9 +84,13 @@ func (a *AbuseIPDB) Name() string {
 
 // String returns the result of the check.
 func (a *AbuseIPDB) String() string {
-	return fmt.Sprintf("reported abusive %d times with %d%% confidence (%s)",
+	confidence := strconv.Itoa(a.Data.AbuseConfidenceScore)
+	if a.isNotOK() {
+		confidence = fmt.Sprintf("%s", util.Highlight(confidence+"%"))
+	}
+	return fmt.Sprintf("reported abusive %d times with %s confidence (%s)",
 		a.Data.TotalReports,
-		a.Data.AbuseConfidenceScore,
+		confidence,
 		a.Data.Domain,
 	)
 }
