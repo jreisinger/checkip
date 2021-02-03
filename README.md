@@ -5,19 +5,24 @@
 `checkip` is a CLI tool that finds out information about an IP address (the output is colored in [real terminal](https://reisinge.net/blog/2021-01-15-check-ip-address)):
 
 ```
-$ checkip 1.1.1.1
-AS          38726, 1.1.1.0 - 1.1.1.3, VTCDIGICOM-AS-VN VTC DIGICOM
-AbuseIPDB   reported abusive 173 times with 91% confidence (cloudflare.com)
-DNS         one.one.one.one.
-Geolocation city unknown, Australia, AU
-IPsum       found on 0 blacklists
-OTX         threat score 0 (seen date unknown - date unknown)
-Shodan      OS unknown, open ports: 53 (service unknown, version unknown)
-ThreatCrowd voted malicious by most users
-VirusTotal  0 malicious, 2 suspicious, 88 harmless analysis results
+$ checkip 45.155.205.108
+AS          49505, 45.155.205.0 - 45.155.205.255, SELECTEL
+AbuseIPDB   reported abusive 2808 times with 100% confidence (smartdata.su)
+DNS         lookup 45.155.205.108: nodename nor servname provided, or not known
+Geolocation St Petersburg, Russia, RU
+IPsum       found on 3 blacklists
+OTX         threat score 2 (seen 2020-12-23 - 2021-02-03)
+Shodan      OS unknown, open ports: 123 (service unknown, version unknown)
+ThreatCrowd voted malicious/harmless by equal number of users
+VirusTotal  71 harmless, 0 suspicious, 7 malicious analysis results
 
-$ checkip -check geo,ipsum 1.1.1.1
-Geolocation city unknown, Australia, AU
+# Three checks say the IP address is not OK.
+$ echo $?
+3
+
+# Run only selected checks.
+$ checkip -check dns,ipsum 1.1.1.1
+DNS         one.one.one.one.
 IPsum       found on 0 blacklists
 ```
 
@@ -60,7 +65,7 @@ You can also use environment variables with the same names as in the config file
 * Checks are done concurrently to save time.
 * Output is colored to improve readability.
 * You can select which checks you want to run.
-* Return non-zero exit code when one or more checkers think the IP address is not OK.
+* Return non-zero exit code when one or more checks say the IP address is not OK.
 * It's easy to add new checks.
 
 Currently these checks (types of information) are available:
