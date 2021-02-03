@@ -46,9 +46,8 @@ func run(chk Check, ipaddr net.IP, ch chan checkResult) {
 }
 
 // RunAndPrint runs concurrent checks of an IP address and prints sorted
-// results. countNotOK holds the number of checkers that think the IP address is
-// not OK.
-func RunAndPrint(checks []Check, ipaddr net.IP, countNotOK *int) {
+// results. It returns the number of checks that say the IP address is not OK.
+func RunAndPrint(checks []Check, ipaddr net.IP) (countNotOK int) {
 	var results []checkResult
 
 	chn := make(chan checkResult)
@@ -67,10 +66,12 @@ func RunAndPrint(checks []Check, ipaddr net.IP, countNotOK *int) {
 			s = fmt.Sprintf(format, util.Lowlight(fmt.Sprintf("%-11s", r.name)), util.Lowlight(fmt.Sprintf("%s", r.err)))
 		} else if r.notOK {
 			s = fmt.Sprintf(format, util.Highlight(fmt.Sprintf("%-11s", r.name)), r.msg)
-			*countNotOK++
+			countNotOK++
 		}
 		fmt.Println(s)
 	}
+
+	return countNotOK
 }
 
 // GetAvailable returns all available checks.

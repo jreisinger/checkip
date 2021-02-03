@@ -31,7 +31,6 @@ func main() {
 		checks = flags.ChecksToRun
 	}
 
-	var countNotOK int // this many checkers think the IP address is not OK
-	check.RunAndPrint(checks, flags.IPaddr, &countNotOK)
+	countNotOK := check.RunAndPrint(checks, flags.IPaddr)
 	os.Exit(countNotOK)
 }
