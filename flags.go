@@ -25,10 +25,10 @@ func ParseFlags() (Flags, error) {
 	f := flag.NewFlagSet(os.Args[0], flag.ContinueOnError)
 
 	f.BoolVar(&flags.Version, "version", false, "print version")
-	f.Var(&flags.ChecksToRun, "check", "run only `<check>[,<check>,...]` instead of all checks")
+	f.Var(&flags.ChecksToRun, "check", "run only `CHECK[,CHECK,...]` instead of all checks")
 
 	f.Usage = func() {
-		fmt.Fprintf(flag.CommandLine.Output(), "%s [flags] <ipaddr>[ <ipaddr> ...]\n", os.Args[0])
+		fmt.Fprintf(flag.CommandLine.Output(), "%s [flags] <IPADDR>[ <IPADDR> ...]\n", os.Args[0])
 		f.PrintDefaults()
 	}
 
