@@ -21,15 +21,15 @@ type Check interface {
 }
 
 type JSONOutput struct {
-	IPaddr  net.IP
 	Results []Result
 }
 
 type Result struct {
-	Name  string
-	Msg   string
-	NotOK bool
-	Err   error
+	IPaddr net.IP
+	Name   string
+	Msg    string
+	NotOK  bool
+	Err    error
 }
 
 type byName []Result
@@ -40,6 +40,7 @@ func (r byName) Less(i, j int) bool { return r[i].Name < r[j].Name }
 
 func run(chk Check, ipaddr net.IP, ch chan Result) {
 	var result Result
+	result.IPaddr = ipaddr
 	result.Name = chk.Name()
 	ok, err := chk.Do(ipaddr)
 	result.Msg = chk.String()
@@ -87,7 +88,6 @@ func RunAndPrint(checks []Check, ipaddr net.IP, ch chan string) {
 }
 
 func RunAndJSON(checks []Check, ipaddr net.IP, ch chan string) {
-	var j JSONOutput
 	var results []Result
 
 	chn := make(chan Result)
@@ -98,10 +98,7 @@ func RunAndJSON(checks []Check, ipaddr net.IP, ch chan string) {
 		results = append(results, <-chn)
 	}
 
-	j.IPaddr = ipaddr
-	j.Results = results
-
-	js, err := json.Marshal(j)
+	js, err := json.Marshal(results)
 	if err != nil {
 		log.Fatal(err)
 	}
