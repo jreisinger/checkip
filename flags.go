@@ -17,6 +17,7 @@ type Flags struct {
 	Version     bool
 	ChecksToRun checksToRun
 	IPaddrs     []net.IP
+	JSON        bool
 }
 
 // ParseFlags validates the flags and parses them into Flags.
@@ -26,6 +27,7 @@ func ParseFlags() (Flags, error) {
 	f := flag.NewFlagSet(os.Args[0], flag.ContinueOnError)
 
 	f.BoolVar(&flags.Version, "version", false, "print version")
+	f.BoolVar(&flags.JSON, "json", false, "print output in JSON")
 	f.Var(&flags.ChecksToRun, "check", "run only `CHECK[,CHECK,...]` instead of all checks")
 
 	f.Usage = func() {
