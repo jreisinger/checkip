@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"flag"
 	"fmt"
 	"log"
@@ -41,10 +42,20 @@ func ParseFlags() (Flags, error) {
 		return flags, nil
 	}
 
+	// Read from STDIN.
 	if len(f.Args()) == 0 {
-		return flags, fmt.Errorf("missing IP address to check")
+		// return flags, fmt.Errorf("missing IP address to check")
+		s := bufio.NewScanner(os.Stdin)
+		for s.Scan() {
+			addr := net.ParseIP(s.Text())
+			if addr == nil {
+				return flags, fmt.Errorf("invalid IP address: %v", s.Text())
+			}
+			flags.IPaddrs = append(flags.IPaddrs, addr)
+		}
 	}
 
+	// Read CLI arguments.
 	for _, arg := range f.Args() {
 		addr := net.ParseIP(arg)
 		if addr == nil {
