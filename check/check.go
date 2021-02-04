@@ -84,7 +84,8 @@ func RunAndPrint(checks []Check, ipaddr net.IP, ch chan string) {
 	ch <- s
 }
 
-func RunAndJSON(checks []Check, ipaddr net.IP, ch chan string) {
+// RunAndPrintJSON is equivalent to RunAndPrint but it generates JSON.
+func RunAndPrintJSON(checks []Check, ipaddr net.IP, ch chan string) {
 	var results []Result
 
 	chn := make(chan Result)
@@ -93,6 +94,12 @@ func RunAndJSON(checks []Check, ipaddr net.IP, ch chan string) {
 	}
 	for range checks {
 		results = append(results, <-chn)
+	}
+
+	for _, r := range results {
+		if r.NotOK {
+			CountNotOK++
+		}
 	}
 
 	js, err := json.Marshal(results)

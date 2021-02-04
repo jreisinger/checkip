@@ -34,7 +34,7 @@ func main() {
 	ch := make(chan string)
 	for _, ipaddr := range flags.IPaddrs {
 		if flags.JSON {
-			go check.RunAndJSON(checks, ipaddr, ch)
+			go check.RunAndPrintJSON(checks, ipaddr, ch)
 		} else {
 			go check.RunAndPrint(checks, ipaddr, ch)
 		}
