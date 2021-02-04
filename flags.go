@@ -29,7 +29,7 @@ func ParseFlags() (Flags, error) {
 	f.Var(&flags.ChecksToRun, "check", "run only `CHECK[,CHECK,...]` instead of all checks")
 
 	f.Usage = func() {
-		fmt.Fprintf(flag.CommandLine.Output(), "%s [flags] <IPADDR>[ <IPADDR> ...]\n", os.Args[0])
+		fmt.Fprintf(flag.CommandLine.Output(), "%s [FLAGS] [IPADDR[ IPADDR ...]]\n", os.Args[0])
 		f.PrintDefaults()
 	}
 
