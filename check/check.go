@@ -35,36 +35,42 @@ func (r byName) Len() int           { return len(r) }
 func (r byName) Swap(i, j int)      { r[j], r[i] = r[i], r[j] }
 func (r byName) Less(i, j int) bool { return r[i].Check < r[j].Check }
 
-func run(chk Check, ipaddr net.IP, ch chan Result) {
+// CountNotOK is the numbers of checks that say an IP address is not ok.
+var CountNotOK int
+
+func runCheck(chk Check, ipaddr net.IP, ch chan Result) {
 	var result Result
+
 	result.IPaddr = ipaddr
-	result.Check = chk.Name()
 	ok, err := chk.Do(ipaddr)
-	result.Msg = chk.String()
-	if err != nil {
-		result.Err = err
-	}
 	if !ok {
 		result.NotOK = true
+		CountNotOK++
 	}
+	result.Err = err
+	result.Check = chk.Name()
+	result.Msg = chk.String()
+
 	ch <- result
 }
 
-// CountNotOK is the numbers of checks that say that an IP address is not ok.
-var CountNotOK int
-
-// RunAndPrint runs concurrent checks of an IP address and prints sorted
-// results. It updates CountNotOK when a check says the IP address is not OK.
-func RunAndPrint(checks []Check, ipaddr net.IP, ch chan string) {
+func runChecks(checks []Check, ipaddr net.IP) []Result {
 	var results []Result
 
-	chn := make(chan Result)
+	chn := make(chan Result, 10) // buffered channel to throttle concurrency
 	for _, chk := range checks {
-		go run(chk, ipaddr, chn)
+		go runCheck(chk, ipaddr, chn)
 	}
 	for range checks {
 		results = append(results, <-chn)
 	}
+
+	return results
+}
+
+// RunAndPrint runs concurrent checks of an IP address and prints results.
+func RunAndPrint(checks []Check, ipaddr net.IP, ch chan string) {
+	results := runChecks(checks, ipaddr)
 
 	s := fmt.Sprintf("----------- %15s ----------\n", ipaddr)
 
@@ -75,7 +81,6 @@ func RunAndPrint(checks []Check, ipaddr net.IP, ch chan string) {
 			s += fmt.Sprintf(format, util.Lowlight(fmt.Sprintf("%-11s", r.Check)), util.Lowlight(fmt.Sprintf("%s", r.Err)))
 		} else if r.NotOK {
 			s += fmt.Sprintf(format, util.Highlight(fmt.Sprintf("%-11s", r.Check)), r.Msg)
-			CountNotOK++
 		} else {
 			s += fmt.Sprintf(format, fmt.Sprintf("%-11s", r.Check), r.Msg)
 		}
@@ -84,23 +89,9 @@ func RunAndPrint(checks []Check, ipaddr net.IP, ch chan string) {
 	ch <- s
 }
 
-// RunAndPrintJSON is equivalent to RunAndPrint but it generates JSON.
+// RunAndPrintJSON is equivalent to RunAndPrint but it prints results in JSON.
 func RunAndPrintJSON(checks []Check, ipaddr net.IP, ch chan string) {
-	var results []Result
-
-	chn := make(chan Result)
-	for _, chk := range checks {
-		go run(chk, ipaddr, chn)
-	}
-	for range checks {
-		results = append(results, <-chn)
-	}
-
-	for _, r := range results {
-		if r.NotOK {
-			CountNotOK++
-		}
-	}
+	results := runChecks(checks, ipaddr)
 
 	js, err := json.Marshal(results)
 	if err != nil {
