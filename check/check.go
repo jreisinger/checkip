@@ -20,28 +20,25 @@ type Check interface {
 	String() string // result of the check
 }
 
-type JSONOutput struct {
-	Results []Result
-}
-
+// Result represents result of a single check.
 type Result struct {
-	IPaddr net.IP
-	Name   string
-	Msg    string
-	NotOK  bool
-	Err    error
+	IPaddr net.IP `json:"ipaddr"`
+	Check  string `json:"check"`
+	Msg    string `json:"msg"`
+	NotOK  bool   `json:"notok"`
+	Err    error  `json:"err"`
 }
 
 type byName []Result
 
 func (r byName) Len() int           { return len(r) }
 func (r byName) Swap(i, j int)      { r[j], r[i] = r[i], r[j] }
-func (r byName) Less(i, j int) bool { return r[i].Name < r[j].Name }
+func (r byName) Less(i, j int) bool { return r[i].Check < r[j].Check }
 
 func run(chk Check, ipaddr net.IP, ch chan Result) {
 	var result Result
 	result.IPaddr = ipaddr
-	result.Name = chk.Name()
+	result.Check = chk.Name()
 	ok, err := chk.Do(ipaddr)
 	result.Msg = chk.String()
 	if err != nil {
@@ -75,12 +72,12 @@ func RunAndPrint(checks []Check, ipaddr net.IP, ch chan string) {
 	for _, r := range results {
 		format := "%s %s\n"
 		if r.Err != nil {
-			s += fmt.Sprintf(format, util.Lowlight(fmt.Sprintf("%-11s", r.Name)), util.Lowlight(fmt.Sprintf("%s", r.Err)))
+			s += fmt.Sprintf(format, util.Lowlight(fmt.Sprintf("%-11s", r.Check)), util.Lowlight(fmt.Sprintf("%s", r.Err)))
 		} else if r.NotOK {
-			s += fmt.Sprintf(format, util.Highlight(fmt.Sprintf("%-11s", r.Name)), r.Msg)
+			s += fmt.Sprintf(format, util.Highlight(fmt.Sprintf("%-11s", r.Check)), r.Msg)
 			CountNotOK++
 		} else {
-			s += fmt.Sprintf(format, fmt.Sprintf("%-11s", r.Name), r.Msg)
+			s += fmt.Sprintf(format, fmt.Sprintf("%-11s", r.Check), r.Msg)
 		}
 	}
 
