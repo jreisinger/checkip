@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"sync"
 
 	"github.com/jreisinger/checkip/check"
 )
@@ -32,12 +31,13 @@ func main() {
 		checks = flags.ChecksToRun
 	}
 
-	var wg sync.WaitGroup
+	ch := make(chan string)
 	for _, ipaddr := range flags.IPaddrs {
-		wg.Add(1)
-		go check.RunAndPrint(checks, ipaddr, &wg)
+		go check.RunAndPrint(checks, ipaddr, ch)
 	}
-	wg.Wait()
+	for range flags.IPaddrs {
+		fmt.Print(<-ch)
+	}
 
 	if check.CountNotOK > 125 {
 		check.CountNotOK = 125

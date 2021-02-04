@@ -6,7 +6,6 @@ import (
 	"net"
 	"net/http"
 	"sort"
-	"sync"
 	"time"
 
 	"github.com/jreisinger/checkip/util"
@@ -51,8 +50,7 @@ var CountNotOK int
 
 // RunAndPrint runs concurrent checks of an IP address and prints sorted
 // results. It updates CountNotOK when a check says the IP address is not OK.
-func RunAndPrint(checks []Check, ipaddr net.IP, wg *sync.WaitGroup) {
-	defer wg.Done()
+func RunAndPrint(checks []Check, ipaddr net.IP, ch chan string) {
 	var results []checkResult
 
 	chn := make(chan checkResult)
@@ -63,19 +61,22 @@ func RunAndPrint(checks []Check, ipaddr net.IP, wg *sync.WaitGroup) {
 		results = append(results, <-chn)
 	}
 
-	fmt.Printf("----------- %15s ----------\n", ipaddr)
+	s := fmt.Sprintf("----------- %15s ----------\n", ipaddr)
+
 	sort.Sort(byName(results))
 	for _, r := range results {
-		format := "%s %s"
-		s := fmt.Sprintf(format, fmt.Sprintf("%-11s", r.name), r.msg)
+		format := "%s %s\n"
 		if r.err != nil {
-			s = fmt.Sprintf(format, util.Lowlight(fmt.Sprintf("%-11s", r.name)), util.Lowlight(fmt.Sprintf("%s", r.err)))
+			s += fmt.Sprintf(format, util.Lowlight(fmt.Sprintf("%-11s", r.name)), util.Lowlight(fmt.Sprintf("%s", r.err)))
 		} else if r.notOK {
-			s = fmt.Sprintf(format, util.Highlight(fmt.Sprintf("%-11s", r.name)), r.msg)
+			s += fmt.Sprintf(format, util.Highlight(fmt.Sprintf("%-11s", r.name)), r.msg)
 			CountNotOK++
+		} else {
+			s += fmt.Sprintf(format, fmt.Sprintf("%-11s", r.name), r.msg)
 		}
-		fmt.Println(s)
 	}
+
+	ch <- s
 }
 
 // GetAvailable returns all available checks.
