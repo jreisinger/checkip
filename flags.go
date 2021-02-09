@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bufio"
 	"flag"
 	"fmt"
 	"log"
@@ -16,8 +15,7 @@ import (
 type Flags struct {
 	Version     bool
 	ChecksToRun checksToRun
-	IPaddrs     []net.IP
-	JSON        bool
+	IPaddr      net.IP
 }
 
 // ParseFlags validates the flags and parses them into Flags.
@@ -27,11 +25,10 @@ func ParseFlags() (Flags, error) {
 	f := flag.NewFlagSet(os.Args[0], flag.ContinueOnError)
 
 	f.BoolVar(&flags.Version, "version", false, "print version")
-	f.BoolVar(&flags.JSON, "json", false, "print output in JSON")
-	f.Var(&flags.ChecksToRun, "check", "run only `CHECK[,CHECK,...]` instead of all checks")
+	f.Var(&flags.ChecksToRun, "check", "run only `<check>[,<check>,...]` instead of all checks")
 
 	f.Usage = func() {
-		fmt.Fprintf(flag.CommandLine.Output(), "%s [FLAGS] [IPADDR[ IPADDR ...]]\n", os.Args[0])
+		fmt.Fprintf(flag.CommandLine.Output(), "%s [flags] <ipaddr>\n", os.Args[0])
 		f.PrintDefaults()
 	}
 
@@ -44,26 +41,13 @@ func ParseFlags() (Flags, error) {
 		return flags, nil
 	}
 
-	// Read from STDIN.
 	if len(f.Args()) == 0 {
-		// return flags, fmt.Errorf("missing IP address to check")
-		s := bufio.NewScanner(os.Stdin)
-		for s.Scan() {
-			addr := net.ParseIP(s.Text())
-			if addr == nil {
-				return flags, fmt.Errorf("invalid IP address: %v", s.Text())
-			}
-			flags.IPaddrs = append(flags.IPaddrs, addr)
-		}
+		return flags, fmt.Errorf("missing IP address to check")
 	}
 
-	// Read CLI arguments.
-	for _, arg := range f.Args() {
-		addr := net.ParseIP(arg)
-		if addr == nil {
-			return flags, fmt.Errorf("invalid IP address: %v", arg)
-		}
-		flags.IPaddrs = append(flags.IPaddrs, addr)
+	flags.IPaddr = net.ParseIP(f.Args()[0])
+	if flags.IPaddr == nil {
+		return flags, fmt.Errorf("invalid IP address: %v", f.Args()[0])
 	}
 
 	return flags, err

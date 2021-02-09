@@ -2,9 +2,7 @@
 package check
 
 import (
-	"encoding/json"
 	"fmt"
-	"log"
 	"net"
 	"net/http"
 	"sort"
@@ -20,85 +18,60 @@ type Check interface {
 	String() string // result of the check
 }
 
-// Result represents result of a single check.
-type Result struct {
-	IPaddr net.IP `json:"ipaddr"`
-	Check  string `json:"check"`
-	Msg    string `json:"msg"`
-	NotOK  bool   `json:"notok"`
-	Err    error  `json:"err"`
+type checkResult struct {
+	name  string
+	msg   string
+	notOK bool
+	err   error
 }
 
-type byName []Result
+type byName []checkResult
 
 func (r byName) Len() int           { return len(r) }
 func (r byName) Swap(i, j int)      { r[j], r[i] = r[i], r[j] }
-func (r byName) Less(i, j int) bool { return r[i].Check < r[j].Check }
+func (r byName) Less(i, j int) bool { return r[i].name < r[j].name }
 
-// CountNotOK is the numbers of checks that say an IP address is not ok.
-var CountNotOK int
-
-func runCheck(chk Check, ipaddr net.IP, ch chan Result) {
-	var result Result
-
-	result.IPaddr = ipaddr
+func run(chk Check, ipaddr net.IP, ch chan checkResult) {
+	var result checkResult
+	result.name = chk.Name()
 	ok, err := chk.Do(ipaddr)
-	if !ok {
-		result.NotOK = true
-		CountNotOK++
+	result.msg = chk.String()
+	if err != nil {
+		result.err = err
 	}
-	result.Err = err
-	result.Check = chk.Name()
-	result.Msg = chk.String()
-
+	if !ok {
+		result.notOK = true
+	}
 	ch <- result
 }
 
-func runChecks(checks []Check, ipaddr net.IP) []Result {
-	var results []Result
+// RunAndPrint runs concurrent checks of an IP address and prints sorted
+// results. It returns the number of checks that say the IP address is not OK.
+func RunAndPrint(checks []Check, ipaddr net.IP) (countNotOK int) {
+	var results []checkResult
 
-	chn := make(chan Result, 10) // buffered channel to throttle concurrency
+	chn := make(chan checkResult)
 	for _, chk := range checks {
-		go runCheck(chk, ipaddr, chn)
+		go run(chk, ipaddr, chn)
 	}
 	for range checks {
 		results = append(results, <-chn)
 	}
 
-	return results
-}
-
-// RunAndPrint runs concurrent checks of an IP address and prints results.
-func RunAndPrint(checks []Check, ipaddr net.IP, ch chan string) {
-	results := runChecks(checks, ipaddr)
-
-	s := fmt.Sprintf("----------- %15s ----------\n", ipaddr)
-
 	sort.Sort(byName(results))
 	for _, r := range results {
-		format := "%s %s\n"
-		if r.Err != nil {
-			s += fmt.Sprintf(format, util.Lowlight(fmt.Sprintf("%-11s", r.Check)), util.Lowlight(fmt.Sprintf("%s", r.Err)))
-		} else if r.NotOK {
-			s += fmt.Sprintf(format, util.Highlight(fmt.Sprintf("%-11s", r.Check)), r.Msg)
-		} else {
-			s += fmt.Sprintf(format, fmt.Sprintf("%-11s", r.Check), r.Msg)
+		format := "%s %s"
+		s := fmt.Sprintf(format, fmt.Sprintf("%-11s", r.name), r.msg)
+		if r.err != nil {
+			s = fmt.Sprintf(format, util.Lowlight(fmt.Sprintf("%-11s", r.name)), util.Lowlight(fmt.Sprintf("%s", r.err)))
+		} else if r.notOK {
+			s = fmt.Sprintf(format, util.Highlight(fmt.Sprintf("%-11s", r.name)), r.msg)
+			countNotOK++
 		}
+		fmt.Println(s)
 	}
 
-	ch <- s
-}
-
-// RunAndPrintJSON is equivalent to RunAndPrint but it prints results in JSON.
-func RunAndPrintJSON(checks []Check, ipaddr net.IP, ch chan string) {
-	results := runChecks(checks, ipaddr)
-
-	js, err := json.Marshal(results)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	ch <- fmt.Sprintf("%s", js)
+	return countNotOK
 }
 
 // GetAvailable returns all available checks.

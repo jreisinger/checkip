@@ -31,20 +31,6 @@ func main() {
 		checks = flags.ChecksToRun
 	}
 
-	ch := make(chan string)
-	for _, ipaddr := range flags.IPaddrs {
-		if flags.JSON {
-			go check.RunAndPrintJSON(checks, ipaddr, ch)
-		} else {
-			go check.RunAndPrint(checks, ipaddr, ch)
-		}
-	}
-	for range flags.IPaddrs {
-		fmt.Print(<-ch)
-	}
-
-	if check.CountNotOK > 125 {
-		check.CountNotOK = 125
-	}
-	os.Exit(check.CountNotOK)
+	countNotOK := check.RunAndPrint(checks, flags.IPaddr)
+	os.Exit(countNotOK)
 }

@@ -88,7 +88,7 @@ func (a *AbuseIPDB) String() string {
 	if a.isNotOK() {
 		confidence = fmt.Sprintf("%s", util.Highlight(confidence+"%"))
 	}
-	return fmt.Sprintf("reported abusive %d times with %s%% confidence (%s)",
+	return fmt.Sprintf("reported abusive %d times with %s confidence (%s)",
 		a.Data.TotalReports,
 		confidence,
 		a.Data.Domain,
