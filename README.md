@@ -5,25 +5,16 @@
 `checkip` is a CLI tool that finds out information about an IP address (the output is [colored](https://reisinge.net/blog/2021-01-15-check-ip-address) in real terminal):
 
 ```
-$ checkip 45.155.205.108
-AS          49505, 45.155.205.0 - 45.155.205.255, SELECTEL
-AbuseIPDB   reported abusive 2808 times with 100% confidence (smartdata.su)
-DNS         lookup 45.155.205.108: nodename nor servname provided, or not known
-Geolocation St Petersburg, Russia, RU
-IPsum       found on 3 blacklists
-OTX         threat score 2 (seen 2020-12-23 - 2021-02-03)
-Shodan      OS unknown, open ports: 123 (service unknown, version unknown)
+$ checkip 218.92.0.158
+AS          4134, 218.92.0.0 - 218.93.8.255, CHINANET-BACKBONE No.31,Jin-rong Street
+AbuseIPDB   reported abusive 2653 times with 100% confidence (chinatelecom.com.cn)
+DNS         lookup 218.92.0.158: Name or service not known
+Geolocation Qingdao, China, CN
+IPsum       found on 4 blacklists
+OTX         threat score 3 (seen 2019-12-01 - 2020-03-24)
+Shodan      OS unknown, open ports: 22 (OpenSSH, 5.3)
 ThreatCrowd voted malicious/harmless by equal number of users
-VirusTotal  71 harmless, 0 suspicious, 7 malicious analysis results
-
-# Three checks say the IP address is not OK.
-$ echo $?
-3
-
-# Run only selected checks.
-$ checkip -check dns,ipsum 1.1.1.1
-DNS         one.one.one.one.
-IPsum       found on 0 blacklists
+VirusTotal  80 harmless, 2 suspicious, 7 malicious analysis results
 ```
 
 ## Installation
@@ -65,7 +56,7 @@ You can also use environment variables with the same names as in the config file
 * Checks are done concurrently to save time.
 * Output is colored to improve readability.
 * You can select which checks you want to run.
-* Return non-zero exit code when one or more checks say the IP address is not OK.
+* Exit code is the number of checks that say the IP address is not OK.
 * It's easy to add new checks.
 
 Currently these checks (types of information) are available:
