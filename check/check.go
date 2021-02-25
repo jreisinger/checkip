@@ -47,7 +47,7 @@ func (r byName) Len() int           { return len(r) }
 func (r byName) Swap(i, j int)      { r[j], r[i] = r[i], r[j] }
 func (r byName) Less(i, j int) bool { return r[i].name < r[j].name }
 
-func run(chk Check, ipaddr net.IP, ch chan checkResult) {
+func run(chk Check, ipaddr net.IP, chkRes chan checkResult) {
 	var result checkResult
 	result.name = chk.Name()
 	ok, err := chk.Do(ipaddr)
@@ -58,7 +58,7 @@ func run(chk Check, ipaddr net.IP, ch chan checkResult) {
 	if !ok {
 		result.notOK = true
 	}
-	ch <- result
+	chkRes <- result
 }
 
 // RunAndPrint runs concurrent checks of an IP address and prints sorted
