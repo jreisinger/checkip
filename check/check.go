@@ -18,6 +18,22 @@ type Check interface {
 	String() string // result of the check
 }
 
+// GetAvailable returns all available checks.
+func GetAvailable() []Check {
+	availableChecks := []Check{
+		&AbuseIPDB{},
+		&AS{},
+		&DNS{},
+		&Geo{},
+		&IPsum{},
+		&OTX{},
+		&Shodan{},
+		&ThreatCrowd{},
+		&VirusTotal{},
+	}
+	return availableChecks
+}
+
 type checkResult struct {
 	name  string
 	msg   string
@@ -72,22 +88,6 @@ func RunAndPrint(checks []Check, ipaddr net.IP) (countNotOK int) {
 	}
 
 	return countNotOK
-}
-
-// GetAvailable returns all available checks.
-func GetAvailable() []Check {
-	availableChecks := []Check{
-		&AbuseIPDB{},
-		&AS{},
-		&DNS{},
-		&Geo{},
-		&IPsum{},
-		&OTX{},
-		&Shodan{},
-		&ThreatCrowd{},
-		&VirusTotal{},
-	}
-	return availableChecks
 }
 
 // NewHTTPClient creates an HTTP client. Clients and Transports are safe for
