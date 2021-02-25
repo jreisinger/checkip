@@ -34,39 +34,40 @@ func GetAvailable() []Check {
 	return availableChecks
 }
 
-type checkResult struct {
+// Result represents result of a check.
+type Result struct {
 	name  string
 	msg   string
 	notOK bool
 	err   error
 }
 
-type byName []checkResult
+type byName []Result
 
 func (r byName) Len() int           { return len(r) }
 func (r byName) Swap(i, j int)      { r[j], r[i] = r[i], r[j] }
 func (r byName) Less(i, j int) bool { return r[i].name < r[j].name }
 
-func run(chk Check, ipaddr net.IP, chkRes chan checkResult) {
-	var result checkResult
-	result.name = chk.Name()
-	ok, err := chk.Do(ipaddr)
-	result.msg = chk.String()
+func run(check Check, ipaddr net.IP, resultCh chan Result) {
+	var result Result
+	result.name = check.Name()
+	ok, err := check.Do(ipaddr)
+	result.msg = check.String()
 	if err != nil {
 		result.err = err
 	}
 	if !ok {
 		result.notOK = true
 	}
-	chkRes <- result
+	resultCh <- result
 }
 
 // RunAndPrint runs concurrent checks of an IP address and prints sorted
 // results. It returns the number of checks that say the IP address is not OK.
 func RunAndPrint(checks []Check, ipaddr net.IP) (countNotOK int) {
-	var results []checkResult
+	var results []Result
 
-	chn := make(chan checkResult)
+	chn := make(chan Result)
 	for _, chk := range checks {
 		go run(chk, ipaddr, chn)
 	}
