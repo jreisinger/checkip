@@ -7,14 +7,14 @@
 ```
 $ checkip 218.92.0.158
 AS          4134, 218.92.0.0 - 218.93.8.255, CHINANET-BACKBONE No.31,Jin-rong Street
-AbuseIPDB   reported abusive 2653 times with 100% confidence (chinatelecom.com.cn)
-DNS         lookup 218.92.0.158: Name or service not known
+AbuseIPDB   reported abusive 5414 times with 100% confidence (chinatelecom.com.cn)
+DNS         lookup 218.92.0.158: nodename nor servname provided, or not known
 Geolocation Qingdao, China, CN
-IPsum       found on 4 blacklists
+IPsum       found on 5 blacklists
 OTX         threat score 3 (seen 2019-12-01 - 2020-03-24)
-Shodan      OS unknown, open ports: 22 (OpenSSH, 5.3)
+Shodan      OS unknown, 1 open port: 22 (OpenSSH, 5.3)
 ThreatCrowd voted malicious/harmless by equal number of users
-VirusTotal  80 harmless, 2 suspicious, 7 malicious analysis results
+VirusTotal  79 harmless, 2 suspicious, 6 malicious analysis results
 ```
 
 ## Installation

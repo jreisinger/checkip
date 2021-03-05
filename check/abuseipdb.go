@@ -87,6 +87,8 @@ func (a *AbuseIPDB) String() string {
 	confidence := strconv.Itoa(a.Data.AbuseConfidenceScore)
 	if a.isNotOK() {
 		confidence = fmt.Sprintf("%s", util.Highlight(confidence+"%"))
+	} else {
+		confidence = fmt.Sprintf("%s", (confidence + "%"))
 	}
 	return fmt.Sprintf("reported abusive %d times with %s confidence (%s)",
 		a.Data.TotalReports,
