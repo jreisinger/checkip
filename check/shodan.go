@@ -70,7 +70,7 @@ func (s *Shodan) Name() string {
 
 // String returns the result of the check.
 func (s *Shodan) String() string {
-	os := "OS unknown"
+	os := "unknown"
 	if s.Os != "" {
 		os = s.Os
 	}
@@ -90,7 +90,16 @@ func (s *Shodan) String() string {
 		portInfo = append(portInfo, fmt.Sprintf("%d (%s, %s)", d.Port, product, version))
 	}
 
-	return fmt.Sprintf("%s, open ports: %s", os, strings.Join(portInfo, ", "))
+	var ports string
+	switch len(portInfo) {
+	case 0:
+		ports = "ports"
+	case 1:
+		ports = "port:"
+	default:
+		ports = "ports:"
+	}
+	return fmt.Sprintf("OS %s, %d open %s %s", os, len(portInfo), ports, strings.Join(portInfo, ", "))
 }
 
 func joinPortData(ds data) string {
