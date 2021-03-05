@@ -84,7 +84,7 @@ func (otx *OTX) String() string {
 		score = util.Highlight(score)
 	}
 
-	return fmt.Sprintf("threat score %s (seen %s - %s)",
+	return fmt.Sprintf("threat score %s (first seen: %s, last seen: %s)",
 		score,
 		parseTime(otx.Reputation.FirstSeen),
 		parseTime(otx.Reputation.LastSeen),
@@ -93,7 +93,7 @@ func (otx *OTX) String() string {
 
 func parseTime(value string) string {
 	if value == "" {
-		return "date unknown"
+		return "no date"
 	}
 	inlayout := "2006-01-02T15:04:05"
 	outlayout := "2006-01-02"
