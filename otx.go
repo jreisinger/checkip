@@ -1,4 +1,4 @@
-package check
+package checkip
 
 import (
 	"encoding/json"
@@ -7,10 +7,7 @@ import (
 	"net"
 	"net/http"
 	"net/url"
-	"strconv"
 	"time"
-
-	"github.com/jreisinger/checkip/util"
 )
 
 // OTX holds IP address reputation data from otx.alienvault.com.
@@ -23,9 +20,9 @@ type OTX struct {
 	} `json:"reputation"`
 }
 
-// Do gets data from https://otx.alienvault.com/api. It returns false when
+// Check gets data from https://otx.alienvault.com/api. It returns false when
 // threat score is higher than two.
-func (otx *OTX) Do(ipaddr net.IP) (bool, error) {
+func (otx *OTX) Check(ipaddr net.IP) (bool, error) {
 	otxurl := fmt.Sprintf("https://otx.alienvault.com/api/v1/indicators/IPv4/%s/reputation", ipaddr.String())
 	baseURL, err := url.Parse(otxurl)
 	if err != nil {
@@ -37,7 +34,7 @@ func (otx *OTX) Do(ipaddr net.IP) (bool, error) {
 		return false, err
 	}
 
-	client := NewHTTPClient(5 * time.Second)
+	client := newHTTPClient(5 * time.Second)
 	resp, err := client.Do(req)
 	if err != nil {
 		return false, err
@@ -52,20 +49,11 @@ func (otx *OTX) Do(ipaddr net.IP) (bool, error) {
 		return false, err
 	}
 
-	if otx.isNotOK() {
-		return false, nil
-	}
-
-	return true, nil
+	return otx.isOK(), nil
 }
 
-func (otx *OTX) isNotOK() bool {
-	return otx.Reputation.ThreatScore > 2
-}
-
-// Name returns the name of the check.
-func (otx *OTX) Name() string {
-	return fmt.Sprint("OTX")
+func (otx *OTX) isOK() bool {
+	return otx.Reputation.ThreatScore <= 2
 }
 
 // String returns the result of the check.
@@ -79,13 +67,8 @@ func (otx *OTX) String() string {
 		}
 	}
 
-	score := strconv.Itoa(otx.Reputation.ThreatScore)
-	if otx.isNotOK() {
-		score = util.Highlight(score)
-	}
-
-	return fmt.Sprintf("threat score %s (first seen: %s, last seen: %s)",
-		score,
+	return fmt.Sprintf("threat score %d (first seen: %s, last seen: %s)",
+		otx.Reputation.ThreatScore,
 		parseTime(otx.Reputation.FirstSeen),
 		parseTime(otx.Reputation.LastSeen),
 	)

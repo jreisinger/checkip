@@ -1,4 +1,4 @@
-package check
+package checkip
 
 import (
 	"net"
@@ -10,7 +10,7 @@ func TestAS(t *testing.T) {
 	for _, ip := range testIPs {
 		a := &AS{}
 		ip := net.ParseIP(ip)
-		_, err := a.Do(ip)
+		_, err := a.Check(ip)
 		if err != nil {
 			t.Errorf("checking %s: %v", ip, err)
 		}
