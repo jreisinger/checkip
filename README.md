@@ -18,8 +18,7 @@ To use the CLI tool:
 ## Configuration
 
 For some checks to work you need to register and get an API (LICENSE) key.
-Then create a `$HOME/.checkip.yaml` using your editor of choice. Provide your
-API/LICENSE keys using the following template:
+Then create a `$HOME/.checkip.yaml` using your editor of choice:
 
 ```
 ABUSEIPDB_API_KEY: aaaaaaaabbbbbbbbccccccccddddddddeeeeeeeeffffffff11111111222222223333333344444444
