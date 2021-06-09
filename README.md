@@ -17,6 +17,8 @@ To use the CLI tool:
 
 ![](checkip.png)
 
+See `cmd/checkip.go` for how to use checkip as a library.
+
 ## Configuration
 
 For some checks to work you need to register and get an API (LICENSE) key.
