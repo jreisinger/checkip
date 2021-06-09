@@ -32,7 +32,7 @@ You can also use environment variables with the same names.
 ## Development
 
 To add a new service for checking IP addresses just implement the
-checkip.Checker interface and then:
+`checkip.Checker` interface and then:
 
 ```
 make run
