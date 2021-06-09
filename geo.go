@@ -1,22 +1,21 @@
-package check
+package checkip
 
 import (
 	"fmt"
 	"net"
 	"strings"
 
-	"github.com/jreisinger/checkip/util"
 	"github.com/oschwald/geoip2-golang"
 )
 
-// Geo holds geographic position of an IP address from MaxMind's GeoIP database.
+// Geo holds geographic location of an IP address from maxmind.com GeoIP database.
 type Geo struct {
 	Location []string
 }
 
-// Do fills in the geolocation data.
-func (g *Geo) Do(ip net.IP) (bool, error) {
-	licenseKey, err := util.GetConfigValue("GEOIP_LICENSE_KEY")
+// Check fills in the geolocation data.
+func (g *Geo) Check(ip net.IP) (bool, error) {
+	licenseKey, err := GetConfigValue("GEOIP_LICENSE_KEY")
 	if err != nil {
 		return false, fmt.Errorf("can't download DB: %w", err)
 	}
@@ -24,7 +23,7 @@ func (g *Geo) Do(ip net.IP) (bool, error) {
 	file := "/var/tmp/GeoLite2-City.mmdb"
 	url := "https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-City&license_key=" + licenseKey + "&suffix=tar.gz"
 
-	if err := util.Update(file, url, "tgz"); err != nil {
+	if err := Update(file, url, "tgz"); err != nil {
 		return false, fmt.Errorf("can't update DB file: %v", err)
 	}
 
@@ -58,11 +57,6 @@ func (g *Geo) Do(ip net.IP) (bool, error) {
 	g.Location = append(g.Location, isoCode)
 
 	return true, nil
-}
-
-// Name returns the name of the check.
-func (g *Geo) Name() string {
-	return fmt.Sprint("Geolocation")
 }
 
 // String returns the result of the check.

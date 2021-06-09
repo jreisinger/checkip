@@ -1,5 +1,4 @@
-// Package util contains utility functions.
-package util
+package checkip
 
 import (
 	"archive/tar"
@@ -8,40 +7,39 @@ import (
 	"io"
 	"net/http"
 	"os"
-	"os/user"
 	"path/filepath"
 	"time"
-
-	"github.com/kylelemons/go-gypsy/yaml"
-	"github.com/logrusorgru/aurora"
 )
 
-// GetConfigValue tries to get value for key first from an environment variable
-// then from a configuration file at $HOME/.checkip.yaml
-func GetConfigValue(key string) (string, error) {
-	var v string
+// Update updates file from url if the file is older than a week. If file does
+// not exist it downloads and creates it. compressFmt is the compression format
+// of the file to download; gz or tgz. Empty string means no compression.
+func Update(file, url string, compressFmt string) error {
+	f, err := os.Stat(file)
 
-	// Try to get the key from environment.
-	if v = os.Getenv(key); v != "" {
-		return v, nil
-	}
+	if os.IsNotExist(err) {
+		r, err := downloadFile(url)
+		if err != nil {
+			return err
+		}
+		if err := extractFile(file, r, compressFmt); err != nil {
+			return err
+		}
 
-	// Try to get the key from the config file.
-	usr, err := user.Current()
-	if err != nil {
-		return "", err
-	}
-	confFile := filepath.Join(usr.HomeDir, ".checkip.yaml")
-	cfg, err := yaml.ReadFile(confFile)
-	if err != nil {
-		return "", err
-	}
-	v, err = cfg.Get(key)
-	if err != nil {
-		return "", fmt.Errorf("%s not found in %s", key, confFile)
+		return nil // don't check ModTime if file does not exist
 	}
 
-	return v, nil
+	if isOlderThanOneWeek(f.ModTime()) {
+		r, err := downloadFile(url)
+		if err != nil {
+			return err
+		}
+		if err := extractFile(file, r, compressFmt); err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
 
 func isOlderThanOneWeek(t time.Time) bool {
@@ -153,45 +151,4 @@ func extractTgzFile(outFile string, r io.ReadCloser) error {
 		}
 	}
 	return nil
-}
-
-// Update updates file from url if the file is older than a week. If file does
-// not exist it downloads and creates it. compressFmt is the compression format
-// of the file to download; gz or tgz. Empty string means no compression.
-func Update(file, url string, compressFmt string) error {
-	f, err := os.Stat(file)
-
-	if os.IsNotExist(err) {
-		r, err := downloadFile(url)
-		if err != nil {
-			return err
-		}
-		if err := extractFile(file, r, compressFmt); err != nil {
-			return err
-		}
-
-		return nil // don't check ModTime if file does not exist
-	}
-
-	if isOlderThanOneWeek(f.ModTime()) {
-		r, err := downloadFile(url)
-		if err != nil {
-			return err
-		}
-		if err := extractFile(file, r, compressFmt); err != nil {
-			return err
-		}
-	}
-
-	return nil
-}
-
-// Highlight makes string more visible.
-func Highlight(s string) string {
-	return fmt.Sprintf("%s", aurora.Magenta(s))
-}
-
-// Lowlight makes string less visible.
-func Lowlight(s string) string {
-	return fmt.Sprintf("%s", aurora.Gray(11, s))
 }

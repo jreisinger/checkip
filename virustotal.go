@@ -1,4 +1,4 @@
-package check
+package checkip
 
 import (
 	"encoding/json"
@@ -6,14 +6,10 @@ import (
 	"net"
 	"net/http"
 	"net/url"
-	"strconv"
 	"time"
-
-	"github.com/jreisinger/checkip/util"
 )
 
-// VirusTotal holds information about an IP address from virustotal.com. See
-// https://developers.virustotal.com/v3.0/reference#ip-object for details.
+// VirusTotal holds information about an IP address from virustotal.com.
 type VirusTotal struct {
 	Data struct {
 		Attributes struct {
@@ -32,10 +28,11 @@ type VirusTotal struct {
 	} `json:"data"`
 }
 
-// Do fills in data for a given IP address from virustotal API. It returns false
-// if the IP address is considered malicious or suspicious by some analysis.
-func (vt *VirusTotal) Do(ipaddr net.IP) (bool, error) {
-	apiKey, err := util.GetConfigValue("VIRUSTOTAL_API_KEY")
+// Check fills in data for a given IP address from virustotal API. It returns
+// false if the IP address is considered malicious or suspicious by some
+// analysis. See https://developers.virustotal.com/v3.0/reference#ip-object
+func (vt *VirusTotal) Check(ipaddr net.IP) (bool, error) {
+	apiKey, err := GetConfigValue("VIRUSTOTAL_API_KEY")
 	if err != nil {
 		return false, fmt.Errorf("can't call API: %w", err)
 	}
@@ -55,7 +52,7 @@ func (vt *VirusTotal) Do(ipaddr net.IP) (bool, error) {
 	// Set request headers.
 	req.Header.Set("x-apikey", apiKey)
 
-	client := NewHTTPClient(5 * time.Second)
+	client := newHTTPClient(5 * time.Second)
 	resp, err := client.Do(req)
 	if err != nil {
 		return false, err
@@ -70,31 +67,18 @@ func (vt *VirusTotal) Do(ipaddr net.IP) (bool, error) {
 		return false, err
 	}
 
-	if vt.isNotOK() {
-		return false, nil
-	}
-
-	return true, nil
+	return vt.isOK(), nil
 }
 
-func (vt *VirusTotal) isNotOK() bool {
-	return vt.Data.Attributes.LastAnalysisStats.Malicious > 0
-}
-
-// Name returns the name of the check.
-func (vt *VirusTotal) Name() string {
-	return fmt.Sprint("VirusTotal")
+func (vt *VirusTotal) isOK() bool {
+	return vt.Data.Attributes.LastAnalysisStats.Malicious <= 0
 }
 
 // String returns the result of the check.
 func (vt *VirusTotal) String() string {
-	malicious := strconv.Itoa(vt.Data.Attributes.LastAnalysisStats.Malicious)
-	if vt.isNotOK() {
-		malicious = util.Highlight(malicious)
-	}
-	return fmt.Sprintf("%d harmless, %d suspicious, %s malicious analysis results",
+	return fmt.Sprintf("%d harmless, %d suspicious, %d malicious analysis results",
 		vt.Data.Attributes.LastAnalysisStats.Harmless,
 		vt.Data.Attributes.LastAnalysisStats.Suspicious,
-		malicious,
+		vt.Data.Attributes.LastAnalysisStats.Malicious,
 	)
 }

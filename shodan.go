@@ -1,4 +1,4 @@
-package check
+package checkip
 
 import (
 	"encoding/json"
@@ -7,8 +7,6 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
-
-	"github.com/jreisinger/checkip/util"
 )
 
 // Shodan holds information about an IP address from shodan.io scan data.
@@ -25,10 +23,10 @@ type data []struct {
 	Port    int    `json:"port"`
 }
 
-// Do fills in Shodan data for a given IP address. Its get the data from
+// Check fills in Shodan data for a given IP address. Its get the data from
 // https://api.shodan.io
-func (s *Shodan) Do(ipaddr net.IP) (bool, error) {
-	apiKey, err := util.GetConfigValue("SHODAN_API_KEY")
+func (s *Shodan) Check(ipaddr net.IP) (bool, error) {
+	apiKey, err := GetConfigValue("SHODAN_API_KEY")
 	if err != nil {
 		return false, fmt.Errorf("can't call API: %w", err)
 	}
@@ -43,15 +41,11 @@ func (s *Shodan) Do(ipaddr net.IP) (bool, error) {
 		return false, err
 	}
 
-	if s.isNotOK() {
-		return false, nil
-	}
-
-	return true, nil
+	return s.isOK(), nil
 }
 
-func (s *Shodan) isNotOK() bool {
-	return s.gotServiceVersion()
+func (s *Shodan) isOK() bool {
+	return !s.gotServiceVersion()
 }
 
 func (s *Shodan) gotServiceVersion() bool {
@@ -63,43 +57,34 @@ func (s *Shodan) gotServiceVersion() bool {
 	return false
 }
 
-// Name returns the name of the check.
-func (s *Shodan) Name() string {
-	return fmt.Sprint("Shodan")
-}
-
 // String returns the result of the check.
 func (s *Shodan) String() string {
-	os := "unknown"
+	os := "OS unknown"
 	if s.Os != "" {
 		os = s.Os
 	}
 
-	portInfo := []string{}
+	var portInfo []string
 	for _, d := range s.Data {
-		product := d.Product
-		if product == "" {
-			product = "service unknown"
+		product := "service unknown"
+		if d.Product != "" {
+			product = d.Product
 		}
-		version := d.Version
-		if version != "" {
-			version = util.Highlight(version)
-		} else {
-			version = "version unknown"
+
+		version := "version unknown"
+		if d.Version != "" {
+			version = d.Version
 		}
+
 		portInfo = append(portInfo, fmt.Sprintf("%d (%s, %s)", d.Port, product, version))
 	}
 
-	var ports string
-	switch len(portInfo) {
-	case 0:
-		ports = "ports"
-	case 1:
-		ports = "port:"
-	default:
-		ports = "ports:"
+	portStr := "port"
+	if len(portInfo) != 1 {
+		portStr += "s"
 	}
-	return fmt.Sprintf("OS %s, %d open %s %s", os, len(portInfo), ports, strings.Join(portInfo, ", "))
+
+	return fmt.Sprintf("%s, %d open %s %s", os, len(portInfo), portStr, strings.Join(portInfo, ", "))
 }
 
 func joinPortData(ds data) string {

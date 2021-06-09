@@ -1,4 +1,4 @@
-package check
+package checkip
 
 import (
 	"bufio"
@@ -7,23 +7,21 @@ import (
 	"os"
 	"strconv"
 	"strings"
-
-	"github.com/jreisinger/checkip/util"
 )
 
 // IPsum counts on how many blacklists the IP address was found according to
-// https://github.com/stamparm/ipsum.
+// github.com/stamparm/ipsum.
 type IPsum struct {
 	NumOfBlacklists int
 }
 
-// Do fills in the date into IPsum. If the IP address is found on at least 3
+// Check fills in the date into IPsum. If the IP address is found on at least 3
 // blacklists it returns false.
-func (ip *IPsum) Do(ipaddr net.IP) (bool, error) {
+func (ip *IPsum) Check(ipaddr net.IP) (bool, error) {
 	file := "/var/tmp/ipsum.txt"
 	url := "https://raw.githubusercontent.com/stamparm/ipsum/master/ipsum.txt"
 
-	if err := util.Update(file, url, ""); err != nil {
+	if err := Update(file, url, ""); err != nil {
 		return false, fmt.Errorf("can't update %s from %s: %v", file, url, err)
 	}
 
@@ -71,17 +69,9 @@ func (ip *IPsum) search(ipaddr net.IP, tsvFile string) error {
 	return nil
 }
 
-// Name returns the name of the check.
-func (ip *IPsum) Name() string {
-	return fmt.Sprint("IPsum")
-}
-
 // String returns the result of the check.
 func (ip *IPsum) String() string {
 	s := fmt.Sprintf("found on %d blacklist", ip.NumOfBlacklists)
-	if ip.isNotOK() {
-		s = fmt.Sprintf("found on %s blacklist", util.Highlight(strconv.Itoa(ip.NumOfBlacklists)))
-	}
 	if ip.NumOfBlacklists != 1 {
 		s += "s"
 	}

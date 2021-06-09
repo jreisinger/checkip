@@ -1,16 +1,9 @@
-VERSION ?= dev
-
 test:
-	go clean -testcache && go test -race -cover ./...
+	go test ./...
 
 install: test
-	go install -ldflags "-X main.Version=${VERSION}"
+	go install cmd/checkip.go
 
-release:
-	docker build --build-arg version=${VERSION} -t checkip-releases -f Releases.Dockerfile .
-	docker create -ti --name checkip-releases checkip-releases sh
-	test -d releases || mkdir releases
-	docker cp checkip-releases:/releases/checkip-linux-amd64 releases/
-	docker cp checkip-releases:/releases/checkip-darwin-amd64 releases/
-	docker rm checkip-releases
-	docker rmi checkip-releases
+run: install
+	checkip 1.1.1.1 # ok
+	checkip 218.92.0.158 # suspicious
