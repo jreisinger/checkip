@@ -3,7 +3,7 @@
 `checkip` is a CLI tool and library that checks an IP address using various
 public services.
 
-## Installation and usage
+![](checkip.png)
 
 To install the CLI tool:
 
@@ -12,10 +12,6 @@ git clone git@github.com:jreisinger/checkip.git
 cd checkip
 make install
 ```
-
-To use the CLI tool:
-
-![](checkip.png)
 
 See `cmd/checkip.go` for how to use checkip as a library.
 
