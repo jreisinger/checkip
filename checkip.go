@@ -40,9 +40,9 @@ func run(ip net.IP, format, name string, checker Checker, ch chan string) {
 	ok, err := checker.Check(ip)
 	switch {
 	case err != nil:
-		ch <- fmt.Sprintf(format, name, Lowlight(err.Error()))
+		ch <- fmt.Sprintf(format, name, lowlight(err.Error()))
 	case !ok:
-		ch <- fmt.Sprintf(format, name, Highlight(checker.String()))
+		ch <- fmt.Sprintf(format, name, highlight(checker.String()))
 	default:
 		ch <- fmt.Sprintf(format, name, checker)
 	}

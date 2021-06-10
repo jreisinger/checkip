@@ -32,7 +32,7 @@ type VirusTotal struct {
 // false if the IP address is considered malicious or suspicious by some
 // analysis. See https://developers.virustotal.com/v3.0/reference#ip-object
 func (vt *VirusTotal) Check(ipaddr net.IP) (bool, error) {
-	apiKey, err := GetConfigValue("VIRUSTOTAL_API_KEY")
+	apiKey, err := getConfigValue("VIRUSTOTAL_API_KEY")
 	if err != nil {
 		return false, fmt.Errorf("can't call API: %w", err)
 	}

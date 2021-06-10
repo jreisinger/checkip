@@ -6,12 +6,12 @@ import (
 	"github.com/logrusorgru/aurora"
 )
 
-// Highlight makes string more visible.
-func Highlight(s string) string {
+// highlight makes string more visible.
+func highlight(s string) string {
 	return fmt.Sprintf("%s", aurora.Magenta(s))
 }
 
-// Lowlight makes string less visible.
-func Lowlight(s string) string {
+// lowlight makes string less visible.
+func lowlight(s string) string {
 	return fmt.Sprintf("%s", aurora.Gray(11, s))
 }

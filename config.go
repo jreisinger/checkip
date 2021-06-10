@@ -9,9 +9,9 @@ import (
 	"github.com/kylelemons/go-gypsy/yaml"
 )
 
-// GetConfigValue tries to get value for key first from an environment variable
+// getConfigValue tries to get value for key first from an environment variable
 // then from a configuration file at $HOME/.checkip.yaml
-func GetConfigValue(key string) (string, error) {
+func getConfigValue(key string) (string, error) {
 	var v string
 
 	// Try to get the key from environment.

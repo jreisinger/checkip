@@ -26,7 +26,7 @@ type data []struct {
 // Check fills in Shodan data for a given IP address. Its get the data from
 // https://api.shodan.io
 func (s *Shodan) Check(ipaddr net.IP) (bool, error) {
-	apiKey, err := GetConfigValue("SHODAN_API_KEY")
+	apiKey, err := getConfigValue("SHODAN_API_KEY")
 	if err != nil {
 		return false, fmt.Errorf("can't call API: %w", err)
 	}

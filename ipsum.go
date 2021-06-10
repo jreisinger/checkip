@@ -21,7 +21,7 @@ func (ip *IPsum) Check(ipaddr net.IP) (bool, error) {
 	file := "/var/tmp/ipsum.txt"
 	url := "https://raw.githubusercontent.com/stamparm/ipsum/master/ipsum.txt"
 
-	if err := Update(file, url, ""); err != nil {
+	if err := update(file, url, ""); err != nil {
 		return false, fmt.Errorf("can't update %s from %s: %v", file, url, err)
 	}
 

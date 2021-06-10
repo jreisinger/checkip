@@ -20,7 +20,7 @@ type AbuseIPDB struct {
 // Check fills in AbuseIPDB data for a given IP address. Its get the data from
 // api.abuseipdb.com/api/v2/check (docs.abuseipdb.com/#check-endpoint).
 func (a *AbuseIPDB) Check(ipaddr net.IP) (bool, error) {
-	apiKey, err := GetConfigValue("ABUSEIPDB_API_KEY")
+	apiKey, err := getConfigValue("ABUSEIPDB_API_KEY")
 	if err != nil {
 		return false, fmt.Errorf("can't call API: %w", err)
 	}

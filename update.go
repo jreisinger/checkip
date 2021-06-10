@@ -11,10 +11,10 @@ import (
 	"time"
 )
 
-// Update updates file from url if the file is older than a week. If file does
+// update updates file from url if the file is older than a week. If file does
 // not exist it downloads and creates it. compressFmt is the compression format
 // of the file to download; gz or tgz. Empty string means no compression.
-func Update(file, url string, compressFmt string) error {
+func update(file, url string, compressFmt string) error {
 	f, err := os.Stat(file)
 
 	if os.IsNotExist(err) {

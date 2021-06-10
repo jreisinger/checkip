@@ -15,7 +15,7 @@ type Geo struct {
 
 // Check fills in the geolocation data.
 func (g *Geo) Check(ip net.IP) (bool, error) {
-	licenseKey, err := GetConfigValue("GEOIP_LICENSE_KEY")
+	licenseKey, err := getConfigValue("GEOIP_LICENSE_KEY")
 	if err != nil {
 		return false, fmt.Errorf("can't download DB: %w", err)
 	}
@@ -23,7 +23,7 @@ func (g *Geo) Check(ip net.IP) (bool, error) {
 	file := "/var/tmp/GeoLite2-City.mmdb"
 	url := "https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-City&license_key=" + licenseKey + "&suffix=tar.gz"
 
-	if err := Update(file, url, "tgz"); err != nil {
+	if err := update(file, url, "tgz"); err != nil {
 		return false, fmt.Errorf("can't update DB file: %v", err)
 	}
 
