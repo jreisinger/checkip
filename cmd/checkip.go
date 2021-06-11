@@ -24,7 +24,7 @@ func main() {
 		"abuseipdb.com":             &checkip.AbuseIPDB{},
 		"iptoasn.com":               &checkip.AS{},
 		"net.LookupAddr":            &checkip.DNS{},
-		"maxmind.com geolocation":   &checkip.Geo{},
+		"maxmind.com GeoLite2":      &checkip.Geo{},
 		"github.com/stamparm/ipsum": &checkip.IPsum{},
 		"otx.alienvault.com":        &checkip.OTX{},
 		"shodan.io":                 &checkip.Shodan{},
