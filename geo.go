@@ -3,14 +3,13 @@ package checkip
 import (
 	"fmt"
 	"net"
-	"strings"
 
 	"github.com/oschwald/geoip2-golang"
 )
 
 // Geo holds geographic location of an IP address from maxmind.com GeoIP database.
 type Geo struct {
-	Location []string
+	City, Country, IsoCode string
 }
 
 // Check fills in the geolocation data.
@@ -38,28 +37,23 @@ func (g *Geo) Check(ip net.IP) (bool, error) {
 		return false, err
 	}
 
-	city := record.City.Names["en"]
-	country := record.Country.Names["en"]
-	isoCode := record.Country.IsoCode
+	g.City = record.City.Names["en"]
+	g.Country = record.Country.Names["en"]
+	g.IsoCode = record.Country.IsoCode
 
-	if city == "" {
-		city = "city unknown"
+	if g.City == "" {
+		g.City = "city unknown"
 	}
-	if country == "" {
-		country = "country unknown"
+	if g.Country == "" {
+		g.Country = "country unknown"
 	}
-	if isoCode == "" {
-		isoCode = "ISO code unknown"
+	if g.IsoCode == "" {
+		g.IsoCode = "ISO code unknown"
 	}
-
-	g.Location = append(g.Location, city)
-	g.Location = append(g.Location, country)
-	g.Location = append(g.Location, isoCode)
-
 	return true, nil
 }
 
 // String returns the result of the check.
 func (g *Geo) String() string {
-	return fmt.Sprintf("%s", strings.Join(g.Location, ", "))
+	return fmt.Sprintf("%s, %s (%s)", g.City, g.Country, g.IsoCode)
 }

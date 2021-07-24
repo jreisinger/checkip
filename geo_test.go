@@ -12,8 +12,8 @@ func TestGeoCheck(t *testing.T) {
 	}
 
 	type testpair struct {
-		ip    string
-		state string
+		ip      string
+		country string
 	}
 	testpairs := []testpair{
 		{"1.1.1.1", "Australia"},
@@ -23,8 +23,8 @@ func TestGeoCheck(t *testing.T) {
 		g := &Geo{}
 		ip := net.ParseIP(tp.ip)
 		g.Check(ip)
-		if g.Location[1] != tp.state {
-			t.Errorf("%s is expected to be in %s but is in %s", tp.ip, tp.state, g.Location[1])
+		if g.Country != tp.country {
+			t.Errorf("%s is expected to be in %s but is in %s", tp.ip, tp.country, g.Country)
 		}
 	}
 
