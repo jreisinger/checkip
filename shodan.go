@@ -83,6 +83,9 @@ func (s *Shodan) String() string {
 	if len(portInfo) != 1 {
 		portStr += "s"
 	}
+	if len(portInfo) > 0 {
+		portStr += ":"
+	}
 
 	return fmt.Sprintf("%s, %d open %s %s", os, len(portInfo), portStr, strings.Join(portInfo, ", "))
 }
