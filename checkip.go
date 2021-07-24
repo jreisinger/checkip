@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net"
 	"net/http"
+	"sort"
 	"strconv"
 	"time"
 )
@@ -23,7 +24,8 @@ type Checkers map[string]Checker
 // Run checks an IP address running Checkers concurrently. It prints the name
 // and the info the Checker has found about the IP address. If the Checker
 // considers the IP address suspicious (not ok) the info is highlighted. If the
-// Checker returns en error the info is lowlighted.
+// Checker returns en error the info is lowlighted. Resuls are alphabetically
+// sorted by the Checker name.
 func (checkers Checkers) Run(ip net.IP) {
 	ch := make(chan string)
 	longest := longestName(checkers)
@@ -31,8 +33,13 @@ func (checkers Checkers) Run(ip net.IP) {
 	for name, checker := range checkers {
 		go run(ip, format, name, checker, ch)
 	}
+	var results []string
 	for range checkers {
-		fmt.Println(<-ch)
+		results = append(results, <-ch)
+	}
+	sort.Strings(results)
+	for _, res := range results {
+		fmt.Println(res)
 	}
 }
 
