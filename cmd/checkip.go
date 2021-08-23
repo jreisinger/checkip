@@ -31,5 +31,5 @@ func main() {
 		"threatcrowd.org":           &checkip.ThreatCrowd{},
 		"virustotal.com":            &checkip.VirusTotal{},
 	}
-	checkers.Run(ipaddr)
+	checkers.CheckAndPrint(ipaddr)
 }
