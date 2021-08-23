@@ -29,15 +29,11 @@ func (ip *IPsum) Check(ipaddr net.IP) (bool, error) {
 		return false, fmt.Errorf("searching %s in %s: %v", ipaddr, file, err)
 	}
 
-	if ip.isNotOK() {
-		return false, nil
-	}
-
-	return true, nil
+	return ip.isOK(), nil
 }
 
-func (ip *IPsum) isNotOK() bool {
-	return ip.NumOfBlacklists > 2
+func (ip *IPsum) isOK() bool {
+	return ip.NumOfBlacklists == 0
 }
 
 // search searches the ippadrr in tsvFile and if found fills in IPsum data.
