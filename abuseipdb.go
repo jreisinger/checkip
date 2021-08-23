@@ -9,11 +9,15 @@ import (
 	"time"
 )
 
+// Only return reports within the last x amount of days. Default is 30.
+var maxAgeInDays = "90"
+
 // AbuseIPDB holds information about an IP address from abuseipdb.com database.
 type AbuseIPDB struct {
 	Data struct {
-		AbuseConfidenceScore int `json:"abuseConfidenceScore"`
-		TotalReports         int `json:"totalReports"`
+		AbuseConfidenceScore int  `json:"abuseConfidenceScore"`
+		TotalReports         int  `json:"totalReports"`
+		IsWhitelisted        bool `json:"isWhitelisted"`
 	} `json:"data"`
 }
 
@@ -33,6 +37,7 @@ func (a *AbuseIPDB) Check(ipaddr net.IP) (bool, error) {
 	// Add GET paramaters.
 	params := url.Values{}
 	params.Add("ipAddress", ipaddr.String())
+	params.Add("maxAgeInDays", maxAgeInDays)
 	baseURL.RawQuery = params.Encode()
 
 	req, err := http.NewRequest("GET", baseURL.String(), nil)
@@ -64,13 +69,15 @@ func (a *AbuseIPDB) Check(ipaddr net.IP) (bool, error) {
 }
 
 func (a *AbuseIPDB) isOK() bool {
-	return a.Data.AbuseConfidenceScore <= 25
+	return a.Data.TotalReports == 0 || a.Data.IsWhitelisted || a.Data.AbuseConfidenceScore <= 25
 }
 
 // String returns the result of the check.
 func (a *AbuseIPDB) String() string {
-	return fmt.Sprintf("reported abusive %d times with %d%% confidence",
+	return fmt.Sprintf("%d reports in last %s days (abuseConfidence score: %d%%, whitelisted: %v)",
 		a.Data.TotalReports,
+		maxAgeInDays,
 		a.Data.AbuseConfidenceScore,
+		a.Data.IsWhitelisted,
 	)
 }
