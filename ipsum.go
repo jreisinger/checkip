@@ -71,5 +71,5 @@ func (ip *IPsum) String() string {
 	if ip.NumOfBlacklists != 1 {
 		s += "s"
 	}
-	return fmt.Sprintf(s)
+	return s
 }
