@@ -74,7 +74,7 @@ func (a *AbuseIPDB) isOK() bool {
 
 // String returns the result of the check.
 func (a *AbuseIPDB) String() string {
-	return fmt.Sprintf("%d reports in last %s days (abuseConfidence score: %d%%, whitelisted: %v)",
+	return fmt.Sprintf("%d reports in last %s days (abuse confidence score: %d%%, whitelisted: %v)",
 		a.Data.TotalReports,
 		maxAgeInDays,
 		a.Data.AbuseConfidenceScore,
