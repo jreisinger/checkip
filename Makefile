@@ -5,8 +5,10 @@ install: test
 	go install cmd/checkip.go
 
 run: install
-	checkip 1.1.1.1 # ok
-	checkip 218.92.0.158 # suspicious
+	# ok ipaddr
+	checkip 1.1.1.1 | sort
+	# suspicious ipaddr
+	checkip 218.92.0.158 | sort
 
 build: test
 	GOOS=linux GOARCH=amd64 go build -o cmd/checkip-linux-amd64 cmd/checkip.go

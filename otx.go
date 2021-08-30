@@ -3,7 +3,6 @@ package checkip
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 	"net"
 	"net/http"
 	"net/url"
@@ -12,18 +11,14 @@ import (
 
 // OTX holds IP address reputation data from otx.alienvault.com.
 type OTX struct {
-	Reputation struct {
-		ThreatScore int         `json:"threat_score"`
-		Counts      interface{} `json:"counts"`
-		FirstSeen   string      `json:"first_seen"`
-		LastSeen    string      `json:"last_seen"`
-	} `json:"reputation"`
+	PulseInfo struct {
+		Count int `json:"count"`
+	} `json:"pulse_info"`
 }
 
-// Check gets data from https://otx.alienvault.com/api. It returns false when
-// threat score is higher than two.
+// Check gets data from https://otx.alienvault.com/api.
 func (otx *OTX) Check(ipaddr net.IP) (bool, error) {
-	otxurl := fmt.Sprintf("https://otx.alienvault.com/api/v1/indicators/IPv4/%s/reputation", ipaddr.String())
+	otxurl := fmt.Sprintf("https://otx.alienvault.com/api/v1/indicators/IPv4/%s/", ipaddr.String())
 	baseURL, err := url.Parse(otxurl)
 	if err != nil {
 		return false, err
@@ -53,36 +48,10 @@ func (otx *OTX) Check(ipaddr net.IP) (bool, error) {
 }
 
 func (otx *OTX) isOK() bool {
-	return otx.Reputation.ThreatScore <= 2
+	return otx.PulseInfo.Count <= 10
 }
 
 // String returns the result of the check.
 func (otx *OTX) String() string {
-	var activities []string
-
-	if otx.Reputation.Counts != nil {
-		counts := otx.Reputation.Counts.(map[string]interface{})
-		for activity, n := range counts {
-			activities = append(activities, activity+" - "+fmt.Sprint(n))
-		}
-	}
-
-	return fmt.Sprintf("threat score %d (first seen: %s, last seen: %s)",
-		otx.Reputation.ThreatScore,
-		parseTime(otx.Reputation.FirstSeen),
-		parseTime(otx.Reputation.LastSeen),
-	)
-}
-
-func parseTime(value string) string {
-	if value == "" {
-		return "no date"
-	}
-	inlayout := "2006-01-02T15:04:05"
-	outlayout := "2006-01-02"
-	t, err := time.Parse(inlayout, value)
-	if err != nil {
-		log.Fatal(err)
-	}
-	return t.Format(outlayout)
+	return fmt.Sprintf("%d pulses", otx.PulseInfo.Count)
 }
