@@ -3,3 +3,4 @@
 !.travis.yaml
 cmd/checkip-darwin-amd64
 cmd/checkip-linux-amd64
+/x
