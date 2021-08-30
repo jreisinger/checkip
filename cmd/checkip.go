@@ -17,7 +17,7 @@ func main() {
 
 	if len(flag.Args()) != 1 {
 		fmt.Printf("Usage: %s <ipaddr>\n", os.Args[0])
-		os.Exit(0)
+		os.Exit(1)
 	}
 
 	ipaddr := net.ParseIP(flag.Arg(0))
@@ -26,8 +26,8 @@ func main() {
 		os.Exit(1)
 	}
 
-	// secCheckers can tell you wether the IP address is suspicious.
-	secCheckers := map[string]checkip.Checker{
+	// checkers can tell you wether the IP address is suspicious.
+	checkers := map[string]checkip.Checker{
 		"abuseipdb.com":             &checkip.AbuseIPDB{},
 		"otx.alienvault.com":        &checkip.OTX{},
 		"github.com/stamparm/ipsum": &checkip.IPsum{},
@@ -36,7 +36,8 @@ func main() {
 		"virustotal.com":            &checkip.VirusTotal{},
 	}
 
-	// infoCheckers just give you information about an IP address.
+	// infoCheckers just give you information about an IP address. They
+	// always return ok == true.
 	infoCheckers := map[string]checkip.Checker{
 		"iptoasn.com":          &checkip.AS{},
 		"net.LookupAddr":       &checkip.DNS{},
@@ -45,13 +46,14 @@ func main() {
 
 	if !*s {
 		for k, v := range infoCheckers {
-			secCheckers[k] = v
+			checkers[k] = v
 		}
 	}
 
+	// Run checkers concurrently and print the results.
 	ch := make(chan string)
 	format := "%-25s %s"
-	for name, checker := range secCheckers {
+	for name, checker := range checkers {
 		go func(checker checkip.Checker, name string) {
 			ok, err := checker.Check(ipaddr)
 			switch {
@@ -64,7 +66,7 @@ func main() {
 			}
 		}(checker, name)
 	}
-	for range secCheckers {
+	for range checkers {
 		fmt.Println(<-ch)
 	}
 }
