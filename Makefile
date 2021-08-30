@@ -7,6 +7,7 @@ install: test
 run: install
 	# ok ipaddr
 	checkip 1.1.1.1 | sort
+	checkip 8.8.8.8 | sort
 	# suspicious ipaddr
 	checkip 218.92.0.158 | sort
 

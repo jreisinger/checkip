@@ -13,6 +13,7 @@ import (
 type VirusTotal struct {
 	Data struct {
 		Attributes struct {
+			Reputation        int `json:"reputation"`
 			LastAnalysisStats struct {
 				Harmless   int `json:"harmless"`
 				Malicious  int `json:"malicious"`
@@ -20,10 +21,6 @@ type VirusTotal struct {
 				Timeout    int `json:"timeout"`
 				Undetected int `json:"undetected"`
 			} `json:"last_analysis_stats"`
-			TotalVotes struct {
-				Harmless  int
-				Malicious int
-			} `json:"total_votes"`
 		} `json:"attributes"`
 	} `json:"data"`
 }
@@ -71,14 +68,15 @@ func (vt *VirusTotal) Check(ipaddr net.IP) (bool, error) {
 }
 
 func (vt *VirusTotal) isOK() bool {
-	return vt.Data.Attributes.LastAnalysisStats.Malicious <= 0
+	// https://developers.virustotal.com/reference#ip-object
+	return vt.Data.Attributes.Reputation >= 0
 }
 
 // String returns the result of the check.
 func (vt *VirusTotal) String() string {
-	return fmt.Sprintf("%d harmless, %d suspicious, %d malicious analysis results",
-		vt.Data.Attributes.LastAnalysisStats.Harmless,
-		vt.Data.Attributes.LastAnalysisStats.Suspicious,
-		vt.Data.Attributes.LastAnalysisStats.Malicious,
-	)
+	what := "malicious"
+	if vt.Data.Attributes.Reputation >= 0 {
+		what = "harmless"
+	}
+	return fmt.Sprintf("%s whith reputation of %d (the higher the absolute number, the more you can trust it)", what, vt.Data.Attributes.Reputation)
 }
