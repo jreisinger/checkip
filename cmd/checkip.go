@@ -7,6 +7,7 @@ import (
 	"os"
 
 	"github.com/jreisinger/checkip"
+	"github.com/logrusorgru/aurora"
 )
 
 var s = flag.Bool("s", false, "use only checkers that tell whether ipaddr is suspicious")
@@ -26,7 +27,7 @@ func main() {
 	}
 
 	// secCheckers can tell you wether the IP address is suspicious.
-	secCheckers := checkip.Checkers{
+	secCheckers := map[string]checkip.Checker{
 		"abuseipdb.com":             &checkip.AbuseIPDB{},
 		"otx.alienvault.com":        &checkip.OTX{},
 		"github.com/stamparm/ipsum": &checkip.IPsum{},
@@ -36,7 +37,7 @@ func main() {
 	}
 
 	// infoCheckers just give you information about an IP address.
-	infoCheckers := checkip.Checkers{
+	infoCheckers := map[string]checkip.Checker{
 		"iptoasn.com":          &checkip.AS{},
 		"net.LookupAddr":       &checkip.DNS{},
 		"maxmind.com GeoLite2": &checkip.Geo{},
@@ -48,5 +49,22 @@ func main() {
 		}
 	}
 
-	secCheckers.CheckAndPrint(ipaddr)
+	ch := make(chan string)
+	format := "%-25s %s"
+	for name, checker := range secCheckers {
+		go func(checker checkip.Checker, name string) {
+			ok, err := checker.Check(ipaddr)
+			switch {
+			case err != nil:
+				ch <- fmt.Sprintf(format, name, aurora.Gray(11, err.Error()))
+			case !ok:
+				ch <- fmt.Sprintf(format, name, aurora.Magenta(checker.String()))
+			default:
+				ch <- fmt.Sprintf(format, name, checker)
+			}
+		}(checker, name)
+	}
+	for range secCheckers {
+		fmt.Println(<-ch)
+	}
 }
