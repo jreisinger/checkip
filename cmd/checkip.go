@@ -9,7 +9,7 @@ import (
 	"github.com/jreisinger/checkip"
 )
 
-var c = flag.Bool("c", false, "use only checkers that can tell whether IP address is suspicious")
+var s = flag.Bool("s", false, "use only checkers that tell whether ipaddr is suspicious")
 
 func main() {
 	flag.Parse()
@@ -25,8 +25,8 @@ func main() {
 		os.Exit(1)
 	}
 
-	// checkers can tell you wether the IP address is suspicious.
-	checkers := checkip.Checkers{
+	// secCheckers can tell you wether the IP address is suspicious.
+	secCheckers := checkip.Checkers{
 		"abuseipdb.com":             &checkip.AbuseIPDB{},
 		"otx.alienvault.com":        &checkip.OTX{},
 		"github.com/stamparm/ipsum": &checkip.IPsum{},
@@ -42,11 +42,11 @@ func main() {
 		"maxmind.com GeoLite2": &checkip.Geo{},
 	}
 
-	if !*c {
+	if !*s {
 		for k, v := range infoCheckers {
-			checkers[k] = v
+			secCheckers[k] = v
 		}
 	}
 
-	checkers.CheckAndPrint(ipaddr)
+	secCheckers.CheckAndPrint(ipaddr)
 }
