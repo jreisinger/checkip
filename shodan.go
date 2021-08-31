@@ -24,7 +24,8 @@ type data []struct {
 }
 
 // Check fills in Shodan data for a given IP address. Its get the data from
-// https://api.shodan.io
+// https://api.shodan.io. It returns false if version of at least one listening
+// service is known.
 func (s *Shodan) Check(ipaddr net.IP) (bool, error) {
 	apiKey, err := getConfigValue("SHODAN_API_KEY")
 	if err != nil {

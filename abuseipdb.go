@@ -22,7 +22,9 @@ type AbuseIPDB struct {
 }
 
 // Check fills in AbuseIPDB data for a given IP address. Its get the data from
-// api.abuseipdb.com/api/v2/check (docs.abuseipdb.com/#check-endpoint).
+// api.abuseipdb.com/api/v2/check (docs.abuseipdb.com/#check-endpoint). It
+// returns false if the IP address is not whitelisted and AbuseConfidenceScore >
+// 25.
 func (a *AbuseIPDB) Check(ipaddr net.IP) (bool, error) {
 	apiKey, err := getConfigValue("ABUSEIPDB_API_KEY")
 	if err != nil {

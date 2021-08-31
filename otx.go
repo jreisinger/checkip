@@ -16,7 +16,8 @@ type OTX struct {
 	} `json:"pulse_info"`
 }
 
-// Check gets data from https://otx.alienvault.com/api.
+// Check gets data from https://otx.alienvault.com/api. It returns false if
+// there are more than 10 pulses about the IP address.
 func (otx *OTX) Check(ipaddr net.IP) (bool, error) {
 	otxurl := fmt.Sprintf("https://otx.alienvault.com/api/v1/indicators/IPv4/%s/", ipaddr.String())
 	baseURL, err := url.Parse(otxurl)

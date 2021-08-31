@@ -15,8 +15,8 @@ type IPsum struct {
 	NumOfBlacklists int
 }
 
-// Check fills in the date into IPsum. If the IP address is found on at least 3
-// blacklists it returns false.
+// Check fills in the date into IPsum. If the IP address is found on at least 1
+// blacklist it returns false.
 func (ip *IPsum) Check(ipaddr net.IP) (bool, error) {
 	file := "/var/tmp/ipsum.txt"
 	url := "https://raw.githubusercontent.com/stamparm/ipsum/master/ipsum.txt"

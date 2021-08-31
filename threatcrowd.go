@@ -16,8 +16,8 @@ type ThreatCrowd struct {
 }
 
 // Check retrieves information about an IP address from the ThreatCrowd API:
-// https://www.threatcrowd.org/searchApi/v2/ip/report. If the IP address is
-// voted malicious it returns false.
+// https://www.threatcrowd.org/searchApi/v2/ip/report. It returns false if the
+// IP address is voted malicious by most users.
 func (t *ThreatCrowd) Check(ipaddr net.IP) (bool, error) {
 	baseURL, err := url.Parse("https://www.threatcrowd.org/searchApi/v2/ip/report")
 	if err != nil {
@@ -56,11 +56,6 @@ func (t *ThreatCrowd) isOK() bool {
 	return t.Votes >= 0
 }
 
-// Name returns the name of the check.
-func (t *ThreatCrowd) Name() string {
-	return fmt.Sprint("ThreatCrowd")
-}
-
 // String returns the result of the check.
 func (t *ThreatCrowd) String() string {
 	// https://github.com/AlienVault-OTX/ApiV2#votes
@@ -70,5 +65,5 @@ func (t *ThreatCrowd) String() string {
 		1:  "voted harmless by most users",
 	}
 
-	return fmt.Sprintf("%s", votesMeaning[t.Votes])
+	return votesMeaning[t.Votes]
 }
