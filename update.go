@@ -43,7 +43,7 @@ func update(file, url string, compressFmt string) error {
 }
 
 func isOlderThanOneWeek(t time.Time) bool {
-	return time.Now().Sub(t) > 7*24*time.Hour
+	return time.Since(t) > 7*24*time.Hour
 }
 
 func downloadFile(url string) (r io.ReadCloser, err error) {
@@ -129,7 +129,7 @@ func extractTgzFile(outFile string, r io.ReadCloser) error {
 
 	tarReader := tar.NewReader(gzipReader)
 
-	for true {
+	for {
 		tarHeader, err := tarReader.Next()
 		if err == io.EOF {
 			break

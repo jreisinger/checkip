@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"net"
 	"net/http"
-	"strconv"
 	"strings"
 )
 
@@ -89,22 +88,4 @@ func (s *Shodan) String() string {
 	}
 
 	return fmt.Sprintf("%s, %d open %s %s", os, len(portInfo), portStr, strings.Join(portInfo, ", "))
-}
-
-func joinPortData(ds data) string {
-	var ss []string
-	for _, d := range ds {
-		s := fmt.Sprintf("%d (%s %s)", d.Port, d.Product, d.Version)
-		ss = append(ss, s)
-	}
-	return strings.Join(ss, ", ")
-}
-
-func joinInts(ints []int) string {
-	var ss []string
-	for _, i := range ints {
-		a := strconv.Itoa(i)
-		ss = append(ss, a)
-	}
-	return strings.Join(ss, ", ")
 }
