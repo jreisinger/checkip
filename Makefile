@@ -12,6 +12,13 @@ run: install
 	checkip 218.92.0.158 | sort
 	checkip 92.118.160.17 | sort
 
-build: test
-	GOOS=linux GOARCH=amd64 go build -o cmd/checkip-linux-amd64 cmd/checkip.go
-	GOOS=darwin GOARCH=amd64 go build -o cmd/checkip-darwin-amd64 cmd/checkip.go
+PLATFORMS := linux/amd64 darwin/amd64 linux/arm windows/amd64
+
+temp = $(subst /, ,$@)
+os = $(word 1, $(temp))
+arch = $(word 2, $(temp))
+
+release: test $(PLATFORMS)
+
+$(PLATFORMS):
+	GO111MODULE=on GOOS=$(os) GOARCH=$(arch) go build -o cmd/checkip-$(os)-$(arch) cmd/checkip.go
