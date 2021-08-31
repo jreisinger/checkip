@@ -7,10 +7,9 @@ import (
 	"os"
 
 	"github.com/jreisinger/checkip"
-	"github.com/logrusorgru/aurora"
 )
 
-var s = flag.Bool("s", false, "use only checkers that tell whether ipaddr is suspicious")
+var s = flag.Bool("s", false, "only print how many checkers consider the ipaddr suspicious")
 
 func main() {
 	flag.Parse()
@@ -48,25 +47,11 @@ func main() {
 		for k, v := range infoCheckers {
 			checkers[k] = v
 		}
+		checkip.RunAndPrint(checkers, ipaddr, "%-25s %s")
+	} else {
+		n := checkip.Run(checkers, ipaddr)
+		perc := float64(n) / float64(len(checkers)) * 100.0
+		fmt.Printf("%02.0f%% (%d/%d)\n", perc, n, len(checkers))
 	}
 
-	// Run checkers concurrently and print the results.
-	ch := make(chan string)
-	format := "%-25s %s"
-	for name, checker := range checkers {
-		go func(checker checkip.Checker, name string) {
-			ok, err := checker.Check(ipaddr)
-			switch {
-			case err != nil:
-				ch <- fmt.Sprintf(format, name, aurora.Gray(11, err.Error()))
-			case !ok:
-				ch <- fmt.Sprintf(format, name, aurora.Magenta(checker.String()))
-			default:
-				ch <- fmt.Sprintf(format, name, checker)
-			}
-		}(checker, name)
-	}
-	for range checkers {
-		fmt.Println(<-ch)
-	}
 }
