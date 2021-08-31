@@ -78,5 +78,5 @@ func (vt *VirusTotal) String() string {
 	if vt.Data.Attributes.Reputation >= 0 {
 		what = "harmless"
 	}
-	return fmt.Sprintf("%s with reputation of %d (the higher the absolute number, the more you can trust it)", what, vt.Data.Attributes.Reputation)
+	return fmt.Sprintf("%s with reputation of %d (the higher the absolute number, the more trustworthy)", what, vt.Data.Attributes.Reputation)
 }
