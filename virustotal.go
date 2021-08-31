@@ -31,19 +31,19 @@ type VirusTotal struct {
 func (vt *VirusTotal) Check(ipaddr net.IP) (bool, error) {
 	apiKey, err := getConfigValue("VIRUSTOTAL_API_KEY")
 	if err != nil {
-		return false, fmt.Errorf("can't call API: %w", err)
+		return true, fmt.Errorf("can't call API: %w", err)
 	}
 
 	// curl --header "x-apikey:$VIRUSTOTAL_API_KEY" https://www.virustotal.com/api/v3/ip_addresses/1.1.1.1
 
 	baseURL, err := url.Parse("https://www.virustotal.com/api/v3/ip_addresses/" + ipaddr.String())
 	if err != nil {
-		return false, err
+		return true, err
 	}
 
 	req, err := http.NewRequest("GET", baseURL.String(), nil)
 	if err != nil {
-		return false, err
+		return true, err
 	}
 
 	// Set request headers.
@@ -52,16 +52,16 @@ func (vt *VirusTotal) Check(ipaddr net.IP) (bool, error) {
 	client := newHTTPClient(5 * time.Second)
 	resp, err := client.Do(req)
 	if err != nil {
-		return false, err
+		return true, err
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return false, fmt.Errorf("%s", resp.Status)
+		return true, fmt.Errorf("%s", resp.Status)
 	}
 
 	if err := json.NewDecoder(resp.Body).Decode(vt); err != nil {
-		return false, err
+		return true, err
 	}
 
 	return vt.isOK(), nil

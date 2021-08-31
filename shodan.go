@@ -29,17 +29,17 @@ type data []struct {
 func (s *Shodan) Check(ipaddr net.IP) (bool, error) {
 	apiKey, err := getConfigValue("SHODAN_API_KEY")
 	if err != nil {
-		return false, fmt.Errorf("can't call API: %w", err)
+		return true, fmt.Errorf("can't call API: %w", err)
 	}
 
 	resp, err := http.Get(fmt.Sprintf("https://api.shodan.io/shodan/host/%s?key=%s", ipaddr, apiKey))
 	if err != nil {
-		return false, err
+		return true, err
 	}
 	defer resp.Body.Close()
 
 	if err := json.NewDecoder(resp.Body).Decode(&s); err != nil {
-		return false, err
+		return true, err
 	}
 
 	return s.isOK(), nil

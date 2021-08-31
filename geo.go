@@ -17,25 +17,25 @@ type Geo struct {
 func (g *Geo) Check(ip net.IP) (bool, error) {
 	licenseKey, err := getConfigValue("GEOIP_LICENSE_KEY")
 	if err != nil {
-		return false, fmt.Errorf("can't download DB: %w", err)
+		return true, fmt.Errorf("can't download DB: %w", err)
 	}
 
 	file := "/var/tmp/GeoLite2-City.mmdb"
 	url := "https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-City&license_key=" + licenseKey + "&suffix=tar.gz"
 
 	if err := update(file, url, "tgz"); err != nil {
-		return false, fmt.Errorf("can't update DB file: %v", err)
+		return true, fmt.Errorf("can't update DB file: %v", err)
 	}
 
 	db, err := geoip2.Open(file)
 	if err != nil {
-		return false, fmt.Errorf("can't load DB file: %v", err)
+		return true, fmt.Errorf("can't load DB file: %v", err)
 	}
 	defer db.Close()
 
 	record, err := db.City(ip)
 	if err != nil {
-		return false, err
+		return true, err
 	}
 
 	g.City = record.City.Names["en"]

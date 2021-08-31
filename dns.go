@@ -1,7 +1,6 @@
 package checkip
 
 import (
-	"fmt"
 	"net"
 	"strings"
 )
@@ -15,7 +14,7 @@ type DNS struct {
 func (d *DNS) Check(ipaddr net.IP) (bool, error) {
 	names, err := net.LookupAddr(ipaddr.String())
 	if err != nil {
-		return false, err
+		return true, err
 	}
 	d.Names = names
 	return true, nil
@@ -23,5 +22,5 @@ func (d *DNS) Check(ipaddr net.IP) (bool, error) {
 
 // String returns the result of the check.
 func (d *DNS) String() string {
-	return fmt.Sprintf("%s", strings.Join(d.Names, ", "))
+	return strings.Join(d.Names, ", ")
 }

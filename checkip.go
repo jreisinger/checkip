@@ -10,9 +10,10 @@ import (
 	"github.com/logrusorgru/aurora"
 )
 
-// Checker checks an IP address. It returns false if it considers the IP address
-// to be suspicious. You can print the Checker to see what it has found about
-// the IP address.
+// Checker checks an IP address. ok is false if it considers the IP address to
+// be suspicious. If the check fails (err != nil), ok must be true - presumption
+// of innocence. Print the Checker to see what it has found about the IP
+// address.
 type Checker interface {
 	Check(ip net.IP) (ok bool, err error)
 	fmt.Stringer

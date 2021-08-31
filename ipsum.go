@@ -22,11 +22,11 @@ func (ip *IPsum) Check(ipaddr net.IP) (bool, error) {
 	url := "https://raw.githubusercontent.com/stamparm/ipsum/master/ipsum.txt"
 
 	if err := update(file, url, ""); err != nil {
-		return false, fmt.Errorf("can't update %s from %s: %v", file, url, err)
+		return true, fmt.Errorf("can't update %s from %s: %v", file, url, err)
 	}
 
 	if err := ip.search(ipaddr, file); err != nil {
-		return false, fmt.Errorf("searching %s in %s: %v", ipaddr, file, err)
+		return true, fmt.Errorf("searching %s in %s: %v", ipaddr, file, err)
 	}
 
 	return ip.isOK(), nil

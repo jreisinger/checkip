@@ -21,7 +21,7 @@ type ThreatCrowd struct {
 func (t *ThreatCrowd) Check(ipaddr net.IP) (bool, error) {
 	baseURL, err := url.Parse("https://www.threatcrowd.org/searchApi/v2/ip/report")
 	if err != nil {
-		return false, err
+		return true, err
 	}
 
 	params := url.Values{}
@@ -30,22 +30,22 @@ func (t *ThreatCrowd) Check(ipaddr net.IP) (bool, error) {
 
 	req, err := http.NewRequest("GET", baseURL.String(), nil)
 	if err != nil {
-		return false, err
+		return true, err
 	}
 
 	client := newHTTPClient(5 * time.Second)
 	resp, err := client.Do(req)
 	if err != nil {
-		return false, err
+		return true, err
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return false, fmt.Errorf("search threatcrowd failed: %s", resp.Status)
+		return true, fmt.Errorf("search threatcrowd failed: %s", resp.Status)
 	}
 
 	if err := json.NewDecoder(resp.Body).Decode(t); err != nil {
-		return false, err
+		return true, err
 	}
 
 	return t.isOK(), nil

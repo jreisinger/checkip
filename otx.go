@@ -22,27 +22,27 @@ func (otx *OTX) Check(ipaddr net.IP) (bool, error) {
 	otxurl := fmt.Sprintf("https://otx.alienvault.com/api/v1/indicators/IPv4/%s/", ipaddr.String())
 	baseURL, err := url.Parse(otxurl)
 	if err != nil {
-		return false, err
+		return true, err
 	}
 
 	req, err := http.NewRequest("GET", baseURL.String(), nil)
 	if err != nil {
-		return false, err
+		return true, err
 	}
 
 	client := newHTTPClient(5 * time.Second)
 	resp, err := client.Do(req)
 	if err != nil {
-		return false, err
+		return true, err
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return false, fmt.Errorf("%s", resp.Status)
+		return true, fmt.Errorf("%s", resp.Status)
 	}
 
 	if err := json.NewDecoder(resp.Body).Decode(otx); err != nil {
-		return false, err
+		return true, err
 	}
 
 	return otx.isOK(), nil

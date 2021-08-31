@@ -28,12 +28,12 @@ type AbuseIPDB struct {
 func (a *AbuseIPDB) Check(ipaddr net.IP) (bool, error) {
 	apiKey, err := getConfigValue("ABUSEIPDB_API_KEY")
 	if err != nil {
-		return false, fmt.Errorf("can't call API: %w", err)
+		return true, fmt.Errorf("can't call API: %w", err)
 	}
 
 	baseURL, err := url.Parse("https://api.abuseipdb.com/api/v2/check")
 	if err != nil {
-		return false, err
+		return true, err
 	}
 
 	// Add GET paramaters.
@@ -44,7 +44,7 @@ func (a *AbuseIPDB) Check(ipaddr net.IP) (bool, error) {
 
 	req, err := http.NewRequest("GET", baseURL.String(), nil)
 	if err != nil {
-		return false, err
+		return true, err
 	}
 
 	// Set request headers.
@@ -55,16 +55,16 @@ func (a *AbuseIPDB) Check(ipaddr net.IP) (bool, error) {
 	client := newHTTPClient(5 * time.Second)
 	resp, err := client.Do(req)
 	if err != nil {
-		return false, err
+		return true, err
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return false, fmt.Errorf("calling API: %s", resp.Status)
+		return true, fmt.Errorf("calling API: %s", resp.Status)
 	}
 
 	if err := json.NewDecoder(resp.Body).Decode(a); err != nil {
-		return false, err
+		return true, err
 	}
 
 	return a.isOK(), nil
