@@ -5,13 +5,15 @@ public services.
 
 ![](checkip.png)
 
-To install the CLI tool:
+To install the CLI tool
 
 ```
 git clone git@github.com:jreisinger/checkip.git
 cd checkip
 make install
 ```
+
+or download a [release](https://github.com/jreisinger/checkip/releases) binary for your system and architecture.
 
 See `cmd/checkip.go` for how to use checkip as a library.
 
@@ -32,7 +34,7 @@ You can also use environment variables with the same names.
 ## Development
 
 To add a new service for checking IP addresses just implement the
-`checkip.Checker` interface and then:
+[checkip.Checker](https://pkg.go.dev/github.com/jreisinger/checkip#Checker) interface and then:
 
 ```
 make run
