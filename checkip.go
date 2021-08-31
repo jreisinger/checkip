@@ -20,7 +20,7 @@ type Checker interface {
 
 // Run runs checkers concurrently and returns the number of checkers that
 // consider the IP address suspicious.
-func Run(checkers map[string]Checker, ipaddr net.IP) int {
+func Run(checkers []Checker, ipaddr net.IP) int {
 	ch := make(chan bool)
 	for _, checker := range checkers {
 		go func(checker Checker) {

@@ -43,15 +43,19 @@ func main() {
 		"maxmind.com GeoLite2": &checkip.Geo{},
 	}
 
-	if !*s {
+	if *s {
+		var checkerSlice []checkip.Checker
+		for _, v := range checkers {
+			checkerSlice = append(checkerSlice, v)
+		}
+		n := checkip.Run(checkerSlice, ipaddr)
+		perc := float64(n) / float64(len(checkers)) * 100.0
+		fmt.Printf("%02.0f%% (%d/%d)\n", perc, n, len(checkers))
+	} else {
 		for k, v := range infoCheckers {
 			checkers[k] = v
 		}
 		checkip.RunAndPrint(checkers, ipaddr, "%-25s %s")
-	} else {
-		n := checkip.Run(checkers, ipaddr)
-		perc := float64(n) / float64(len(checkers)) * 100.0
-		fmt.Printf("%02.0f%% (%d/%d)\n", perc, n, len(checkers))
 	}
 
 }
