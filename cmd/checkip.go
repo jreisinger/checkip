@@ -1,3 +1,4 @@
+// Checkip checks an IP address using all checkers from checkip package.
 package main
 
 import (

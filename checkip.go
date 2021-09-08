@@ -1,4 +1,4 @@
-// Package checkip checks an IP address using various public services.
+// Checkip checks an IP address using various public services.
 package checkip
 
 import (
