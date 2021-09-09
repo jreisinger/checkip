@@ -7,11 +7,11 @@ import (
 	"os"
 )
 
-// ET (Emerging Threats) says whether the IP address was found among compromised
-// IP addresses according to rules.emergingthreats.net
+// ET (Emerging Threats) says whether the IP address was found among CountIPs
+// compromised IP addresses according to rules.emergingthreats.net
 type ET struct {
 	CompromisedIP bool
-	CheckedIPs    int
+	CountIPs      int
 }
 
 // Check checks whether the ippaddr is not among compromised IP addresses from
@@ -42,10 +42,9 @@ func (e *ET) search(ipaddr net.IP, filename string) error {
 	s := bufio.NewScanner(file)
 	for s.Scan() {
 		line := s.Text()
-		e.CheckedIPs++
+		e.CountIPs++
 		if line == ipaddr.String() {
 			e.CompromisedIP = true
-			return nil
 		}
 	}
 	if s.Err() != nil {
@@ -57,7 +56,7 @@ func (e *ET) search(ipaddr net.IP, filename string) error {
 
 // String returns the result of the check.
 func (e *ET) String() string {
-	s := fmt.Sprintf("found among %d compromised IP addresses", e.CheckedIPs)
+	s := fmt.Sprintf("found among %d compromised IP addresses", e.CountIPs)
 	if !e.CompromisedIP {
 		s = "not " + s
 	}
