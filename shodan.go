@@ -50,7 +50,19 @@ func (s *Shodan) isOK() bool {
 
 func (s *Shodan) gotServiceVersion() bool {
 	for _, d := range s.Data {
-		if d.Version != "" {
+		if d.Version != "" && !okBanner(d.Product) {
+			return true
+		}
+	}
+	return false
+}
+
+func okBanner(product string) bool {
+	okBannersPrefixes := []string{
+		"OpenSSH",
+	}
+	for _, prefix := range okBannersPrefixes {
+		if strings.HasPrefix(product, prefix) {
 			return true
 		}
 	}
