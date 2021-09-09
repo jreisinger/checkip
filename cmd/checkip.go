@@ -29,6 +29,7 @@ func main() {
 	// checkers can tell you wether the IP address is suspicious.
 	checkers := map[string]checkip.Checker{
 		"abuseipdb.com":             &checkip.AbuseIPDB{},
+		"cinsscore.com":             &checkip.CINSArmy{},
 		"emergingthreats.net":       &checkip.ET{},
 		"otx.alienvault.com":        &checkip.OTX{},
 		"github.com/stamparm/ipsum": &checkip.IPsum{},
