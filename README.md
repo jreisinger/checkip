@@ -13,7 +13,8 @@ cd checkip
 make install
 ```
 
-or download a [release](https://github.com/jreisinger/checkip/releases) binary for your system and architecture.
+or download a [release](https://github.com/jreisinger/checkip/releases)
+binary for your system and architecture.
 
 See `cmd/checkip.go` for how to use checkip as a library.
 
@@ -31,10 +32,12 @@ VIRUSTOTAL_API_KEY: aaaaaaaabbbbbbbbccccccccddddddddeeeeeeeeffffffff111111112222
 
 You can also use environment variables with the same names.
 
-## Development
+## Adding Checkers
 
-To add a new service for checking IP addresses just implement the
-[checkip.Checker](https://pkg.go.dev/github.com/jreisinger/checkip#Checker) interface and then:
+To add a new service for checking IP addresses (i.e. a Checker) just
+implement the
+[checkip.Checker](https://pkg.go.dev/github.com/jreisinger/checkip#Checker)
+interface and add it to `cmd/checkip.go`. Then:
 
 ```
 make run

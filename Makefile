@@ -5,10 +5,10 @@ install: test
 	go install cmd/checkip.go
 
 run: install
-	# ok ipaddr
+	### run CLI tool with ok IP addresses
 	checkip 1.1.1.1 | sort
 	checkip 8.8.8.8 | sort
-	# suspicious ipaddr
+	### run CLI tool with suspicious IP addresses
 	checkip 218.92.0.158 | sort
 	checkip 92.118.160.17 | sort
 

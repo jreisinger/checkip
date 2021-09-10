@@ -10,7 +10,7 @@ import (
 
 // Checker checks an IP address. ok is false if it considers the IP address to
 // be suspicious. If the check fails (err != nil), ok must be true - presumption
-// of innocence. Print the Checker to see what it has found about the IP
+// of innocence. Checker can be printed to see what it has found about the IP
 // address.
 type Checker interface {
 	Check(ip net.IP) (ok bool, err error)
