@@ -20,7 +20,7 @@ func (c *CINSArmy) Check(ipaddr net.IP) (bool, error) {
 	file := "/var/tmp/cins.txt"
 	url := "http://cinsscore.com/list/ci-badguys.txt"
 
-	if err := update(file, url, ""); err != nil {
+	if err := updateFile(file, url, ""); err != nil {
 		return true, fmt.Errorf("can't update %s from %s: %v", file, url, err)
 	}
 

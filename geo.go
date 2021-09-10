@@ -23,7 +23,7 @@ func (g *Geo) Check(ip net.IP) (bool, error) {
 	file := "/var/tmp/GeoLite2-City.mmdb"
 	url := "https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-City&license_key=" + licenseKey + "&suffix=tar.gz"
 
-	if err := update(file, url, "tgz"); err != nil {
+	if err := updateFile(file, url, "tgz"); err != nil {
 		return true, fmt.Errorf("can't update DB file: %v", err)
 	}
 

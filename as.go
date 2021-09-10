@@ -26,7 +26,7 @@ func (a *AS) Check(ipaddr net.IP) (bool, error) {
 	file := "/var/tmp/ip2asn-combined.tsv"
 	url := "https://iptoasn.com/data/ip2asn-combined.tsv.gz"
 
-	if err := update(file, url, "gz"); err != nil {
+	if err := updateFile(file, url, "gz"); err != nil {
 		return true, fmt.Errorf("can't update %s from %s: %v", file, url, err)
 	}
 
