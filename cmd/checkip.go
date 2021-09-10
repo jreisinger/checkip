@@ -44,6 +44,7 @@ func main() {
 		"iptoasn.com":          &checkip.AS{},
 		"net.LookupAddr":       &checkip.DNS{},
 		"maxmind.com GeoLite2": &checkip.Geo{},
+		"net.IP":               &checkip.IP{},
 	}
 
 	if *s {
