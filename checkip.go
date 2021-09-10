@@ -4,8 +4,6 @@ package checkip
 import (
 	"fmt"
 	"net"
-	"net/http"
-	"time"
 
 	"github.com/logrusorgru/aurora"
 )
@@ -62,11 +60,4 @@ func RunAndPrint(checkers map[string]Checker, ipaddr net.IP, format string) {
 	for range checkers {
 		fmt.Println(<-ch)
 	}
-}
-
-// newHTTPClient creates an HTTP client. Clients and Transports are safe for
-// concurrent use by multiple goroutines and for efficiency should only be
-// created once and re-used. See https://golang.org/pkg/net/http/ for more.
-func newHTTPClient(timeout time.Duration) *http.Client {
-	return &http.Client{Timeout: timeout}
 }
