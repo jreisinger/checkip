@@ -21,6 +21,7 @@ type Checker interface {
 // Run runs checkers concurrently and returns the number of checkers that
 // consider the IP address to be suspicious.
 func Run(checkers []Checker, ipaddr net.IP) int {
+	var mu sync.Mutex
 	var suspicious int
 	var wg sync.WaitGroup
 	for _, checker := range checkers {
@@ -28,11 +29,14 @@ func Run(checkers []Checker, ipaddr net.IP) int {
 		go func(checker Checker) {
 			ok, err := checker.Check(ipaddr)
 			if err == nil && !ok {
+				mu.Lock()
 				suspicious++
+				mu.Unlock()
 			}
 			wg.Done()
 		}(checker)
 	}
+	wg.Wait()
 	return suspicious
 }
 
@@ -40,8 +44,8 @@ func Run(checkers []Checker, ipaddr net.IP) int {
 // names to checkers. Format defines how to print the name and checker results
 // (e.g. "%-25s %s").
 func RunAndPrint(checkers map[string]Checker, ipaddr net.IP, format string) {
-	var wg sync.WaitGroup
 	format += "\n"
+	var wg sync.WaitGroup
 	for name, checker := range checkers {
 		wg.Add(1)
 		go func(checker Checker, name string) {
