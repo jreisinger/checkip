@@ -27,4 +27,36 @@ func TestRun(t *testing.T) {
 			t.Fatalf("%s considered suspiscious by %d info checkers", test.ip, got)
 		}
 	}
+
+	// checkers can tell you wether the IP address is suspicious.
+	checkers := []Checker{
+		&AbuseIPDB{},
+		&CINSArmy{},
+		&ET{},
+		&OTX{},
+		&IPsum{},
+		&Shodan{},
+		&ThreatCrowd{},
+		&VirusTotal{},
+	}
+
+	checkers = append(checkers, infoCheckers...)
+
+	tests = []struct {
+		ip         string
+		suspicious int
+	}{
+		{"1.1.1.1", 1},
+		{"1.1.1.2", 0},
+		{"8.8.8.8", 0},
+		{"8.8.4.4", 2},
+	}
+
+	for _, test := range tests {
+		ipaddr := net.ParseIP(test.ip)
+		got := Run(checkers, ipaddr)
+		if got != test.suspicious {
+			t.Fatalf("%s considered suspiscious by %d info checkers", test.ip, got)
+		}
+	}
 }
