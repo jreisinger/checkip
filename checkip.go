@@ -4,6 +4,7 @@ package checkip
 import (
 	"fmt"
 	"net"
+	"sync"
 
 	"github.com/logrusorgru/aurora"
 )
@@ -18,46 +19,43 @@ type Checker interface {
 }
 
 // Run runs checkers concurrently and returns the number of checkers that
-// consider the IP address suspicious.
+// consider the IP address to be suspicious.
 func Run(checkers []Checker, ipaddr net.IP) int {
-	ch := make(chan bool)
+	var suspicious int
+	var wg sync.WaitGroup
 	for _, checker := range checkers {
+		wg.Add(1)
 		go func(checker Checker) {
 			ok, err := checker.Check(ipaddr)
-			if err == nil {
-				ch <- ok
+			if err == nil && !ok {
+				suspicious++
 			}
+			wg.Done()
 		}(checker)
-	}
-	var suspicious int
-	for range checkers {
-		ok := <-ch
-		if !ok {
-			suspicious++
-		}
 	}
 	return suspicious
 }
 
-// RunAndPrint runs checkers concurrently and print the results. checkers maps a
-// name to a checker. Format defines how to print the name and checker results
+// RunAndPrint runs checkers concurrently and print the results. checkers maps
+// names to checkers. Format defines how to print the name and checker results
 // (e.g. "%-25s %s").
 func RunAndPrint(checkers map[string]Checker, ipaddr net.IP, format string) {
-	ch := make(chan string)
+	var wg sync.WaitGroup
+	format += "\n"
 	for name, checker := range checkers {
+		wg.Add(1)
 		go func(checker Checker, name string) {
 			ok, err := checker.Check(ipaddr)
 			switch {
 			case err != nil:
-				ch <- fmt.Sprintf(format, name, aurora.Gray(11, err.Error()))
+				fmt.Printf(format, name, aurora.Gray(11, err.Error()))
 			case !ok:
-				ch <- fmt.Sprintf(format, name, aurora.Magenta(checker.String()))
+				fmt.Printf(format, name, aurora.Magenta(checker.String()))
 			default:
-				ch <- fmt.Sprintf(format, name, checker)
+				fmt.Printf(format, name, checker)
 			}
+			wg.Done()
 		}(checker, name)
 	}
-	for range checkers {
-		fmt.Println(<-ch)
-	}
+	wg.Wait()
 }
