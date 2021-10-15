@@ -10,7 +10,7 @@ import (
 	"github.com/jreisinger/checkip"
 )
 
-var s = flag.Bool("s", false, "only print how many checkers consider the ipaddr suspicious")
+var i = flag.Bool("i", false, "run only information checkers")
 
 func main() {
 	flag.Parse()
@@ -47,19 +47,12 @@ func main() {
 		"net.IP":               &checkip.IP{},
 	}
 
-	if *s {
-		var checkerSlice []checkip.Checker
-		for _, v := range checkers {
-			checkerSlice = append(checkerSlice, v)
-		}
-		n := checkip.Run(checkerSlice, ipaddr)
-		perc := float64(n) / float64(len(checkers)) * 100.0
-		fmt.Printf("%02.0f%% (%d/%d)\n", perc, n, len(checkers))
+	if *i {
+		checkers = infoCheckers
 	} else {
 		for k, v := range infoCheckers {
 			checkers[k] = v
 		}
-		checkip.RunAndPrint(checkers, ipaddr, "%-25s %s")
 	}
-
+	checkip.RunAndPrint(checkers, ipaddr, "%-25s %s")
 }
