@@ -42,3 +42,13 @@ interface and add it to `cmd/checkip.go`. Then:
 ```
 make run
 ```
+
+## Releasing
+
+```
+make release                        # build binaries in cmd
+git fetch --all --tags              # fetch all tags from remote
+git tag                             # list existing local tags
+git tag -a v0.2.3 -m "improve docs" # add a new tag locally
+git push --tags                     # push local tags to remote
+```
