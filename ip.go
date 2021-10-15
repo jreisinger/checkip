@@ -3,6 +3,8 @@ package checkip
 import (
 	"fmt"
 	"net"
+	"strconv"
+	"strings"
 )
 
 // IP holds info from net.IP.
@@ -20,5 +22,13 @@ func (i *IP) Check(ipaddr net.IP) (bool, error) {
 
 // String returns the result of the check.
 func (i *IP) String() string {
-	return fmt.Sprintf("RFC 1918 private: %v, default mask: %d", i.Private, i.DefaultMask)
+	private := "RFC 1918 private"
+	if !i.Private {
+		private = "not " + private
+	}
+	var mask []string
+	for _, b := range i.DefaultMask {
+		mask = append(mask, strconv.Itoa(int(b)))
+	}
+	return fmt.Sprintf("%s, default mask %s", private, strings.Join(mask, "."))
 }
