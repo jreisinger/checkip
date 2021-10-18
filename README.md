@@ -46,7 +46,7 @@ make run
 ## Releasing
 
 ```
-make release                        # build binaries in cmd
+make release # build binaries in cmd
 ```
 
 See [git tags](https://reisinge.net/notes/prog/git#tags).
