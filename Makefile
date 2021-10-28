@@ -4,7 +4,7 @@ test:
 install: test
 	go install cmd/checkip.go
 
-run: install
+run: test
 	checkip 140.82.114.4 | sort
 	checkip 218.92.0.158 | sort
 	checkip 92.118.160.17 | sort
@@ -18,4 +18,6 @@ arch = $(word 2, $(temp))
 release: test $(PLATFORMS)
 
 $(PLATFORMS):
-	GOOS=$(os) GOARCH=$(arch) go build -o cmd/checkip-$(os)-$(arch) cmd/checkip.go
+	GOOS=$(os) GOARCH=$(arch) go build -ldflags "-w" -o cmd/checkip-$(os)-$(arch) cmd/checkip.go
+	tar -cf - cmd/checkip-$(os)-$(arch) | gzip -9c > cmd/checkip-$(os)-$(arch).tar.gz
+	rm -f cmd/checkip-$(os)-$(arch)
