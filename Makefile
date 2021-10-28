@@ -4,10 +4,13 @@ test:
 install: test
 	go install cmd/checkip.go
 
-run: test
-	checkip 140.82.114.4 | sort
-	checkip 218.92.0.158 | sort
-	checkip 92.118.160.17 | sort
+build: test
+	go build -ldflags "-w" -o cmd/checkip cmd/checkip.go
+
+run: build
+	./cmd/checkip 140.82.114.4
+	./cmd/checkip 218.92.0.158
+	./cmd/checkip 92.118.160.17
 
 PLATFORMS := linux/amd64 darwin/amd64 linux/arm windows/amd64
 
