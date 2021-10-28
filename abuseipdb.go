@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"net"
 	"net/http"
-	"net/url"
-	"time"
 )
 
 // Only return reports within the last x amount of days. Default is 30.
@@ -31,29 +29,18 @@ func (a *AbuseIPDB) Check(ipaddr net.IP) (bool, error) {
 		return true, fmt.Errorf("can't call API: %w", err)
 	}
 
-	baseURL, err := url.Parse("https://api.abuseipdb.com/api/v2/check")
-	if err != nil {
-		return true, err
+	headers := map[string]string{
+		"Key":          apiKey,
+		"Accept":       "application/json",
+		"Content-Type": "application/x-www-form-urlencoded",
 	}
 
-	// Add GET paramaters.
-	params := url.Values{}
-	params.Add("ipAddress", ipaddr.String())
-	params.Add("maxAgeInDays", maxAgeInDays)
-	baseURL.RawQuery = params.Encode()
-
-	req, err := http.NewRequest("GET", baseURL.String(), nil)
-	if err != nil {
-		return true, err
+	queryParams := map[string]string{
+		"ipAddress":    ipaddr.String(),
+		"maxAgeInDays": maxAgeInDays,
 	}
 
-	// Set request headers.
-	req.Header.Set("Key", apiKey)
-	req.Header.Set("Accept", "application/json")
-	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-
-	client := newHTTPClient(5 * time.Second)
-	resp, err := client.Do(req)
+	resp, err := makeAPIcall("https://api.abuseipdb.com/api/v2/check", headers, queryParams)
 	if err != nil {
 		return true, err
 	}

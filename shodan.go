@@ -31,11 +31,16 @@ func (s *Shodan) Check(ipaddr net.IP) (bool, error) {
 		return true, fmt.Errorf("can't call API: %w", err)
 	}
 
-	resp, err := http.Get(fmt.Sprintf("https://api.shodan.io/shodan/host/%s?key=%s", ipaddr, apiKey))
+	apiURL := fmt.Sprintf("https://api.shodan.io/shodan/host/%s?key=%s", ipaddr, apiKey)
+	resp, err := makeAPIcall(apiURL, map[string]string{}, map[string]string{})
 	if err != nil {
 		return true, err
 	}
 	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return true, fmt.Errorf("calling API: %s", resp.Status)
+	}
 
 	if err := json.NewDecoder(resp.Body).Decode(&s); err != nil {
 		return true, err
