@@ -18,4 +18,4 @@ arch = $(word 2, $(temp))
 release: test $(PLATFORMS)
 
 $(PLATFORMS):
-	GO111MODULE=on GOOS=$(os) GOARCH=$(arch) go build -o cmd/checkip-$(os)-$(arch) cmd/checkip.go
+	GOOS=$(os) GOARCH=$(arch) go build -o cmd/checkip-$(os)-$(arch) cmd/checkip.go
