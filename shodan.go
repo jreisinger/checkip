@@ -38,8 +38,9 @@ func (s *Shodan) Check(ipaddr net.IP) (bool, error) {
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode != http.StatusOK {
-		return true, fmt.Errorf("calling API: %s", resp.Status)
+	// StatusNotFound is returned when shodan doesn't know the IP address.
+	if resp.StatusCode != http.StatusOK && resp.StatusCode != http.StatusNotFound {
+		return true, fmt.Errorf("calling %s: %s", apiURL, resp.Status)
 	}
 
 	if err := json.NewDecoder(resp.Body).Decode(&s); err != nil {

@@ -24,11 +24,13 @@ func makeAPIcall(apiurl string, headers map[string]string, queryParams map[strin
 	}
 
 	// Set query parameters.
-	vals := url.Values{}
-	for k, v := range queryParams {
-		vals.Add(k, v)
+	if len(queryParams) != 0 {
+		vals := url.Values{}
+		for k, v := range queryParams {
+			vals.Add(k, v)
+		}
+		apiURL.RawQuery = vals.Encode()
 	}
-	apiURL.RawQuery = vals.Encode()
 
 	req, err := http.NewRequest("GET", apiURL.String(), nil)
 	if err != nil {

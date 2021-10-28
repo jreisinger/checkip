@@ -13,10 +13,9 @@ type DNS struct {
 
 // Check does a reverse lookup for a given IP address.
 func (d *DNS) Check(ipaddr net.IP) (bool, error) {
-	names, err := net.LookupAddr(ipaddr.String())
-	if err != nil {
-		return true, err
-	}
+	// We are ignoring error. It says: nodename nor servname provided, or
+	// not known
+	names, _ := net.LookupAddr(ipaddr.String())
 	d.Names = names
 	return true, nil
 }

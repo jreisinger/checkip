@@ -3,9 +3,16 @@ package checkip
 
 import (
 	"fmt"
+	"log"
 	"net"
+	"os"
 	"sync"
 )
+
+func init() {
+	log.SetFlags(0)
+	log.SetPrefix(os.Args[0] + ": ")
+}
 
 // Checker checks an IP address. ok is false if it considers the IP address to
 // be suspicious. If the check fails (err != nil), ok must be true - presumption
@@ -25,13 +32,17 @@ func Run(checkers []Checker, ipaddr net.IP) int {
 	for _, checker := range checkers {
 		wg.Add(1)
 		go func(checker Checker) {
+			defer wg.Done()
 			ok, err := checker.Check(ipaddr)
-			if err == nil && !ok {
+			if err != nil {
+				log.Print(err)
+				return
+			}
+			if !ok {
 				mu.Lock()
 				suspicious++
 				mu.Unlock()
 			}
-			wg.Done()
 		}(checker)
 	}
 	wg.Wait()
