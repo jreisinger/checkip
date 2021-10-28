@@ -30,5 +30,5 @@ func (i *IP) String() string {
 	for _, b := range i.DefaultMask {
 		mask = append(mask, strconv.Itoa(int(b)))
 	}
-	return fmt.Sprintf("%s, default mask %s", private, strings.Join(mask, "."))
+	return fmt.Sprintf("IP address\t%s, default mask %s", private, strings.Join(mask, "."))
 }

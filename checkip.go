@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"net"
 	"sync"
-
-	"github.com/logrusorgru/aurora"
 )
 
 // Checker checks an IP address. ok is false if it considers the IP address to
@@ -38,28 +36,4 @@ func Run(checkers []Checker, ipaddr net.IP) int {
 	}
 	wg.Wait()
 	return suspicious
-}
-
-// RunAndPrint runs checkers concurrently and print the results. checkers maps
-// names to checkers. Format defines how to print the name and checker results
-// (e.g. "%-25s %s").
-func RunAndPrint(checkers map[string]Checker, ipaddr net.IP, format string) {
-	format += "\n"
-	var wg sync.WaitGroup
-	for name, checker := range checkers {
-		wg.Add(1)
-		go func(checker Checker, name string) {
-			ok, err := checker.Check(ipaddr)
-			switch {
-			case err != nil:
-				fmt.Printf(format, name, aurora.Gray(11, err.Error()))
-			case !ok:
-				fmt.Printf(format, name, aurora.Magenta(checker.String()))
-			default:
-				fmt.Printf(format, name, checker)
-			}
-			wg.Done()
-		}(checker, name)
-	}
-	wg.Wait()
 }

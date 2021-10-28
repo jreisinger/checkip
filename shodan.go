@@ -78,17 +78,21 @@ func (s *Shodan) String() string {
 
 	var portInfo []string
 	for _, d := range s.Data {
-		product := "service unknown"
+		var product string
 		if d.Product != "" {
 			product = d.Product
 		}
 
-		version := "version unknown"
+		var version string
 		if d.Version != "" {
 			version = d.Version
 		}
 
-		portInfo = append(portInfo, fmt.Sprintf("%d (%s, %s)", d.Port, product, version))
+		if product == "" && version == "" {
+			portInfo = append(portInfo, fmt.Sprintf("%d", d.Port))
+		} else {
+			portInfo = append(portInfo, fmt.Sprintf("%d (%s, %s)", d.Port, product, version))
+		}
 	}
 
 	portStr := "port"
@@ -99,5 +103,5 @@ func (s *Shodan) String() string {
 		portStr += ":"
 	}
 
-	return fmt.Sprintf("%s, %d open %s %s", os, len(portInfo), portStr, strings.Join(portInfo, ", "))
+	return fmt.Sprintf("OS and ports\t%s, %d open %s %s", os, len(portInfo), portStr, strings.Join(portInfo, ", "))
 }

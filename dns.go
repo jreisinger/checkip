@@ -1,6 +1,7 @@
 package checkip
 
 import (
+	"fmt"
 	"net"
 	"strings"
 )
@@ -22,5 +23,5 @@ func (d *DNS) Check(ipaddr net.IP) (bool, error) {
 
 // String returns the result of the check.
 func (d *DNS) String() string {
-	return strings.Join(d.Names, ", ")
+	return fmt.Sprintf("DNS names\t%s", strings.Join(d.Names, ", "))
 }

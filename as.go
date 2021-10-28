@@ -39,8 +39,7 @@ func (a *AS) Check(ipaddr net.IP) (bool, error) {
 
 // String returns the result of the check.
 func (a *AS) String() string {
-	return fmt.Sprintf("%d (%s - %s), %s (%s)",
-		a.Number, a.FirstIP, a.LastIP, a.Description, a.CountryCode)
+	return fmt.Sprintf("AS owner\t%s", a.Description)
 }
 
 // search searches the ippadrr in tsvFile and if found fills in AS data.

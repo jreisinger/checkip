@@ -56,5 +56,5 @@ func (g *Geo) Check(ip net.IP) (bool, error) {
 
 // String returns the result of the check.
 func (g *Geo) String() string {
-	return fmt.Sprintf("%s, %s (%s)", g.City, g.Country, g.IsoCode)
+	return fmt.Sprintf("Geolocation\t%s, %s (%s)", g.City, g.Country, g.IsoCode)
 }

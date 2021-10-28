@@ -8,9 +8,8 @@ import (
 	"os"
 
 	"github.com/jreisinger/checkip"
+	"github.com/logrusorgru/aurora"
 )
-
-var i = flag.Bool("i", false, "run only information checkers")
 
 func main() {
 	flag.Parse()
@@ -26,33 +25,42 @@ func main() {
 		os.Exit(1)
 	}
 
-	// checkers can tell you wether the IP address is suspicious.
-	checkers := map[string]checkip.Checker{
-		"abuseipdb.com":             &checkip.AbuseIPDB{},
-		"cinsscore.com":             &checkip.CINSArmy{},
-		"emergingthreats.net":       &checkip.ET{},
-		"otx.alienvault.com":        &checkip.OTX{},
-		"github.com/stamparm/ipsum": &checkip.IPsum{},
-		"shodan.io":                 &checkip.Shodan{},
-		"threatcrowd.org":           &checkip.ThreatCrowd{},
-		"virustotal.com":            &checkip.VirusTotal{},
+	// secCheckers can tell you wether the IP address is suspicious.
+	secCheckers := []checkip.Checker{
+		&checkip.AbuseIPDB{},
+		&checkip.CINSArmy{},
+		&checkip.ET{},
+		&checkip.OTX{},
+		&checkip.IPsum{},
+		&checkip.ThreatCrowd{},
+		&checkip.VirusTotal{},
 	}
 
 	// infoCheckers just give you information about an IP address. They
 	// always return ok == true.
-	infoCheckers := map[string]checkip.Checker{
-		"iptoasn.com":          &checkip.AS{},
-		"net.LookupAddr":       &checkip.DNS{},
-		"maxmind.com GeoLite2": &checkip.Geo{},
-		"net.IP":               &checkip.IP{},
+	infoCheckers := []checkip.Checker{
+		&checkip.AS{},
+		&checkip.DNS{},
+		&checkip.Geo{},
+		&checkip.IP{},
+		&checkip.Shodan{},
 	}
 
-	if *i {
-		checkers = infoCheckers
-	} else {
-		for k, v := range infoCheckers {
-			checkers[k] = v
-		}
+	n := checkip.Run(secCheckers, ipaddr)
+	perc := float64(n) / float64(len(secCheckers)) * 100
+	var msg string
+	switch {
+	case perc < 15:
+		msg = fmt.Sprint(aurora.Green("Malicious"))
+	case perc < 50:
+		msg = fmt.Sprint(aurora.Yellow("Malicious"))
+	default:
+		msg = fmt.Sprint(aurora.Red("Malicious"))
 	}
-	checkip.RunAndPrint(checkers, ipaddr, "%-25s %s")
+	fmt.Printf("%s\t%.0f%% (%d out of %d checkers)\n", msg, perc, n, len(secCheckers))
+
+	checkip.Run(infoCheckers, ipaddr)
+	for _, c := range infoCheckers {
+		fmt.Println(c)
+	}
 }
