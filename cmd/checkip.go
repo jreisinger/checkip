@@ -12,6 +12,11 @@ import (
 	"github.com/logrusorgru/aurora"
 )
 
+func init() {
+	log.SetFlags(0)
+	log.SetPrefix(os.Args[0] + ": ")
+}
+
 func main() {
 	if len(os.Args[1:]) != 1 {
 		fmt.Printf("Usage: %s <ipaddr>\n", os.Args[0])
