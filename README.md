@@ -32,10 +32,11 @@ You can also use environment variables with the same names.
 
 ## Adding Checkers
 
-To add a new Checker (i.e. a way for checking an IP addresses) just implement
-the
-[checkip.Checker](https://pkg.go.dev/github.com/jreisinger/checkip#Checker)
-interfaces and add it to `cmd/checkip.go`. Then:
+To add a new way for checking an IP addresses just implement the
+[checkip.InfoChecker](https://pkg.go.dev/github.com/jreisinger/checkip#InfoChecker)
+or
+[checkip.SecChecker](https://pkg.go.dev/github.com/jreisinger/checkip#SecChecker)
+interface and add it to `cmd/checkip.go`. Then:
 
 ```
 make demo # see the picture above
