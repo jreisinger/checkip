@@ -40,7 +40,7 @@ the
 interfaces and add it to `cmd/checkip.go`. Then:
 
 ```
-make run
+make demo
 ```
 
 ## Releasing
