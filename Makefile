@@ -2,7 +2,7 @@ install:
 	go install cmd/checkip.go
 
 build:
-	go build -ldflags "-w" -o cmd/checkip cmd/main.go
+	go build -ldflags "-w" -o cmd/checkip cmd/checkip.go
 
 run: build
 	./cmd/checkip 140.82.114.4

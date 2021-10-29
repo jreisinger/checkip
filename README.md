@@ -16,7 +16,7 @@ make install
 or download a [release](https://github.com/jreisinger/checkip/releases)
 binary for your system and architecture.
 
-See `cmd/main.go` for how to use checkip as a library.
+See `cmd/checkip.go` for how to use checkip as a library.
 
 ## Configuration
 
@@ -34,10 +34,10 @@ You can also use environment variables with the same names.
 
 ## Adding Checkers
 
-To add a new service for checking IP addresses (i.e. a Checker) just
-implement the
+To add a new Checker (i.e. a way for checking an IP addresses) just implement
+the
 [checkip.Checker](https://pkg.go.dev/github.com/jreisinger/checkip#Checker)
-interface and add it to `cmd/checkip.go`. Then:
+interfaces and add it to `cmd/checkip.go`. Then:
 
 ```
 make run
