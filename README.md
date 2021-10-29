@@ -16,8 +16,6 @@ make install
 or download a [release](https://github.com/jreisinger/checkip/releases)
 binary for your system and architecture.
 
-See `cmd/checkip.go` for how to use checkip as a library.
-
 ## Configuration
 
 For some checks to work you need to register and get an API (LICENSE) key.
@@ -40,7 +38,7 @@ the
 interfaces and add it to `cmd/checkip.go`. Then:
 
 ```
-make demo
+make demo # see the picture above
 ```
 
 ## Releasing
