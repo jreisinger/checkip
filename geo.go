@@ -42,6 +42,11 @@ func (g *Geo) Check(ip net.IP) error {
 	g.Country = record.Country.Names["en"]
 	g.IsoCode = record.Country.IsoCode
 
+	return nil
+}
+
+// Info returns interesting information from the check.
+func (g *Geo) Info() string {
 	if g.City == "" {
 		g.City = "city unknown"
 	}
@@ -51,10 +56,5 @@ func (g *Geo) Check(ip net.IP) error {
 	if g.IsoCode == "" {
 		g.IsoCode = "ISO code unknown"
 	}
-	return nil
-}
-
-// Info returns interesting information from the check.
-func (g *Geo) Info() string {
 	return fmt.Sprintf("Geolocation\t%s, %s (%s)", g.City, g.Country, g.IsoCode)
 }
