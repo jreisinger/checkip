@@ -15,7 +15,7 @@ temp = $(subst /, ,$@)
 os = $(word 1, $(temp))
 arch = $(word 2, $(temp))
 
-release: test $(PLATFORMS)
+release: $(PLATFORMS)
 
 $(PLATFORMS):
 	GOOS=$(os) GOARCH=$(arch) go build -ldflags "-w" -o cmd/checkip-$(os)-$(arch) cmd/checkip.go
