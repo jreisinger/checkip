@@ -19,14 +19,12 @@ type AbuseIPDB struct {
 	} `json:"data"`
 }
 
-// Check fills in AbuseIPDB data for a given IP address. Its get the data from
-// api.abuseipdb.com/api/v2/check (docs.abuseipdb.com/#check-endpoint). It
-// returns false if the IP address is not whitelisted and AbuseConfidenceScore >
-// 25.
-func (a *AbuseIPDB) Check(ipaddr net.IP) (bool, error) {
+// Check fills in AbuseIPDB data for a given IP address. It gets the data from
+// api.abuseipdb.com/api/v2/check (docs.abuseipdb.com/#check-endpoint).
+func (a *AbuseIPDB) Check(ipaddr net.IP) error {
 	apiKey, err := getConfigValue("ABUSEIPDB_API_KEY")
 	if err != nil {
-		return true, fmt.Errorf("can't call API: %w", err)
+		return fmt.Errorf("can't call API: %w", err)
 	}
 
 	headers := map[string]string{
@@ -42,31 +40,22 @@ func (a *AbuseIPDB) Check(ipaddr net.IP) (bool, error) {
 
 	resp, err := makeAPIcall("https://api.abuseipdb.com/api/v2/check", headers, queryParams)
 	if err != nil {
-		return true, err
+		return err
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return true, fmt.Errorf("calling API: %s", resp.Status)
+		return fmt.Errorf("calling API: %s", resp.Status)
 	}
 
 	if err := json.NewDecoder(resp.Body).Decode(a); err != nil {
-		return true, err
+		return err
 	}
 
-	return a.isOK(), nil
+	return nil
 }
 
-func (a *AbuseIPDB) isOK() bool {
+// IsOK returns true if the IP address is not considered suspicious.
+func (a *AbuseIPDB) IsOK() bool {
 	return a.Data.TotalReports == 0 || a.Data.IsWhitelisted || a.Data.AbuseConfidenceScore <= 25
-}
-
-// String returns the result of the check.
-func (a *AbuseIPDB) String() string {
-	return fmt.Sprintf("%d reports in last %s days (abuse confidence score: %d%%, whitelisted: %v)",
-		a.Data.TotalReports,
-		maxAgeInDays,
-		a.Data.AbuseConfidenceScore,
-		a.Data.IsWhitelisted,
-	)
 }

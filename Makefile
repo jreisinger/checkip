@@ -1,11 +1,8 @@
-test:
-	go test -race -cover ./...
-
-install: test
+install:
 	go install cmd/checkip.go
 
-build: test
-	go build -ldflags "-w" -o cmd/checkip cmd/checkip.go
+build:
+	go build -ldflags "-w" -o cmd/checkip cmd/main.go
 
 run: build
 	./cmd/checkip 140.82.114.4

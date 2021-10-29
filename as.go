@@ -22,23 +22,23 @@ type AS struct {
 // Check fills in AS data for a given IP address. The data is taken from a TSV
 // file ip2asn-combined downloaded from iptoasn.com. The file is created or
 // updated as needed.
-func (a *AS) Check(ipaddr net.IP) (bool, error) {
+func (a *AS) Check(ipaddr net.IP) error {
 	file := "/var/tmp/ip2asn-combined.tsv"
 	url := "https://iptoasn.com/data/ip2asn-combined.tsv.gz"
 
 	if err := updateFile(file, url, "gz"); err != nil {
-		return true, fmt.Errorf("can't update %s from %s: %v", file, url, err)
+		return fmt.Errorf("can't update %s from %s: %v", file, url, err)
 	}
 
 	if err := a.search(ipaddr, file); err != nil {
-		return true, fmt.Errorf("searching %s in %s: %v", ipaddr, file, err)
+		return fmt.Errorf("searching %s in %s: %v", ipaddr, file, err)
 	}
 
-	return true, nil
+	return nil
 }
 
-// String returns the result of the check.
-func (a *AS) String() string {
+// Info returns interesting information from the check.
+func (a *AS) Info() string {
 	return fmt.Sprintf("AS description\t%s", a.Description)
 }
 

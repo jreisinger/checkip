@@ -14,28 +14,28 @@ type Geo struct {
 
 // Check fills in the geolocation data. The data is taken from
 // GeoLite2-City.mmdb file that gets downloaded and regularly updated.
-func (g *Geo) Check(ip net.IP) (bool, error) {
+func (g *Geo) Check(ip net.IP) error {
 	licenseKey, err := getConfigValue("GEOIP_LICENSE_KEY")
 	if err != nil {
-		return true, fmt.Errorf("can't download DB: %w", err)
+		return fmt.Errorf("can't download DB: %w", err)
 	}
 
 	file := "/var/tmp/GeoLite2-City.mmdb"
 	url := "https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-City&license_key=" + licenseKey + "&suffix=tar.gz"
 
 	if err := updateFile(file, url, "tgz"); err != nil {
-		return true, fmt.Errorf("can't update DB file: %v", err)
+		return fmt.Errorf("can't update DB file: %v", err)
 	}
 
 	db, err := geoip2.Open(file)
 	if err != nil {
-		return true, fmt.Errorf("can't load DB file: %v", err)
+		return fmt.Errorf("can't load DB file: %v", err)
 	}
 	defer db.Close()
 
 	record, err := db.City(ip)
 	if err != nil {
-		return true, err
+		return err
 	}
 
 	g.City = record.City.Names["en"]
@@ -51,10 +51,10 @@ func (g *Geo) Check(ip net.IP) (bool, error) {
 	if g.IsoCode == "" {
 		g.IsoCode = "ISO code unknown"
 	}
-	return true, nil
+	return nil
 }
 
-// String returns the result of the check.
-func (g *Geo) String() string {
+// Info returns interesting information from the check.
+func (g *Geo) Info() string {
 	return fmt.Sprintf("Geolocation\t%s, %s (%s)", g.City, g.Country, g.IsoCode)
 }

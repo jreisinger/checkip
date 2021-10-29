@@ -7,21 +7,21 @@ import (
 	"strings"
 )
 
-// IP holds info from net.IP.
+// IP holds information from net.IP.
 type IP struct {
 	Private     bool
 	DefaultMask net.IPMask
 }
 
-// Check fills in data to IP.
-func (i *IP) Check(ipaddr net.IP) (bool, error) {
+// Check fills in IP data.
+func (i *IP) Check(ipaddr net.IP) error {
 	i.Private = ipaddr.IsPrivate()
 	i.DefaultMask = ipaddr.DefaultMask()
-	return true, nil
+	return nil
 }
 
-// String returns the result of the check.
-func (i *IP) String() string {
+// Info returns interesting information from the check.
+func (i *IP) Info() string {
 	private := "RFC 1918 private"
 	if !i.Private {
 		private = "not " + private

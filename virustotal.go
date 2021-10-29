@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"net"
 	"net/http"
-	"net/url"
-	"time"
 )
 
 // VirusTotal holds information about an IP address from virustotal.com.
@@ -25,58 +23,37 @@ type VirusTotal struct {
 	} `json:"data"`
 }
 
-// Check fills in data for a given IP address from virustotal API. It returns
-// false if the IP address is considered malicious or suspicious by some
-// analysis. See https://developers.virustotal.com/v3.0/reference#ip-object
-func (vt *VirusTotal) Check(ipaddr net.IP) (bool, error) {
+// Check fills in data about ippaddr from https://www.virustotal.com/api
+func (vt *VirusTotal) Check(ipaddr net.IP) error {
 	apiKey, err := getConfigValue("VIRUSTOTAL_API_KEY")
 	if err != nil {
-		return true, fmt.Errorf("can't call API: %w", err)
+		return fmt.Errorf("can't call API: %w", err)
 	}
 
 	// curl --header "x-apikey:$VIRUSTOTAL_API_KEY" https://www.virustotal.com/api/v3/ip_addresses/1.1.1.1
 
-	baseURL, err := url.Parse("https://www.virustotal.com/api/v3/ip_addresses/" + ipaddr.String())
-	if err != nil {
-		return true, err
+	headers := map[string]string{
+		"x-apikey": apiKey,
 	}
-
-	req, err := http.NewRequest("GET", baseURL.String(), nil)
+	resp, err := makeAPIcall("https://www.virustotal.com/api/v3/ip_addresses/"+ipaddr.String(), headers, map[string]string{})
 	if err != nil {
-		return true, err
-	}
-
-	// Set request headers.
-	req.Header.Set("x-apikey", apiKey)
-
-	client := newHTTPClient(5 * time.Second)
-	resp, err := client.Do(req)
-	if err != nil {
-		return true, err
+		return err
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return true, fmt.Errorf("%s", resp.Status)
+		return fmt.Errorf("%s", resp.Status)
 	}
 
 	if err := json.NewDecoder(resp.Body).Decode(vt); err != nil {
-		return true, err
+		return err
 	}
 
-	return vt.isOK(), nil
+	return nil
 }
 
-func (vt *VirusTotal) isOK() bool {
+// IsOK returns true if the IP address is not considered suspicious.
+func (vt *VirusTotal) IsOK() bool {
 	// https://developers.virustotal.com/reference#ip-object
 	return vt.Data.Attributes.Reputation >= 0
-}
-
-// String returns the result of the check.
-func (vt *VirusTotal) String() string {
-	what := "malicious"
-	if vt.Data.Attributes.Reputation >= 0 {
-		what = "harmless"
-	}
-	return fmt.Sprintf("%s with reputation of %d (the higher the absolute number, the more trustworthy)", what, vt.Data.Attributes.Reputation)
 }

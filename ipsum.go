@@ -9,30 +9,29 @@ import (
 	"strings"
 )
 
-// IPsum counts on how many blacklists the IP address was found according to
-// github.com/stamparm/ipsum.
+// IPsum holds information from github.com/stamparm/ipsum.
 type IPsum struct {
 	NumOfBlacklists int
 }
 
-// Check fills in the date into IPsum. If the IP address is found on at least 1
-// blacklist it returns false.
-func (ip *IPsum) Check(ipaddr net.IP) (bool, error) {
+// Check checks how many blackists the IP address is found on.
+func (ip *IPsum) Check(ipaddr net.IP) error {
 	file := "/var/tmp/ipsum.txt"
 	url := "https://raw.githubusercontent.com/stamparm/ipsum/master/ipsum.txt"
 
 	if err := updateFile(file, url, ""); err != nil {
-		return true, fmt.Errorf("can't update %s from %s: %v", file, url, err)
+		return fmt.Errorf("can't update %s from %s: %v", file, url, err)
 	}
 
 	if err := ip.search(ipaddr, file); err != nil {
-		return true, fmt.Errorf("searching %s in %s: %v", ipaddr, file, err)
+		return fmt.Errorf("searching %s in %s: %v", ipaddr, file, err)
 	}
 
-	return ip.isOK(), nil
+	return nil
 }
 
-func (ip *IPsum) isOK() bool {
+// IsOK returns true if the IP address is not considered suspicious.
+func (ip *IPsum) IsOK() bool {
 	return ip.NumOfBlacklists == 0
 }
 

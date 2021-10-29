@@ -16,7 +16,7 @@ make install
 or download a [release](https://github.com/jreisinger/checkip/releases)
 binary for your system and architecture.
 
-See `cmd/checkip.go` for how to use checkip as a library.
+See `cmd/main.go` for how to use checkip as a library.
 
 ## Configuration
 

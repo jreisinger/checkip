@@ -23,60 +23,34 @@ type data []struct {
 }
 
 // Check fills in Shodan data for a given IP address. Its get the data from
-// https://api.shodan.io. It returns false if version of at least one listening
-// service is known.
-func (s *Shodan) Check(ipaddr net.IP) (bool, error) {
+// https://api.shodan.io.
+func (s *Shodan) Check(ipaddr net.IP) error {
 	apiKey, err := getConfigValue("SHODAN_API_KEY")
 	if err != nil {
-		return true, fmt.Errorf("can't call API: %w", err)
+		return fmt.Errorf("can't call API: %w", err)
 	}
 
 	apiURL := fmt.Sprintf("https://api.shodan.io/shodan/host/%s?key=%s", ipaddr, apiKey)
 	resp, err := makeAPIcall(apiURL, map[string]string{}, map[string]string{})
 	if err != nil {
-		return true, err
+		return err
 	}
 	defer resp.Body.Close()
 
 	// StatusNotFound is returned when shodan doesn't know the IP address.
 	if resp.StatusCode != http.StatusOK && resp.StatusCode != http.StatusNotFound {
-		return true, fmt.Errorf("calling %s: %s", apiURL, resp.Status)
+		return fmt.Errorf("calling %s: %s", apiURL, resp.Status)
 	}
 
 	if err := json.NewDecoder(resp.Body).Decode(&s); err != nil {
-		return true, err
+		return err
 	}
 
-	return s.isOK(), nil
+	return nil
 }
 
-func (s *Shodan) isOK() bool {
-	return !s.gotServiceVersion()
-}
-
-func (s *Shodan) gotServiceVersion() bool {
-	for _, d := range s.Data {
-		if d.Version != "" && !okBanner(d.Product) {
-			return true
-		}
-	}
-	return false
-}
-
-func okBanner(product string) bool {
-	okBannersPrefixes := []string{
-		"OpenSSH",
-	}
-	for _, prefix := range okBannersPrefixes {
-		if strings.HasPrefix(product, prefix) {
-			return true
-		}
-	}
-	return false
-}
-
-// String returns the result of the check.
-func (s *Shodan) String() string {
+// Info returns interesting information from the check.
+func (s *Shodan) Info() string {
 	os := "OS unknown"
 	if s.Os != "" {
 		os = s.Os

@@ -12,15 +12,15 @@ type DNS struct {
 }
 
 // Check does a reverse lookup for a given IP address.
-func (d *DNS) Check(ipaddr net.IP) (bool, error) {
-	// We are ignoring error. It says: nodename nor servname provided, or
-	// not known
+func (d *DNS) Check(ipaddr net.IP) error {
+	// NOTE: We are ignoring error. It says: "nodename nor servname
+	// provided, or not known" if there is no DNS name for the IP address.
 	names, _ := net.LookupAddr(ipaddr.String())
 	d.Names = names
-	return true, nil
+	return nil
 }
 
-// String returns the result of the check.
-func (d *DNS) String() string {
+// Info returns interesting information from the check.
+func (d *DNS) Info() string {
 	return fmt.Sprintf("DNS names\t%s", strings.Join(d.Names, ", "))
 }

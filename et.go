@@ -7,29 +7,34 @@ import (
 	"os"
 )
 
-// ET (Emerging Threats) says whether the IP address was found among CountIPs
-// compromised IP addresses according to rules.emergingthreats.net
+// ET (Emerging Threats) holds information about an IP address from
+// rules.emergingthreats.net
 type ET struct {
 	CompromisedIP bool
 	CountIPs      int
 }
 
 // Check checks whether the ippaddr is not among compromised IP addresses from
-// The Emerging Threats Intelligence feed (ET).
+// The Emerging Threats Intelligence feed (ET). I found ET mentioned at
 // https://logz.io/blog/open-source-threat-intelligence-feeds/
-func (e *ET) Check(ipaddr net.IP) (bool, error) {
+func (e *ET) Check(ipaddr net.IP) error {
 	file := "/var/tmp/et.txt"
 	url := "https://rules.emergingthreats.net/blockrules/compromised-ips.txt"
 
 	if err := updateFile(file, url, ""); err != nil {
-		return true, fmt.Errorf("can't update %s from %s: %v", file, url, err)
+		return fmt.Errorf("can't update %s from %s: %v", file, url, err)
 	}
 
 	if err := e.search(ipaddr, file); err != nil {
-		return true, fmt.Errorf("searching %s in %s: %v", ipaddr, file, err)
+		return fmt.Errorf("searching %s in %s: %v", ipaddr, file, err)
 	}
 
-	return true, nil
+	return nil
+}
+
+// IsOK returns true if the IP address is not considered suspicious.
+func (e *ET) IsOK() bool {
+	return !e.CompromisedIP
 }
 
 // search searches the ippadrr in filename fills in ET data.
@@ -52,13 +57,4 @@ func (e *ET) search(ipaddr net.IP, filename string) error {
 	}
 
 	return nil
-}
-
-// String returns the result of the check.
-func (e *ET) String() string {
-	s := fmt.Sprintf("found among %d compromised IP addresses", e.CountIPs)
-	if !e.CompromisedIP {
-		s = "not " + s
-	}
-	return s
 }
