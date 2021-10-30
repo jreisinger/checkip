@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"net"
 	"net/http"
-	"net/url"
-	"time"
 )
 
 // OTX holds information from otx.alienvault.com.
@@ -18,19 +16,9 @@ type OTX struct {
 
 // Check gets data from https://otx.alienvault.com/api.
 func (otx *OTX) Check(ipaddr net.IP) error {
-	otxurl := fmt.Sprintf("https://otx.alienvault.com/api/v1/indicators/IPv4/%s/", ipaddr.String())
-	baseURL, err := url.Parse(otxurl)
-	if err != nil {
-		return err
-	}
+	apiurl := fmt.Sprintf("https://otx.alienvault.com/api/v1/indicators/IPv4/%s/", ipaddr.String())
 
-	req, err := http.NewRequest("GET", baseURL.String(), nil)
-	if err != nil {
-		return err
-	}
-
-	client := newHTTPClient(5 * time.Second)
-	resp, err := client.Do(req)
+	resp, err := makeAPIcall(apiurl, map[string]string{}, map[string]string{})
 	if err != nil {
 		return err
 	}
