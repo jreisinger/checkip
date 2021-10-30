@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net"
 	"net/http"
+	"sort"
 	"strings"
 )
 
@@ -50,6 +51,12 @@ func (s *Shodan) Check(ipaddr net.IP) error {
 	return nil
 }
 
+type byPort data
+
+func (x byPort) Len() int           { return len(x) }
+func (x byPort) Less(i, j int) bool { return x[i].Port < x[j].Port }
+func (x byPort) Swap(i, j int)      { x[i], x[j] = x[j], x[i] }
+
 // Info returns interesting information from the check.
 func (s *Shodan) Info() string {
 	os := "OS unknown"
@@ -58,6 +65,7 @@ func (s *Shodan) Info() string {
 	}
 
 	var portInfo []string
+	sort.Sort(byPort(s.Data))
 	for _, d := range s.Data {
 		var product string
 		if d.Product != "" {
