@@ -43,8 +43,11 @@ make demo # see the picture above
 
 ## Releasing
 
+Just add new git [tag](https://reisinge.net/notes/prog/git#tags)
+
 ```
-make release # build binaries in cmd
+git tag -a v0.6.9 -m "goreleaser with GitHub Actions"
+git push --tags
 ```
 
-See [git tags](https://reisinge.net/notes/prog/git#tags).
+and GitHub Actions with goreleaser will make the release.
