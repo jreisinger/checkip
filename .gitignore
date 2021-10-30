@@ -7,5 +7,6 @@ cmd/checkip-linux-arm*
 cmd/checkip-windows-amd64*
 cmd/checkip
 
-!.goreleaser.yml
 dist/
+!.goreleaser.yml
+!.github
