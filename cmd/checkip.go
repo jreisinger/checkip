@@ -1,3 +1,4 @@
+// Checkip quickly finds information on an IP address services from a CLI.
 package main
 
 import (
