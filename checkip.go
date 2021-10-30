@@ -1,4 +1,4 @@
-// Checkip finds information on an IP address using various public services.
+// Checkip finds information about an IP address using various public services.
 package checkip
 
 import (

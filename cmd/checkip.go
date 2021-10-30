@@ -1,4 +1,4 @@
-// Checkip quickly finds information on an IP address services from a CLI.
+// Checkip quickly finds information about an IP address from a CLI.
 package main
 
 import (
