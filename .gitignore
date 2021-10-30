@@ -1,9 +1,11 @@
 .*
 !.gitignore
-!.travis.yaml
+
 cmd/checkip-darwin-amd64*
 cmd/checkip-linux-amd64*
 cmd/checkip-linux-arm*
 cmd/checkip-windows-amd64*
 cmd/checkip
-/x
+
+!.goreleaser.yml
+dist/
