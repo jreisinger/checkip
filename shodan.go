@@ -17,9 +17,10 @@ type Shodan struct {
 }
 
 type data []struct {
-	Product string `json:"product"`
-	Version string `json:"version"`
-	Port    int    `json:"port"`
+	Product   string `json:"product"`
+	Version   string `json:"version"`
+	Port      int    `json:"port"`
+	Transport string `json:"transport"` // tcp, udp
 }
 
 // Check fills in Shodan data for a given IP address. Its get the data from
@@ -69,9 +70,9 @@ func (s *Shodan) Info() string {
 		}
 
 		if product == "" && version == "" {
-			portInfo = append(portInfo, fmt.Sprintf("%d", d.Port))
+			portInfo = append(portInfo, fmt.Sprintf("%s/%d", d.Transport, d.Port))
 		} else {
-			portInfo = append(portInfo, fmt.Sprintf("%d (%s, %s)", d.Port, product, version))
+			portInfo = append(portInfo, fmt.Sprintf("%s/%d (%s, %s)", d.Transport, d.Port, product, version))
 		}
 	}
 
