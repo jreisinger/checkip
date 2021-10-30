@@ -7,6 +7,7 @@ import (
 	"log"
 	"net"
 	"os"
+	"regexp"
 	"sync"
 
 	"github.com/jreisinger/checkip"
@@ -51,7 +52,7 @@ func main() {
 		go func(c checkip.Checker) {
 			defer wg.Done()
 			if err := c.Check(ipaddr); err != nil {
-				log.Print(err)
+				log.Print(redactSecrets(err.Error()))
 			}
 		}(c)
 	}
@@ -81,4 +82,9 @@ func main() {
 		msg = fmt.Sprint(aurora.Red("Malicious"))
 	}
 	fmt.Printf("%s\t%.0f%% (%d out of %d checkers)\n", msg, perc, malicious, total)
+}
+
+func redactSecrets(s string) string {
+	key := regexp.MustCompile(`(key|pass|password)=\w+`)
+	return key.ReplaceAllString(s, "${1}=REDACTED")
 }
