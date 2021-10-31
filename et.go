@@ -32,9 +32,8 @@ func (e *ET) Check(ipaddr net.IP) error {
 	return nil
 }
 
-// IsOK returns true if the IP address is not considered suspicious.
-func (e *ET) IsOK() bool {
-	return !e.CompromisedIP
+func (e *ET) IsMalicious() bool {
+	return e.CompromisedIP
 }
 
 // search searches the ippadrr in filename fills in ET data.

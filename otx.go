@@ -35,7 +35,6 @@ func (otx *OTX) Check(ipaddr net.IP) error {
 	return nil
 }
 
-// IsOK returns true if the IP address is not considered suspicious.
-func (otx *OTX) IsOK() bool {
-	return otx.PulseInfo.Count <= 10
+func (otx *OTX) IsMalicious() bool {
+	return otx.PulseInfo.Count > 10
 }

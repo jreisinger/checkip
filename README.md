@@ -38,7 +38,7 @@ or [SecChecker](https://pkg.go.dev/github.com/jreisinger/checkip#SecChecker)
 interface and add it to `cmd/checkip.go`. Then:
 
 ```
-make demo # see the picture above
+make run # see the picture above
 ```
 
 ## Releasing

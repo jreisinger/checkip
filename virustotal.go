@@ -52,8 +52,7 @@ func (vt *VirusTotal) Check(ipaddr net.IP) error {
 	return nil
 }
 
-// IsOK returns true if the IP address is not considered suspicious.
-func (vt *VirusTotal) IsOK() bool {
+func (vt *VirusTotal) IsMalicious() bool {
 	// https://developers.virustotal.com/reference#ip-object
-	return vt.Data.Attributes.Reputation >= 0
+	return vt.Data.Attributes.Reputation < 0
 }

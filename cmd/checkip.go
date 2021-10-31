@@ -3,15 +3,11 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"log"
 	"net"
 	"os"
-	"regexp"
-	"sync"
 
 	"github.com/jreisinger/checkip"
-	"github.com/logrusorgru/aurora"
 )
 
 func init() {
@@ -19,16 +15,18 @@ func init() {
 	log.SetPrefix(os.Args[0] + ": ")
 }
 
+var j = flag.Bool("j", false, "output JSON")
+
 func main() {
-	if len(os.Args[1:]) != 1 {
-		fmt.Printf("Usage: %s <ipaddr>\n", os.Args[0])
-		os.Exit(1)
+	flag.Parse()
+
+	if len(flag.Args()) != 1 {
+		log.Fatal("missing IP address")
 	}
 
-	ipaddr := net.ParseIP(os.Args[1])
+	ipaddr := net.ParseIP(flag.Arg(0))
 	if ipaddr == nil {
-		fmt.Fprintf(os.Stderr, "%s: wrong IP address: %s\n", os.Args[0], flag.Arg(0))
-		os.Exit(1)
+		log.Fatalf("wrong IP address: %s\n", flag.Arg(0))
 	}
 
 	checkers := []checkip.Checker{
@@ -46,45 +44,13 @@ func main() {
 		&checkip.VirusTotal{},
 	}
 
-	var wg sync.WaitGroup
-	for _, c := range checkers {
-		wg.Add(1)
-		go func(c checkip.Checker) {
-			defer wg.Done()
-			if err := c.Check(ipaddr); err != nil {
-				log.Print(redactSecrets(err.Error()))
-			}
-		}(c)
-	}
-	wg.Wait()
-
-	var total, malicious int
-	for _, c := range checkers {
-		switch ip := c.(type) {
-		case checkip.InfoChecker:
-			fmt.Println(ip.Info())
-		case checkip.SecChecker:
-			total++
-			if !ip.IsOK() {
-				malicious++
-			}
+	results := checkip.Run(checkers, ipaddr)
+	if *j {
+		results.PrintJSON()
+	} else {
+		for _, e := range results.Errors {
+			log.Println(e)
 		}
-
+		results.Print()
 	}
-	perc := float64(malicious) / float64(total) * 100
-	var msg string
-	switch {
-	case perc < 15:
-		msg = fmt.Sprint(aurora.Green("Malicious"))
-	case perc < 50:
-		msg = fmt.Sprint(aurora.Yellow("Malicious"))
-	default:
-		msg = fmt.Sprint(aurora.Red("Malicious"))
-	}
-	fmt.Printf("%s\t%.0f%% (%d out of %d checkers)\n", msg, perc, malicious, total)
-}
-
-func redactSecrets(s string) string {
-	key := regexp.MustCompile(`(key|pass|password)=\w+`)
-	return key.ReplaceAllString(s, "${1}=REDACTED")
 }

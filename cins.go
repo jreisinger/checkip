@@ -31,9 +31,8 @@ func (c *CINSArmy) Check(ipaddr net.IP) error {
 	return nil
 }
 
-// IsOK returns true if the IP address is not considered suspicious.
-func (c *CINSArmy) IsOK() bool {
-	return !c.BadGuyIP
+func (c *CINSArmy) IsMalicious() bool {
+	return c.BadGuyIP
 }
 
 // search searches the ippadrr in filename fills in ET data.

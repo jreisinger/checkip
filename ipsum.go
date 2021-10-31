@@ -30,9 +30,8 @@ func (ip *IPsum) Check(ipaddr net.IP) error {
 	return nil
 }
 
-// IsOK returns true if the IP address is not considered suspicious.
-func (ip *IPsum) IsOK() bool {
-	return ip.NumOfBlacklists == 0
+func (ip *IPsum) IsMalicious() bool {
+	return ip.NumOfBlacklists > 0
 }
 
 // search searches the ippadrr in tsvFile and if found fills in IPsum data.

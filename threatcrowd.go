@@ -35,11 +35,10 @@ func (t *ThreatCrowd) Check(ipaddr net.IP) error {
 	return nil
 }
 
-// IsOK returns true if the IP address is not considered suspicious.
-func (t *ThreatCrowd) IsOK() bool {
+func (t *ThreatCrowd) IsMalicious() bool {
 	// https://github.com/AlienVault-OTX/ApiV2#votes
 	// -1 	voted malicious by most users
 	// 0 	voted malicious/harmless by equal number of users
 	// 1:  	voted harmless by most users
-	return t.Votes >= 0
+	return t.Votes < 0
 }

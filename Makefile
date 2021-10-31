@@ -1,7 +1,7 @@
 install:
 	go install cmd/checkip.go
 
-demo: install
+run: install
 	checkip 140.82.114.4
 	checkip 218.92.0.158
 	checkip 92.118.160.17

@@ -55,7 +55,6 @@ func (a *AbuseIPDB) Check(ipaddr net.IP) error {
 	return nil
 }
 
-// IsOK returns true if the IP address is not considered suspicious.
-func (a *AbuseIPDB) IsOK() bool {
-	return a.Data.TotalReports == 0 || a.Data.IsWhitelisted || a.Data.AbuseConfidenceScore <= 25
+func (a *AbuseIPDB) IsMalicious() bool {
+	return a.Data.TotalReports > 0 && !a.Data.IsWhitelisted && a.Data.AbuseConfidenceScore > 25
 }
