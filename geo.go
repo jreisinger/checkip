@@ -15,7 +15,7 @@ type Geo struct {
 // Check fills in the geolocation data. The data is taken from
 // GeoLite2-City.mmdb file that gets downloaded and regularly updated.
 func (g *Geo) Check(ip net.IP) error {
-	licenseKey, err := getConfigValue("GEOIP_LICENSE_KEY")
+	licenseKey, err := getConfigValue("MAXMIND_LICENSE_KEY")
 	if err != nil {
 		return fmt.Errorf("can't download DB: %w", err)
 	}
