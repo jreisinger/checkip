@@ -5,6 +5,8 @@ public services.
 
 <img src="checkip.png" width="600">
 
+## Installation and configuration
+
 To install the CLI tool
 
 ```
@@ -16,10 +18,8 @@ make install
 or download a [release](https://github.com/jreisinger/checkip/releases)
 binary for your system and architecture.
 
-## Configuration
-
 For some checks to work you need to register and get an API (LICENSE) key.
-Then create a `$HOME/.checkip.yaml` using your editor of choice:
+Then create a `$HOME/.checkip.yaml` using your editor of choice
 
 ```
 ABUSEIPDB_API_KEY: aaaaaaaabbbbbbbbccccccccddddddddeeeeeeeeffffffff11111111222222223333333344444444
@@ -30,24 +30,24 @@ VIRUSTOTAL_API_KEY: aaaaaaaabbbbbbbbccccccccddddddddeeeeeeeeffffffff111111112222
 
 You can also use environment variables with the same names.
 
-## Adding Checkers
+## Development and releasing
 
-To add a new way for checking an IP addresses just implement the
+An IP address is checked by running one or more
+[Checker](https://pkg.go.dev/github.com/jreisinger/checkip#Checker)s. To add
+a new way for checking IP addresses just implement the
 [InfoChecker](https://pkg.go.dev/github.com/jreisinger/checkip#InfoChecker)
 or [SecChecker](https://pkg.go.dev/github.com/jreisinger/checkip#SecChecker)
-interface and add it to `cmd/checkip.go`. Then:
+interface and add it to `cmd/checkip.go`. Then
 
 ```
 make run # see the picture above
 ```
 
-## Releasing
-
-Just add new git [tag](https://reisinge.net/notes/prog/git#tags)
+If you are satisfied commit, push and add new [tag](https://reisinge.net/notes/prog/git#tags)
 
 ```
 git tag -a v0.6.9 -m "goreleaser with GitHub Actions"
 git push --tags
 ```
 
-and GitHub Actions with goreleaser will make the release.
+GitHub Actions with goreleaser will make and publish the release.

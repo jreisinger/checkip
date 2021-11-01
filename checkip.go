@@ -1,4 +1,7 @@
-// Checkip finds information about an IP address using various public services.
+// Checkip checks an IP address using various public services. An IP address is
+// checked by running one or more Checkers. There are two kinds of Checkers. An
+// InfoChecker just gathers some useful information about the IP address. A
+// SecChecker says whether the IP address is considered malicious or not.
 package checkip
 
 import (
