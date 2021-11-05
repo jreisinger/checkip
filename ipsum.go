@@ -14,6 +14,8 @@ type IPsum struct {
 	NumOfBlacklists int
 }
 
+func (ip *IPsum) Name() string { return "github.com/stamparm/ipsum" }
+
 // Check checks how many blackists the IP address is found on.
 func (ip *IPsum) Check(ipaddr net.IP) error {
 	file := "/var/tmp/ipsum.txt"

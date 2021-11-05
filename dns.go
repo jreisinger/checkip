@@ -1,7 +1,6 @@
 package checkip
 
 import (
-	"fmt"
 	"net"
 	"strings"
 )
@@ -10,6 +9,8 @@ import (
 type DNS struct {
 	Names []string
 }
+
+func (d *DNS) Name() string { return "net.LookupAddr" }
 
 // Check does a reverse lookup for a given IP address.
 func (d *DNS) Check(ipaddr net.IP) error {
@@ -22,5 +23,5 @@ func (d *DNS) Check(ipaddr net.IP) error {
 
 // Info returns interesting information from the check.
 func (d *DNS) Info() string {
-	return fmt.Sprintf("DNS names\t%s", strings.Join(d.Names, ", "))
+	return strings.Join(d.Names, ", ")
 }

@@ -9,15 +9,16 @@ import (
 	"fmt"
 	"net"
 	"os"
-	"regexp"
+	"sort"
 	"sync"
 
 	"github.com/logrusorgru/aurora"
 )
 
-// Checker runs a check of an IP address.
+// Checker runs a check of an IP address. It also returns its name.
 type Checker interface {
 	Check(ip net.IP) error
+	Name() string
 }
 
 // InfoChecker finds information about an IP address.
@@ -33,72 +34,87 @@ type SecChecker interface {
 }
 
 // Run runs checkers concurrently checking the ipaddr.
-func Run(checkers []Checker, ipaddr net.IP) Result {
-	var res Result
+func Run(checkers []Checker, ipaddr net.IP) []Result {
+	var res []Result
 
 	var wg sync.WaitGroup
-	for _, c := range checkers {
+	for _, chk := range checkers {
 		wg.Add(1)
 		go func(c Checker) {
 			defer wg.Done()
-			if err := c.Check(ipaddr); err != nil {
-				res.Errors = append(res.Errors, redactSecrets(err.Error()))
+			err := c.Check(ipaddr)
+			switch v := c.(type) {
+			case InfoChecker:
+				r := Result{Name: v.Name(), Type: "Info", Data: v, Info: v.Info(), Err: err}
+				res = append(res, r)
+			case SecChecker:
+				r := Result{Name: c.Name(), Type: "Sec", Data: v, IsMalicious: v.IsMalicious(), Err: err}
+				res = append(res, r)
 			}
-		}(c)
+
+		}(chk)
 	}
 	wg.Wait()
-
-	var total, malicious int
-	for _, c := range checkers {
-		switch ip := c.(type) {
-		case InfoChecker:
-			res.Infos = append(res.Infos, ip.Info())
-		case SecChecker:
-			total++
-			if ip.IsMalicious() {
-				malicious++
-			}
-		}
-
-	}
-	res.ProbabilityMalicious = float64(malicious) / float64(total)
 
 	return res
 }
 
-func redactSecrets(s string) string {
-	key := regexp.MustCompile(`(key|pass|password)=\w+`)
-	return key.ReplaceAllString(s, "${1}=REDACTED")
-}
+// func redactSecrets(s string) string {
+// 	key := regexp.MustCompile(`(key|pass|password)=\w+`)
+// 	return key.ReplaceAllString(s, "${1}=REDACTED")
+// }
 
-// Result holds the result of running a check.
+// Result holds the result of a check.
 type Result struct {
-	Infos                []string
-	ProbabilityMalicious float64
-	Errors               []string
+	Name        string
+	Type        string
+	Data        Checker
+	Info        string
+	IsMalicious bool
+	Err         error
 }
 
-func (res Result) Print() error {
-	for _, i := range res.Infos {
-		fmt.Println(i)
+type byName []Result
+
+func (x byName) Len() int           { return len(x) }
+func (x byName) Less(i, j int) bool { return x[i].Name < x[j].Name }
+func (x byName) Swap(i, j int)      { x[i], x[j] = x[j], x[i] }
+
+// Print prints condensed results to stdout.
+func Print(results []Result) error {
+	sort.Sort(byName(results))
+
+	var malicious, total float64
+	for _, r := range results {
+		if r.Type == "Info" {
+			fmt.Printf("%-15s %s\n", r.Name, r.Info)
+			continue
+		}
+		if r.IsMalicious {
+			malicious++
+		}
+		total++
 	}
+	probabilityMalicious := malicious / total
 
 	var msg string
-
 	switch {
-	case res.ProbabilityMalicious < 0.15:
+	case probabilityMalicious < 0.15:
 		msg = fmt.Sprint(aurora.Green("Malicious"))
-	case res.ProbabilityMalicious < 0.50:
+	case probabilityMalicious < 0.50:
 		msg = fmt.Sprint(aurora.Yellow("Malicious"))
 	default:
 		msg = fmt.Sprint(aurora.Red("Malicious"))
 	}
 
-	_, err := fmt.Printf("%s\t%.0f%%\n", msg, res.ProbabilityMalicious*100)
+	_, err := fmt.Printf("%s\t%.0f%%\n", msg, probabilityMalicious*100)
 	return err
 }
 
-func (res Result) PrintJSON() error {
+// PrintJSON prints all data from results in JSON format to stdout.
+func PrintJSON(results []Result) error {
+	sort.Sort(byName(results))
+
 	enc := json.NewEncoder(os.Stdout)
-	return enc.Encode(&res)
+	return enc.Encode(&results)
 }

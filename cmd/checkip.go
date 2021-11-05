@@ -46,11 +46,8 @@ func main() {
 
 	results := checkip.Run(checkers, ipaddr)
 	if *j {
-		results.PrintJSON()
+		checkip.PrintJSON(results)
 	} else {
-		for _, e := range results.Errors {
-			log.Println(e)
-		}
-		results.Print()
+		checkip.Print(results)
 	}
 }

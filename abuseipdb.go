@@ -19,6 +19,8 @@ type AbuseIPDB struct {
 	} `json:"data"`
 }
 
+func (a *AbuseIPDB) Name() string { return "abuseipdb.com" }
+
 // Check fills in AbuseIPDB data for a given IP address. It gets the data from
 // api.abuseipdb.com/api/v2/check (docs.abuseipdb.com/#check-endpoint).
 func (a *AbuseIPDB) Check(ipaddr net.IP) error {

@@ -19,6 +19,8 @@ type AS struct {
 	CountryCode string
 }
 
+func (a *AS) Name() string { return "iptoasn.com" }
+
 // Check fills in AS data for a given IP address. The data is taken from a TSV
 // file ip2asn-combined downloaded from iptoasn.com. The file is created or
 // updated as needed.
@@ -39,7 +41,7 @@ func (a *AS) Check(ipaddr net.IP) error {
 
 // Info returns interesting information from the check.
 func (a *AS) Info() string {
-	return fmt.Sprintf("AS description\t%s", a.Description)
+	return a.Description
 }
 
 // search searches the ippadrr in tsvFile and if found fills in AS data.

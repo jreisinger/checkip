@@ -12,6 +12,8 @@ type ThreatCrowd struct {
 	Votes int `json:"votes"`
 }
 
+func (t *ThreatCrowd) Name() string { return "threatcrowd.org" }
+
 // Check retrieves information from
 // https://www.threatcrowd.org/searchApi/v2/ip/report.
 func (t *ThreatCrowd) Check(ipaddr net.IP) error {

@@ -12,6 +12,8 @@ type Geo struct {
 	City, Country, IsoCode string
 }
 
+func (g *Geo) Name() string { return "maxmind.com" }
+
 // Check fills in the geolocation data. The data is taken from
 // GeoLite2-City.mmdb file that gets downloaded and regularly updated.
 func (g *Geo) Check(ip net.IP) error {
@@ -56,5 +58,5 @@ func (g *Geo) Info() string {
 	if g.IsoCode == "" {
 		g.IsoCode = "ISO code unknown"
 	}
-	return fmt.Sprintf("Geolocation\t%s, %s (%s)", g.City, g.Country, g.IsoCode)
+	return fmt.Sprintf("%s, %s (%s)", g.City, g.Country, g.IsoCode)
 }

@@ -14,6 +14,8 @@ type OTX struct {
 	} `json:"pulse_info"`
 }
 
+func (otx *OTX) Name() string { return "otx.alienvault.com" }
+
 // Check gets data from https://otx.alienvault.com/api.
 func (otx *OTX) Check(ipaddr net.IP) error {
 	apiurl := fmt.Sprintf("https://otx.alienvault.com/api/v1/indicators/IPv4/%s/", ipaddr.String())

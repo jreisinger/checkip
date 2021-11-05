@@ -24,6 +24,8 @@ type data []struct {
 	Transport string `json:"transport"` // tcp, udp
 }
 
+func (s *Shodan) Name() string { return "shodan.io" }
+
 // Check fills in Shodan data for a given IP address. Its get the data from
 // https://api.shodan.io.
 func (s *Shodan) Check(ipaddr net.IP) error {
@@ -92,5 +94,5 @@ func (s *Shodan) Info() string {
 		portStr += ":"
 	}
 
-	return fmt.Sprintf("OS and ports\t%s, %d open %s %s", os, len(portInfo), portStr, strings.Join(portInfo, ", "))
+	return fmt.Sprintf("%s, %d open %s %s", os, len(portInfo), portStr, strings.Join(portInfo, ", "))
 }

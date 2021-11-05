@@ -13,6 +13,8 @@ type IP struct {
 	DefaultMask net.IPMask
 }
 
+func (i *IP) Name() string { return "net.IP" }
+
 // Check fills in IP data.
 func (i *IP) Check(ipaddr net.IP) error {
 	i.Private = ipaddr.IsPrivate()
@@ -30,5 +32,5 @@ func (i *IP) Info() string {
 	for _, b := range i.DefaultMask {
 		mask = append(mask, strconv.Itoa(int(b)))
 	}
-	return fmt.Sprintf("IP address\t%s, default mask %s", private, strings.Join(mask, "."))
+	return fmt.Sprintf("%s, default mask %s", private, strings.Join(mask, "."))
 }
