@@ -10,6 +10,7 @@ import (
 	"log"
 	"net"
 	"os"
+	"regexp"
 	"sort"
 	"sync"
 
@@ -43,13 +44,17 @@ func Run(checkers []Checker, ipaddr net.IP) []Result {
 		wg.Add(1)
 		go func(c Checker) {
 			defer wg.Done()
+			var errMsg string
 			err := c.Check(ipaddr)
+			if err != nil {
+				errMsg = redactSecrets(err.Error())
+			}
 			switch v := c.(type) {
 			case InfoChecker:
-				r := Result{Name: v.Name(), Type: "Info", Data: v, Info: v.Info(), Err: err}
+				r := Result{Name: v.Name(), Type: "Info", Data: v, Info: v.Info(), Err: err, ErrMsg: errMsg}
 				res = append(res, r)
 			case SecChecker:
-				r := Result{Name: c.Name(), Type: "Sec", Data: v, IsMalicious: v.IsMalicious(), Err: err}
+				r := Result{Name: c.Name(), Type: "Sec", Data: v, IsMalicious: v.IsMalicious(), Err: err, ErrMsg: errMsg}
 				res = append(res, r)
 			}
 
@@ -60,10 +65,10 @@ func Run(checkers []Checker, ipaddr net.IP) []Result {
 	return res
 }
 
-// func redactSecrets(s string) string {
-// 	key := regexp.MustCompile(`(key|pass|password)=\w+`)
-// 	return key.ReplaceAllString(s, "${1}=REDACTED")
-// }
+func redactSecrets(s string) string {
+	key := regexp.MustCompile(`(key|pass|password)=\w+`)
+	return key.ReplaceAllString(s, "${1}=REDACTED")
+}
 
 // Result holds the result of a check.
 type Result struct {
@@ -72,7 +77,8 @@ type Result struct {
 	Data        Checker
 	Info        string
 	IsMalicious bool
-	Err         error
+	Err         error `json:"-"` // omit error from marshalling - https://bit.ly/2ZZOM7C
+	ErrMsg      string
 }
 
 type byName []Result
