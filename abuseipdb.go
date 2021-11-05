@@ -16,9 +16,6 @@ type AbuseIPDB struct {
 	Data Data `json:"data"`
 }
 type Data struct {
-	IPAddress            string        `json:"ipAddress"`
-	IsPublic             bool          `json:"isPublic"`
-	IPVersion            int           `json:"ipVersion"`
 	IsWhitelisted        bool          `json:"isWhitelisted"`
 	AbuseConfidenceScore int           `json:"abuseConfidenceScore"`
 	CountryCode          string        `json:"countryCode"`
