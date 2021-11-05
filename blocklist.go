@@ -9,6 +9,7 @@ import (
 	"strconv"
 )
 
+// Blocklist holds information about an IP address from blocklist.de database.
 type Blocklist struct {
 	Attacks int
 	Reports int
@@ -16,6 +17,8 @@ type Blocklist struct {
 
 func (b *Blocklist) Name() string { return "blocklist.de" }
 
+// Check fills in Bloclist data for a given IP address. It gets the data from
+// http://api.blocklist.de
 func (b *Blocklist) Check(ipddr net.IP) error {
 	apiurl := fmt.Sprintf("http://api.blocklist.de/api.php?ip=%s&start=1", ipddr)
 
