@@ -15,7 +15,7 @@ func init() {
 	log.SetPrefix(os.Args[0] + ": ")
 }
 
-var j = flag.Bool("j", false, "output JSON")
+var j = flag.Bool("j", false, "print all data in JSON")
 
 func main() {
 	flag.Parse()

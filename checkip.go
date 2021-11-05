@@ -109,9 +109,9 @@ func Print(results []Result) error {
 
 	var msg string
 	switch {
-	case probabilityMalicious < 0.15:
+	case probabilityMalicious <= 0.15:
 		msg = fmt.Sprint(aurora.Green("Malicious"))
-	case probabilityMalicious < 0.50:
+	case probabilityMalicious <= 0.50:
 		msg = fmt.Sprint(aurora.Yellow("Malicious"))
 	default:
 		msg = fmt.Sprint(aurora.Red("Malicious"))
