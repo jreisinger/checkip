@@ -64,12 +64,3 @@ func (ip *IPsum) search(ipaddr net.IP, tsvFile string) error {
 
 	return nil
 }
-
-// String returns the result of the check.
-func (ip *IPsum) String() string {
-	s := fmt.Sprintf("found on %d blacklist", ip.NumOfBlacklists)
-	if ip.NumOfBlacklists != 1 {
-		s += "s"
-	}
-	return s
-}
