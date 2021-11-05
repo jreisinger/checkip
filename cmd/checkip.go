@@ -32,6 +32,7 @@ func main() {
 	checkers := []checkip.Checker{
 		&checkip.AS{},
 		&checkip.AbuseIPDB{},
+		&checkip.Blocklist{},
 		&checkip.CINSArmy{},
 		&checkip.DNS{},
 		&checkip.ET{},

@@ -91,7 +91,7 @@ func (x byName) Swap(i, j int)      { x[i], x[j] = x[j], x[i] }
 func Print(results []Result) error {
 	sort.Sort(byName(results))
 
-	var malicious, total float64
+	var malicious, totalSec float64
 	for _, r := range results {
 		if r.Err != nil {
 			log.Print(r.Err)
@@ -103,9 +103,9 @@ func Print(results []Result) error {
 		if r.IsMalicious {
 			malicious++
 		}
-		total++
+		totalSec++
 	}
-	probabilityMalicious := malicious / total
+	probabilityMalicious := malicious / totalSec
 
 	var msg string
 	switch {
@@ -117,7 +117,7 @@ func Print(results []Result) error {
 		msg = fmt.Sprint(aurora.Red("Malicious"))
 	}
 
-	_, err := fmt.Printf("%s\t%.0f%%\n", msg, probabilityMalicious*100)
+	_, err := fmt.Printf("%s\t%.0f%% (%d/%d)\n", msg, probabilityMalicious*100, int(malicious), int(totalSec))
 	return err
 }
 
