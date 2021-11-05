@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net"
 	"net/http"
+	"time"
 )
 
 // Only return reports within the last x amount of days. Default is 30.
@@ -12,11 +13,23 @@ var maxAgeInDays = "90"
 
 // AbuseIPDB holds information about an IP address from abuseipdb.com database.
 type AbuseIPDB struct {
-	Data struct {
-		AbuseConfidenceScore int  `json:"abuseConfidenceScore"`
-		TotalReports         int  `json:"totalReports"`
-		IsWhitelisted        bool `json:"isWhitelisted"`
-	} `json:"data"`
+	Data Data `json:"data"`
+}
+type Data struct {
+	IPAddress            string        `json:"ipAddress"`
+	IsPublic             bool          `json:"isPublic"`
+	IPVersion            int           `json:"ipVersion"`
+	IsWhitelisted        bool          `json:"isWhitelisted"`
+	AbuseConfidenceScore int           `json:"abuseConfidenceScore"`
+	CountryCode          string        `json:"countryCode"`
+	CountryName          string        `json:"countryName"`
+	UsageType            string        `json:"usageType"`
+	Isp                  string        `json:"isp"`
+	Domain               string        `json:"domain"`
+	Hostnames            []interface{} `json:"hostnames"`
+	TotalReports         int           `json:"totalReports"`
+	NumDistinctUsers     int           `json:"numDistinctUsers"`
+	LastReportedAt       time.Time     `json:"lastReportedAt"`
 }
 
 func (a *AbuseIPDB) Name() string { return "abuseipdb.com" }
