@@ -102,13 +102,12 @@ func Print(results []Result) error {
 		if r.Type == "Info" || r.Type == "InfoSec" {
 			fmt.Printf("%-15s %s\n", r.Name, r.Info)
 		}
-		if r.Type == "Info" {
-			continue
+		if r.Type == "Sec" || r.Type == "InfoSec" {
+			totalSec++
+			if r.IsMalicious {
+				malicious++
+			}
 		}
-		if r.IsMalicious {
-			malicious++
-		}
-		totalSec++
 	}
 	probabilityMalicious := malicious / totalSec
 
