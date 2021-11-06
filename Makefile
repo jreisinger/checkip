@@ -2,11 +2,10 @@ install:
 	go install cmd/checkip.go
 
 run: install
-	checkip 140.82.114.4
+	checkip 91.228.166.47
 	checkip 209.141.33.65
 	checkip 218.92.0.158
-	checkip 92.118.160.17
-	checkip -j 92.118.160.17 | jq -r '.[] | select(.Type=="Sec" or .Type=="InfoSec") | "\(.Name) => \(.IsMalicious)"'
+	checkip -j 218.92.0.158 | jq -r '.[] | select(.Type=="Sec" or .Type=="InfoSec") | "\(.Name) => \(.IsMalicious)"'
 
 PLATFORMS := linux/amd64 darwin/amd64 linux/arm windows/amd64
 

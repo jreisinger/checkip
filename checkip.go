@@ -144,3 +144,13 @@ func na(s string) string {
 	}
 	return s
 }
+
+func nonEmpty(strings ...string) []string {
+	var ss []string
+	for _, s := range strings {
+		if s != "" {
+			ss = append(ss, s)
+		}
+	}
+	return ss
+}

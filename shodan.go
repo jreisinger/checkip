@@ -77,7 +77,8 @@ func (s *Shodan) Info() string {
 		if product == "" && version == "" {
 			portInfo = append(portInfo, fmt.Sprintf("%s/%d", d.Transport, d.Port))
 		} else {
-			portInfo = append(portInfo, fmt.Sprintf("%s/%d (%s, %s)", d.Transport, d.Port, product, version))
+			ss := nonEmpty(product, version)
+			portInfo = append(portInfo, fmt.Sprintf("%s/%d (%s)", d.Transport, d.Port, strings.Join(ss, ", ")))
 		}
 	}
 
