@@ -70,3 +70,7 @@ func (a *AbuseIPDB) Check(ipaddr net.IP) error {
 func (a *AbuseIPDB) IsMalicious() bool {
 	return a.Data.TotalReports > 0 && !a.Data.IsWhitelisted && a.Data.AbuseConfidenceScore > 25
 }
+
+func (a *AbuseIPDB) Info() string {
+	return fmt.Sprintf("domain: %s, usage: %s", na(a.Data.Domain), na(a.Data.UsageType))
+}
