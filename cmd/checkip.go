@@ -35,7 +35,6 @@ func main() {
 		&checkip.Blocklist{},
 		&checkip.CINSArmy{},
 		&checkip.DNS{},
-		&checkip.ET{},
 		&checkip.Geo{},
 		&checkip.IPsum{},
 		&checkip.OTX{},
