@@ -3,7 +3,7 @@
 `checkip` is a CLI tool and library that checks an IP address using various
 public services. It provides generic and security information.
 
-<img src="checkip.png" width="600">
+<img src="checkip.png" width="700">
 
 ## Installation and configuration
 
