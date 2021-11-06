@@ -11,7 +11,8 @@ want to see, e.g.:
 
 ```
 checkip -j 218.92.0.158 | \
-jq -r '.[] | select(.Type=="Sec" or .Type=="InfoSec") | "\(.IsMalicious)\t\(.Name)"' | sort
+jq -r '.[] | select(.Type=="Sec" or .Type=="InfoSec") | "\(.IsMalicious)\t\(.Name)"' | \
+sort
 false	abuseipdb.com
 false	cinsscore.com
 false	threatcrowd.org
