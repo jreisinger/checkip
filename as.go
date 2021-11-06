@@ -41,7 +41,7 @@ func (a *AS) Check(ipaddr net.IP) error {
 
 // Info returns interesting information from the check.
 func (a *AS) Info() string {
-	return a.Description
+	return fmt.Sprintf("AS description: %s", na(a.Description))
 }
 
 // search searches the ippadrr in tsvFile and if found fills in AS data.

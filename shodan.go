@@ -13,7 +13,7 @@ import (
 type Shodan struct {
 	Org   string `json:"org"`
 	Data  data   `json:"data"`
-	Os    string `json:"os"`
+	OS    string `json:"os"`
 	Ports []int  `json:"ports"`
 }
 
@@ -61,11 +61,6 @@ func (x byPort) Swap(i, j int)      { x[i], x[j] = x[j], x[i] }
 
 // Info returns interesting information from the check.
 func (s *Shodan) Info() string {
-	os := "OS unknown"
-	if s.Os != "" {
-		os = s.Os
-	}
-
 	var portInfo []string
 	sort.Sort(byPort(s.Data))
 	for _, d := range s.Data {
@@ -94,5 +89,5 @@ func (s *Shodan) Info() string {
 		portStr += ":"
 	}
 
-	return fmt.Sprintf("%s, %d open %s %s", os, len(portInfo), portStr, strings.Join(portInfo, ", "))
+	return fmt.Sprintf("OS: %s, %d open %s %s", na(s.OS), len(portInfo), portStr, strings.Join(portInfo, ", "))
 }

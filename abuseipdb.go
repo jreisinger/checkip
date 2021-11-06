@@ -72,5 +72,5 @@ func (a *AbuseIPDB) IsMalicious() bool {
 }
 
 func (a *AbuseIPDB) Info() string {
-	return fmt.Sprintf("domain: %s, usage: %s", na(a.Data.Domain), na(a.Data.UsageType))
+	return fmt.Sprintf("domain: %s, usage type: %s", na(a.Data.Domain), na(a.Data.UsageType))
 }
