@@ -1,7 +1,8 @@
 # checkip
 
 `checkip` is a CLI tool and library that checks an IP address using various
-public services. It provides generic and security information.
+public services. It provides generic and security information in a simple and
+quick way.
 
 <img src="checkip.png" width="700">
 
