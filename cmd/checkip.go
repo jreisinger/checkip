@@ -37,7 +37,6 @@ func main() {
 		&checkip.DNS{},
 		&checkip.ET{},
 		&checkip.Geo{},
-		&checkip.IP{},
 		&checkip.IPsum{},
 		&checkip.OTX{},
 		&checkip.Shodan{},
