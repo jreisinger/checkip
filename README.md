@@ -10,7 +10,8 @@ The CLI tool can also print all data in JSON format so you can pick what you
 want to see, e.g.:
 
 ```
-checkip -j 218.92.0.158 | jq -r '.[] | select(.Type=="Sec" or .Type=="InfoSec") | "\(.IsMalicious)\t\(.Name)"' | sort
+checkip -j 218.92.0.158 | \
+jq -r '.[] | select(.Type=="Sec" or .Type=="InfoSec") | "\(.IsMalicious)\t\(.Name)"' | sort
 false	abuseipdb.com
 false	cinsscore.com
 false	threatcrowd.org
