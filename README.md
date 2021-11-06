@@ -36,8 +36,9 @@ You can also use environment variables with the same names.
 An IP address is checked by running one or more
 [Checker](https://pkg.go.dev/github.com/jreisinger/checkip#Checker)s. To add
 a new way for checking IP addresses just implement the
-[InfoChecker](https://pkg.go.dev/github.com/jreisinger/checkip#InfoChecker)
-or [SecChecker](https://pkg.go.dev/github.com/jreisinger/checkip#SecChecker)
+[InfoChecker](https://pkg.go.dev/github.com/jreisinger/checkip#InfoChecker),
+[SecChecker](https://pkg.go.dev/github.com/jreisinger/checkip#SecChecker) or
+[InfoSecChecker](https://pkg.go.dev/github.com/jreisinger/checkip#InfoSecChecker)
 interface and add it to `cmd/checkip.go`. Then
 
 ```
