@@ -5,7 +5,7 @@ run: install
 	checkip 91.228.166.47
 	checkip 209.141.33.65
 	checkip 218.92.0.158
-	checkip -j 218.92.0.158 | jq -r '.[] | select(.Type=="Sec" or .Type=="InfoSec") | "\(.Name) => \(.IsMalicious)"'
+	checkip -j 218.92.0.158 | jq -r '.[] | select(.Type=="Sec" or .Type=="InfoSec") | "\(.IsMalicious)\t\(.Name)"' | sort
 
 PLATFORMS := linux/amd64 darwin/amd64 linux/arm windows/amd64
 
