@@ -1,7 +1,6 @@
 package checkip
 
 import (
-	"log"
 	"testing"
 )
 
@@ -21,7 +20,26 @@ func TestRedactSecrets(test *testing.T) {
 	for _, t := range tests {
 		got := redactSecrets(t.in)
 		if got != t.out {
-			log.Fatalf("got %s, wanted %s", got, t.out)
+			test.Fatalf("got %s, wanted %s", got, t.out)
+		}
+	}
+}
+
+func TestNa(test *testing.T) {
+	tests := []struct {
+		in  string
+		out string
+	}{
+		{"", "n/a"},
+		{" ", " "},
+		{"a", "a"},
+		{"0", "0"},
+		{"abc", "abc"},
+	}
+	for _, t := range tests {
+		got := na(t.in)
+		if got != t.out {
+			test.Fatalf("got %s, wanted %s", got, t.out)
 		}
 	}
 }
