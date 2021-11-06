@@ -43,3 +43,21 @@ func TestNa(test *testing.T) {
 		}
 	}
 }
+
+func TestNonEmpty(test *testing.T) {
+	tests := []struct {
+		ss       []string
+		sliceLen int
+	}{
+		{[]string{""}, 0},
+		{[]string{"", " "}, 1},
+		{[]string{"a", "", "c"}, 2},
+		{[]string{"", "a", " ", "c"}, 3},
+	}
+	for _, t := range tests {
+		got := nonEmpty(t.ss...)
+		if len(got) != t.sliceLen {
+			test.Fatalf("got %d, wanted %d", len(got), t.sliceLen)
+		}
+	}
+}
