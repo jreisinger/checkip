@@ -94,7 +94,7 @@ func Print(results []Result) error {
 	var malicious, totalSec float64
 	for _, r := range results {
 		if r.Err != nil {
-			log.Print(r.Err)
+			log.Print(r.ErrMsg)
 		}
 		if r.Type == "Info" {
 			fmt.Printf("%-15s %s\n", r.Name, r.Info)
