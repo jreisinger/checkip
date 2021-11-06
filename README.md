@@ -4,7 +4,7 @@
 public services. It provides generic and security information in a simple and
 quick way.
 
-<img src="checkip.png" width="700">
+<img src="checkip.png" width="800">
 
 ## Installation and configuration
 
