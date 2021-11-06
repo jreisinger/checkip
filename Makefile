@@ -1,4 +1,7 @@
-install:
+test:
+	go test -cover
+
+install: test
 	go install cmd/checkip.go
 
 run: install
