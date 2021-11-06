@@ -14,7 +14,7 @@ type ET struct {
 	CountIPs      int
 }
 
-func (e *ET) Name() string { return "rules.emergingthreats.net" }
+func (e *ET) String() string { return "rules.emergingthreats.net" }
 
 // Check checks whether the ippaddr is not among compromised IP addresses from
 // The Emerging Threats Intelligence feed (ET). I found ET mentioned at

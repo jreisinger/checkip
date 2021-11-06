@@ -15,7 +15,7 @@ type Blocklist struct {
 	Reports int
 }
 
-func (b *Blocklist) Name() string { return "blocklist.de" }
+func (b *Blocklist) String() string { return "blocklist.de" }
 
 // Check fills in Bloclist data for a given IP address. It gets the data from
 // http://api.blocklist.de

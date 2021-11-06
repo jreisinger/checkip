@@ -12,7 +12,7 @@ type ThreatCrowd struct {
 	Votes int `json:"votes"`
 }
 
-func (t *ThreatCrowd) Name() string { return "threatcrowd.org" }
+func (t *ThreatCrowd) String() string { return "threatcrowd.org" }
 
 // Check retrieves information from
 // https://www.threatcrowd.org/searchApi/v2/ip/report.

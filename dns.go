@@ -10,7 +10,7 @@ type DNS struct {
 	Names []string
 }
 
-func (d *DNS) Name() string { return "net.LookupAddr" }
+func (d *DNS) String() string { return "net.LookupAddr" }
 
 // Check does a reverse lookup for a given IP address.
 func (d *DNS) Check(ipaddr net.IP) error {

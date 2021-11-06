@@ -17,10 +17,10 @@ import (
 	"github.com/logrusorgru/aurora"
 )
 
-// Checker runs a check of an IP address. It also returns its name.
+// Checker runs a check of an IP address. String() returns checker's name.
 type Checker interface {
 	Check(ip net.IP) error
-	Name() string
+	fmt.Stringer
 }
 
 // InfoChecker finds information about an IP address.
@@ -33,6 +33,17 @@ type InfoChecker interface {
 type SecChecker interface {
 	IsMalicious() bool
 	Checker
+}
+
+// Result holds the result of a check.
+type Result struct {
+	Name        string
+	Type        string
+	Data        Checker
+	Info        string
+	IsMalicious bool
+	Err         error `json:"-"` // omit error from marshalling - https://bit.ly/2ZZOM7C
+	ErrMsg      string
 }
 
 // Run runs checkers concurrently checking the ipaddr.
@@ -51,10 +62,10 @@ func Run(checkers []Checker, ipaddr net.IP) []Result {
 			}
 			switch v := c.(type) {
 			case InfoChecker:
-				r := Result{Name: v.Name(), Type: "Info", Data: v, Info: v.Info(), Err: err, ErrMsg: errMsg}
+				r := Result{Name: v.String(), Type: "Info", Data: v, Info: v.Info(), Err: err, ErrMsg: errMsg}
 				res = append(res, r)
 			case SecChecker:
-				r := Result{Name: c.Name(), Type: "Sec", Data: v, IsMalicious: v.IsMalicious(), Err: err, ErrMsg: errMsg}
+				r := Result{Name: c.String(), Type: "Sec", Data: v, IsMalicious: v.IsMalicious(), Err: err, ErrMsg: errMsg}
 				res = append(res, r)
 			}
 
@@ -68,17 +79,6 @@ func Run(checkers []Checker, ipaddr net.IP) []Result {
 func redactSecrets(s string) string {
 	key := regexp.MustCompile(`(key|pass|password)=\w+`)
 	return key.ReplaceAllString(s, "${1}=REDACTED")
-}
-
-// Result holds the result of a check.
-type Result struct {
-	Name        string
-	Type        string
-	Data        Checker
-	Info        string
-	IsMalicious bool
-	Err         error `json:"-"` // omit error from marshalling - https://bit.ly/2ZZOM7C
-	ErrMsg      string
 }
 
 type byName []Result

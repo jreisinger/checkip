@@ -15,7 +15,7 @@ type CINSArmy struct {
 	CountIPs int
 }
 
-func (c *CINSArmy) Name() string { return "cinsscore.com" }
+func (c *CINSArmy) String() string { return "cinsscore.com" }
 
 // Check fills in the CINSArmy data.
 func (c *CINSArmy) Check(ipaddr net.IP) error {

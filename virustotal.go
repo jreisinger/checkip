@@ -23,7 +23,7 @@ type VirusTotal struct {
 	} `json:"data"`
 }
 
-func (vt *VirusTotal) Name() string { return "virustotal.com" }
+func (vt *VirusTotal) String() string { return "virustotal.com" }
 
 // Check fills in data about ippaddr from https://www.virustotal.com/api
 func (vt *VirusTotal) Check(ipaddr net.IP) error {

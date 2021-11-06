@@ -13,7 +13,7 @@ type IP struct {
 	DefaultMask net.IPMask
 }
 
-func (i *IP) Name() string { return "net.IP" }
+func (i *IP) String() string { return "net.IP" }
 
 // Check fills in IP data.
 func (i *IP) Check(ipaddr net.IP) error {

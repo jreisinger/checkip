@@ -12,7 +12,7 @@ type Geo struct {
 	City, Country, IsoCode string
 }
 
-func (g *Geo) Name() string { return "maxmind.com" }
+func (g *Geo) String() string { return "maxmind.com" }
 
 // Check fills in the geolocation data. The data is taken from
 // GeoLite2-City.mmdb file that gets downloaded and regularly updated.

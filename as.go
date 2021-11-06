@@ -19,7 +19,7 @@ type AS struct {
 	CountryCode string
 }
 
-func (a *AS) Name() string { return "iptoasn.com" }
+func (a *AS) String() string { return "iptoasn.com" }
 
 // Check fills in AS data for a given IP address. The data is taken from a TSV
 // file ip2asn-combined downloaded from iptoasn.com. The file is created or

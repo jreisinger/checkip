@@ -29,7 +29,7 @@ type Data struct {
 	LastReportedAt       time.Time     `json:"lastReportedAt"`
 }
 
-func (a *AbuseIPDB) Name() string { return "abuseipdb.com" }
+func (a *AbuseIPDB) String() string { return "abuseipdb.com" }
 
 // Check fills in AbuseIPDB data for a given IP address. It gets the data from
 // api.abuseipdb.com/api/v2/check (docs.abuseipdb.com/#check-endpoint).

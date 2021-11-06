@@ -14,7 +14,7 @@ type OTX struct {
 	} `json:"pulse_info"`
 }
 
-func (otx *OTX) Name() string { return "otx.alienvault.com" }
+func (otx *OTX) String() string { return "otx.alienvault.com" }
 
 // Check gets data from https://otx.alienvault.com/api.
 func (otx *OTX) Check(ipaddr net.IP) error {
