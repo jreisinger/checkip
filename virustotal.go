@@ -45,14 +45,15 @@ func (vt *VirusTotal) Check(ipaddr net.IP) error {
 	headers := map[string]string{
 		"x-apikey": apiKey,
 	}
-	resp, err := makeAPIcall("https://www.virustotal.com/api/v3/ip_addresses/"+ipaddr.String(), headers, map[string]string{})
+	apiurl := "https://www.virustotal.com/api/v3/ip_addresses/" + ipaddr.String()
+	resp, err := makeAPIcall(apiurl, headers, map[string]string{})
 	if err != nil {
 		return err
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return fmt.Errorf("%s", resp.Status)
+		return fmt.Errorf("calling %s: %s", apiurl, resp.Status)
 	}
 
 	if err := json.NewDecoder(resp.Body).Decode(vt); err != nil {
