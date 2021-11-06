@@ -35,6 +35,11 @@ type SecChecker interface {
 	Checker
 }
 
+type InfoSecChecker interface {
+	InfoChecker
+	SecChecker
+}
+
 // Result holds the result of a check.
 type Result struct {
 	Name        string
@@ -61,6 +66,9 @@ func Run(checkers []Checker, ipaddr net.IP) []Result {
 				errMsg = redactSecrets(err.Error())
 			}
 			switch v := c.(type) {
+			case InfoSecChecker:
+				r := Result{Name: v.String(), Type: "InfoSec", Data: v, Info: v.Info(), IsMalicious: v.IsMalicious(), Err: err, ErrMsg: errMsg}
+				res = append(res, r)
 			case InfoChecker:
 				r := Result{Name: v.String(), Type: "Info", Data: v, Info: v.Info(), Err: err, ErrMsg: errMsg}
 				res = append(res, r)
@@ -74,11 +82,6 @@ func Run(checkers []Checker, ipaddr net.IP) []Result {
 	wg.Wait()
 
 	return res
-}
-
-func redactSecrets(s string) string {
-	key := regexp.MustCompile(`(key|pass|password)=\w+`)
-	return key.ReplaceAllString(s, "${1}=REDACTED")
 }
 
 type byName []Result
@@ -96,14 +99,15 @@ func Print(results []Result) error {
 		if r.Err != nil {
 			log.Print(r.ErrMsg)
 		}
-		if r.Type == "Info" {
+		if r.Type == "Info" || r.Type == "InfoSec" {
 			fmt.Printf("%-15s %s\n", r.Name, r.Info)
-			continue
 		}
-		if r.IsMalicious {
-			malicious++
+		if r.Type == "Sec" || r.Type == "InfoSec" {
+			totalSec++
+			if r.IsMalicious {
+				malicious++
+			}
 		}
-		totalSec++
 	}
 	probabilityMalicious := malicious / totalSec
 
@@ -127,4 +131,26 @@ func PrintJSON(results []Result) error {
 
 	enc := json.NewEncoder(os.Stdout)
 	return enc.Encode(&results)
+}
+
+func redactSecrets(s string) string {
+	key := regexp.MustCompile(`(key|pass|password)=\w+`)
+	return key.ReplaceAllString(s, "${1}=REDACTED")
+}
+
+func na(s string) string {
+	if s == "" {
+		return "n/a"
+	}
+	return s
+}
+
+func nonEmpty(strings ...string) []string {
+	var ss []string
+	for _, s := range strings {
+		if s != "" {
+			ss = append(ss, s)
+		}
+	}
+	return ss
 }

@@ -5,13 +5,16 @@ import (
 	"fmt"
 	"net"
 	"net/http"
+	"strings"
 )
 
 // VirusTotal holds information about an IP address from virustotal.com.
 type VirusTotal struct {
 	Data struct {
 		Attributes struct {
-			Reputation        int `json:"reputation"`
+			Reputation        int    `json:"reputation"`
+			Network           string `json:"network"`
+			ASowner           string `json:"as_owner"`
 			LastAnalysisStats struct {
 				Harmless   int `json:"harmless"`
 				Malicious  int `json:"malicious"`
@@ -19,6 +22,11 @@ type VirusTotal struct {
 				Timeout    int `json:"timeout"`
 				Undetected int `json:"undetected"`
 			} `json:"last_analysis_stats"`
+			LastHTTPScert struct {
+				Extensions struct {
+					SAN []string `json:"subject_alternative_name"`
+				} `json:"extensions"`
+			} `json:"last_https_certificate"`
 		} `json:"attributes"`
 	} `json:"data"`
 }
@@ -57,4 +65,8 @@ func (vt *VirusTotal) Check(ipaddr net.IP) error {
 func (vt *VirusTotal) IsMalicious() bool {
 	// https://developers.virustotal.com/reference#ip-object
 	return vt.Data.Attributes.Reputation < 0
+}
+
+func (vt *VirusTotal) Info() string {
+	return fmt.Sprintf("AS onwer: %s, network: %s, SAN: %s", na(vt.Data.Attributes.ASowner), na(vt.Data.Attributes.Network), na(strings.Join(vt.Data.Attributes.LastHTTPScert.Extensions.SAN, ", ")))
 }

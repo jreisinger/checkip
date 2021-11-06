@@ -49,14 +49,5 @@ func (g *Geo) Check(ip net.IP) error {
 
 // Info returns interesting information from the check.
 func (g *Geo) Info() string {
-	if g.City == "" {
-		g.City = "city unknown"
-	}
-	if g.Country == "" {
-		g.Country = "country unknown"
-	}
-	if g.IsoCode == "" {
-		g.IsoCode = "ISO code unknown"
-	}
-	return fmt.Sprintf("%s, %s (%s)", g.City, g.Country, g.IsoCode)
+	return fmt.Sprintf("city: %s, country: %s, ISO code: %s", na(g.City), na(g.Country), na(g.IsoCode))
 }
