@@ -2,7 +2,7 @@
 
 Checkip checks an IP address using various public services. It provides
 generic and security information in a quick and simple way. It can be run as
-a CLI tool or as JSON API.
+a CLI tool or as JSON API server.
 
 <img src="checkip.png" width="800">
 
