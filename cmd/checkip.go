@@ -1,13 +1,12 @@
-// Checkip quickly finds information about an IP address from a CLI.
-package main
+package cmd
 
 import (
 	"flag"
+	"github.com/jreisinger/checkip/pkg/check"
+	"github.com/jreisinger/checkip/pkg/checker"
 	"log"
 	"net"
 	"os"
-
-	"github.com/jreisinger/checkip"
 )
 
 func init() {
@@ -17,7 +16,7 @@ func init() {
 
 var j = flag.Bool("j", false, "print all data in JSON")
 
-func main() {
+func CheckIP() {
 	flag.Parse()
 
 	if len(flag.Args()) != 1 {
@@ -29,24 +28,21 @@ func main() {
 		log.Fatalf("wrong IP address: %s\n", flag.Arg(0))
 	}
 
-	checkers := []checkip.Checker{
-		&checkip.AS{},
-		&checkip.AbuseIPDB{},
-		&checkip.Blocklist{},
-		&checkip.CINSArmy{},
-		&checkip.DNS{},
-		&checkip.Geo{},
-		&checkip.IPsum{},
-		&checkip.OTX{},
-		&checkip.Shodan{},
-		&checkip.ThreatCrowd{},
-		&checkip.VirusTotal{},
+	checkers := []check.Check{
+		checker.CheckAs,
+		checker.CheckAbuseIPDB,
+		checker.CheckBlockList,
+		checker.CheckCins,
+		checker.CheckDNS,
+		checker.CheckGeo,
+		checker.CheckIPSum,
+		checker.CheckOTX,
+		checker.CheckShodan,
+		checker.CheckThreadCrowd,
+		checker.CheckVirusTotal,
 	}
 
-	results := checkip.Run(checkers, ipaddr)
-	if *j {
-		checkip.PrintJSON(results)
-	} else {
-		checkip.Print(results)
-	}
+	results := check.Run(checkers, ipaddr)
+	results.SortByName()
+	check.Print(results)
 }
