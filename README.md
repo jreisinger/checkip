@@ -1,24 +1,10 @@
 # checkip
 
-`checkip` checks an IP address using various public services. It provides
-generic and security information in a simple and quick way.
-
-It can be run as a CLI tool or as JSON API.
+Checkip checks an IP address using various public services. It provides
+generic and security information in a quick and simple way. It can be run as
+a CLI tool or as JSON API.
 
 <img src="checkip.png" width="800">
-
-```
-checkip -s &
-curl -s localhost:8000/api/v1/218.92.0.158 | \
-jq -r '.Results[] | select(.Type=="Sec" or .Type=="InfoSec") | "\(.IsMalicious)\t\(.Name)"' | sort
-false	abuseipdb.com
-false	cinsscore.com
-false	threatcrowd.org
-false	virustotal.com
-true	blocklist.de
-true	github.com/stamparm/ipsum
-true	otx.alienvault.com
-```
 
 ## Installation and configuration
 
