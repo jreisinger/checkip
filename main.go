@@ -32,11 +32,13 @@ func main() {
 	}
 
 	if *s {
+		addr := "localhost:8000"
+		url := "/api/v1/"
 		c := api.Checkers(checkers)
-		http.HandleFunc("/api/v1/", c.Handler)
-		log.Fatal(http.ListenAndServe(":8000", nil))
+		http.HandleFunc(url, c.Handler)
+		log.Printf("starting API server at %s", addr+url)
+		log.Fatal(http.ListenAndServe(addr, nil))
 	} else {
-
 		log.SetFlags(0)
 		log.SetPrefix(os.Args[0] + ": ")
 
@@ -50,7 +52,6 @@ func main() {
 		}
 
 		results := checkip.Run(checkers, ipaddr)
-
 		cmd.Print(results)
 	}
 }
