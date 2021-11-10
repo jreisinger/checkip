@@ -7,14 +7,9 @@ package checkip
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 	"net"
-	"os"
 	"regexp"
-	"sort"
 	"sync"
-
-	"github.com/logrusorgru/aurora"
 )
 
 // Checker runs a check of an IP address. String() returns checker's name.
@@ -84,24 +79,41 @@ func Run(checkers []Checker, ipaddr net.IP) []Result {
 	return res
 }
 
-type byName []Result
+// JSON marshals results into JSON format.
+func JSON(results []Result) ([]byte, error) {
+	type Overview struct {
+		Infos []struct {
+			Name string
+			Info string
+		}
+		ProbabilityMalicious float64
+	}
 
-func (x byName) Len() int           { return len(x) }
-func (x byName) Less(i, j int) bool { return x[i].Name < x[j].Name }
-func (x byName) Swap(i, j int)      { x[i], x[j] = x[j], x[i] }
+	var o Overview
 
-// Print prints condensed results to stdout.
-func Print(results []Result) error {
-	sort.Sort(byName(results))
+	for _, d := range results {
+		i := struct {
+			Name string
+			Info string
+		}{d.Name, d.Info}
+		o.Infos = append(o.Infos, i)
+	}
+	o.ProbabilityMalicious = probabilityMalicious(results)
 
+	j := struct {
+		Overview
+		Results []Result
+	}{
+		Overview: o,
+		Results:  results,
+	}
+
+	return json.Marshal(&j)
+}
+
+func probabilityMalicious(results []Result) float64 {
 	var malicious, totalSec float64
 	for _, r := range results {
-		if r.Err != nil {
-			log.Print(r.ErrMsg)
-		}
-		if r.Type == "Info" || r.Type == "InfoSec" {
-			fmt.Printf("%-15s %s\n", r.Name, r.Info)
-		}
 		if r.Type == "Sec" || r.Type == "InfoSec" {
 			totalSec++
 			if r.IsMalicious {
@@ -109,28 +121,7 @@ func Print(results []Result) error {
 			}
 		}
 	}
-	probabilityMalicious := malicious / totalSec
-
-	var msg string
-	switch {
-	case probabilityMalicious <= 0.15:
-		msg = fmt.Sprint(aurora.Green("Malicious"))
-	case probabilityMalicious <= 0.50:
-		msg = fmt.Sprint(aurora.Yellow("Malicious"))
-	default:
-		msg = fmt.Sprint(aurora.Red("Malicious"))
-	}
-
-	_, err := fmt.Printf("%s\t%.0f%% (%d/%d)\n", msg, probabilityMalicious*100, int(malicious), int(totalSec))
-	return err
-}
-
-// PrintJSON prints all data from results in JSON format to stdout.
-func PrintJSON(results []Result) error {
-	sort.Sort(byName(results))
-
-	enc := json.NewEncoder(os.Stdout)
-	return enc.Encode(&results)
+	return malicious / totalSec
 }
 
 func redactSecrets(s string) string {
