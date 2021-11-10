@@ -28,21 +28,7 @@ func CheckIP() {
 		log.Fatalf("wrong IP address: %s\n", flag.Arg(0))
 	}
 
-	checkers := []check.Check{
-		checker.CheckAs,
-		checker.CheckAbuseIPDB,
-		checker.CheckBlockList,
-		checker.CheckCins,
-		checker.CheckDNS,
-		checker.CheckGeo,
-		checker.CheckIPSum,
-		checker.CheckOTX,
-		checker.CheckShodan,
-		checker.CheckThreadCrowd,
-		checker.CheckVirusTotal,
-	}
-
-	results := check.Run(checkers, ipaddr)
+	results := check.Run(checker.DefaultCheckers, ipaddr)
 	results.SortByName()
 	check.Print(results)
 }

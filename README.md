@@ -1,29 +1,14 @@
 # checkip
 
-`checkip` is a CLI tool and library that checks an IP address using various
-public services. It provides generic and security information in a simple and
-quick way.
+Checkip checks an IP address using various public services. It provides
+generic and security information in a quick and simple way. It can be run as
+a CLI tool or as JSON API server.
 
 <img src="checkip.png" width="800">
 
-The CLI tool can also print all data in JSON format so you can pick what you
-want to see, e.g.:
-
-```
-checkip -j 218.92.0.158 | \
-jq -r '.[] | select(.Type=="Sec" or .Type=="InfoSec") | "\(.IsMalicious)\t\(.Name)"' | sort
-false	abuseipdb.com
-false	cinsscore.com
-false	threatcrowd.org
-false	virustotal.com
-true	blocklist.de
-true	github.com/stamparm/ipsum
-true	otx.alienvault.com
-```
-
 ## Installation and configuration
 
-To install the CLI tool
+To install the CLI/API tool
 
 ```
 git clone git@github.com:jreisinger/checkip.git
@@ -54,7 +39,7 @@ a new way for checking IP addresses just implement the
 [InfoChecker](https://pkg.go.dev/github.com/jreisinger/checkip#InfoChecker),
 [SecChecker](https://pkg.go.dev/github.com/jreisinger/checkip#SecChecker) or
 [InfoSecChecker](https://pkg.go.dev/github.com/jreisinger/checkip#InfoSecChecker)
-interface and add it to `cmd/checkip.go`. Then
+interface and add it to `main.go`. Then
 
 ```
 make run # see the picture above
