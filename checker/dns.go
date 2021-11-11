@@ -6,7 +6,7 @@ import (
 	"net"
 	"strings"
 
-	"github.com/jreisinger/checkip/pkg/check"
+	"github.com/jreisinger/checkip/check"
 )
 
 // DNS holds the DNS names from net.LookupAddr.

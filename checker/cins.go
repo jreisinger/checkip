@@ -6,7 +6,7 @@ import (
 	"net"
 	"os"
 
-	"github.com/jreisinger/checkip/pkg/check"
+	"github.com/jreisinger/checkip/check"
 )
 
 // CINSArmy holds information about an IP address from

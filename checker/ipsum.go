@@ -8,7 +8,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/jreisinger/checkip/pkg/check"
+	"github.com/jreisinger/checkip/check"
 )
 
 // CheckIPSum checks how many blacklists the IP address is found on.

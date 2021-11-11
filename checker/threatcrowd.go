@@ -3,7 +3,7 @@ package checker
 import (
 	"net"
 
-	"github.com/jreisinger/checkip/pkg/check"
+	"github.com/jreisinger/checkip/check"
 )
 
 // ThreatCrowd holds information about an IP address from threatcrowd.org.

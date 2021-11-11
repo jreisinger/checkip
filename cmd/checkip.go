@@ -7,8 +7,8 @@ import (
 	"net"
 	"os"
 
-	"github.com/jreisinger/checkip/pkg/check"
-	"github.com/jreisinger/checkip/pkg/checker"
+	"github.com/jreisinger/checkip/check"
+	"github.com/jreisinger/checkip/checker"
 )
 
 // var v = flag.Bool("v", false, "be verbose")

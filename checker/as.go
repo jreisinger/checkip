@@ -10,7 +10,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/jreisinger/checkip/pkg/check"
+	"github.com/jreisinger/checkip/check"
 )
 
 // AS holds information about an Autonomous System from iptoasn.com.

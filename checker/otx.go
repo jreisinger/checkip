@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net"
 
-	"github.com/jreisinger/checkip/pkg/check"
+	"github.com/jreisinger/checkip/check"
 )
 
 // OTX holds information from otx.alienvault.com.

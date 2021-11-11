@@ -1,6 +1,6 @@
 package checker
 
-import "github.com/jreisinger/checkip/pkg/check"
+import "github.com/jreisinger/checkip/check"
 
 var DefaultCheckers = []check.Check{
 	CheckAs,

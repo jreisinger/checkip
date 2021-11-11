@@ -6,7 +6,7 @@ import (
 	"net"
 	"strings"
 
-	"github.com/jreisinger/checkip/pkg/check"
+	"github.com/jreisinger/checkip/check"
 )
 
 // VirusTotal holds information about an IP address from virustotal.com.

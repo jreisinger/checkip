@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net"
 
-	"github.com/jreisinger/checkip/pkg/check"
+	"github.com/jreisinger/checkip/check"
 	"github.com/oschwald/geoip2-golang"
 )
 

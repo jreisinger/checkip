@@ -6,7 +6,7 @@ import (
 	"net"
 	"time"
 
-	"github.com/jreisinger/checkip/pkg/check"
+	"github.com/jreisinger/checkip/check"
 )
 
 // Only return reports within the last x amount of days. Default is 30.

@@ -7,7 +7,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/jreisinger/checkip/pkg/check"
+	"github.com/jreisinger/checkip/check"
 )
 
 // Shodan holds information about an IP address from shodan.io scan data.
