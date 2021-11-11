@@ -1,8 +1,9 @@
 package checker
 
 import (
-	"github.com/jreisinger/checkip/pkg/check"
 	"net"
+
+	"github.com/jreisinger/checkip/pkg/check"
 )
 
 // ThreatCrowd holds information about an IP address from threatcrowd.org.
@@ -27,9 +28,9 @@ func CheckThreadCrowd(ipaddr net.IP) check.Result {
 	}
 
 	return check.Result{
-		Name:        "threatcrowd.org",
-		Type:        check.TypeSec,
-		Data:        check.EmptyData{},
-		IsMalicious: threadCrowd.Votes < 0,
+		CheckName:         "threatcrowd.org",
+		CheckType:         check.TypeSec,
+		Data:              check.EmptyData{},
+		IsIPaddrMalicious: threadCrowd.Votes < 0,
 	}
 }

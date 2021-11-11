@@ -3,9 +3,10 @@ package checker
 import (
 	"bufio"
 	"fmt"
-	"github.com/jreisinger/checkip/pkg/check"
 	"net"
 	"os"
+
+	"github.com/jreisinger/checkip/pkg/check"
 )
 
 // CINSArmy holds information about an IP address from
@@ -31,10 +32,10 @@ func CheckCins(ipaddr net.IP) check.Result {
 	}
 
 	return check.Result{
-		Name:        "cinsscore.com",
-		Type:        check.TypeSec,
-		Data:        check.EmptyData{},
-		IsMalicious: cins.BadGuyIP,
+		CheckName:         "cinsscore.com",
+		CheckType:         check.TypeSec,
+		Data:              check.EmptyData{},
+		IsIPaddrMalicious: cins.BadGuyIP,
 	}
 }
 

@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"encoding/json"
+	"flag"
 	"log"
 	"net"
 	"os"
@@ -9,20 +11,32 @@ import (
 	"github.com/jreisinger/checkip/pkg/checker"
 )
 
+// var v = flag.Bool("v", false, "be verbose")
+var j = flag.Bool("j", false, "output all data in JSON")
+
 func Exec() {
+	flag.Parse()
+
 	log.SetFlags(0)
 	log.SetPrefix(os.Args[0] + ": ")
 
-	if len(os.Args[1:]) != 1 {
+	if len(flag.Args()) != 1 {
 		log.Fatal("supply an IP address")
 	}
 
-	ipaddr := net.ParseIP(os.Args[1])
+	ipaddr := net.ParseIP(flag.Args()[0])
 	if ipaddr == nil {
-		log.Fatalf("wrong IP address: %s\n", os.Args[1])
+		log.Fatalf("wrong IP address: %s\n", flag.Args()[0])
 	}
 
 	results := check.Run(checker.DefaultCheckers, ipaddr)
 	results.SortByName()
-	results.Print()
+	if *j {
+		enc := json.NewEncoder(os.Stdout)
+		if err := enc.Encode(results); err != nil {
+			log.Fatal(err)
+		}
+	} else {
+		results.Print()
+	}
 }

@@ -3,9 +3,10 @@ package checker
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/jreisinger/checkip/pkg/check"
 	"net"
 	"strings"
+
+	"github.com/jreisinger/checkip/pkg/check"
 )
 
 // VirusTotal holds information about an IP address from virustotal.com.
@@ -56,9 +57,9 @@ func CheckVirusTotal(ipaddr net.IP) check.Result {
 	}
 
 	return check.Result{
-		Name:        "virustotal.com",
-		Type:        check.TypeInfoSec,
-		Data:        virusTotal,
-		IsMalicious: virusTotal.Data.Attributes.Reputation < 0,
+		CheckName:         "virustotal.com",
+		CheckType:         check.TypeInfoSec,
+		Data:              virusTotal,
+		IsIPaddrMalicious: virusTotal.Data.Attributes.Reputation < 0,
 	}
 }

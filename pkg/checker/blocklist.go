@@ -2,10 +2,11 @@ package checker
 
 import (
 	"fmt"
-	"github.com/jreisinger/checkip/pkg/check"
 	"net"
 	"regexp"
 	"strconv"
+
+	"github.com/jreisinger/checkip/pkg/check"
 )
 
 // CheckBlockList fills in BlockList data for a given IP address. It gets the data from
@@ -31,9 +32,9 @@ func CheckBlockList(ipddr net.IP) check.Result {
 	}
 
 	return check.Result{
-		Name:        "blocklist.de",
-		Type:        check.TypeInfoSec,
-		Data:        check.EmptyData{},
-		IsMalicious: attacks > 0 && reports > 0,
+		CheckName:         "blocklist.de",
+		CheckType:         check.TypeInfoSec,
+		Data:              check.EmptyData{},
+		IsIPaddrMalicious: attacks > 0 && reports > 0,
 	}
 }

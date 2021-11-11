@@ -5,11 +5,12 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/jreisinger/checkip/pkg/check"
 	"net"
 	"os"
 	"strconv"
 	"strings"
+
+	"github.com/jreisinger/checkip/pkg/check"
 )
 
 // AS holds information about an Autonomous System from iptoasn.com.
@@ -47,9 +48,9 @@ func CheckAs(ipaddr net.IP) check.Result {
 	}
 
 	return check.Result{
-		Name: "iptoasn.com",
-		Type: check.TypeInfo,
-		Data: as,
+		CheckName: "iptoasn.com",
+		CheckType: check.TypeInfo,
+		Data:      as,
 	}
 }
 

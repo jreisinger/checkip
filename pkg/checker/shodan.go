@@ -3,10 +3,11 @@ package checker
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/jreisinger/checkip/pkg/check"
 	"net"
 	"sort"
 	"strings"
+
+	"github.com/jreisinger/checkip/pkg/check"
 )
 
 // Shodan holds information about an IP address from shodan.io scan data.
@@ -39,9 +40,9 @@ func CheckShodan(ipaddr net.IP) check.Result {
 	}
 
 	return check.Result{
-		Name: "shodan.io",
-		Type: check.TypeInfo,
-		Data: shodan,
+		CheckName: "shodan.io",
+		CheckType: check.TypeInfo,
+		Data:      shodan,
 	}
 }
 

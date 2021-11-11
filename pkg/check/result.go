@@ -9,19 +9,18 @@ import (
 )
 
 type Result struct {
-	Name        string
-	Type        Type
-	Info        string
-	IsMalicious bool
-	Data        Data
-	Error       *ResultError
+	CheckName         string
+	CheckType         Type
+	IsIPaddrMalicious bool
+	Data              Data
+	Error             *ResultError
 }
 
 type Results []Result
 
 func (rs Results) SortByName() {
 	sort.Slice(rs, func(i, j int) bool {
-		return rs[i].Name < rs[j].Name
+		return rs[i].CheckName < rs[j].CheckName
 	})
 }
 
@@ -33,12 +32,12 @@ func (rs Results) Print() error {
 		if r.Error != nil {
 			log.Print(r.Error.Error())
 		}
-		if r.Type == "Info" || r.Type == "InfoSec" {
-			fmt.Printf("%-15s %s\n", r.Name, r.Data.String())
+		if r.CheckType == "Info" || r.CheckType == "InfoSec" {
+			fmt.Printf("%-15s %s\n", r.CheckName, r.Data.String())
 		}
-		if r.Type == "Sec" || r.Type == "InfoSec" {
+		if r.CheckType == "Sec" || r.CheckType == "InfoSec" {
 			totalSec++
-			if r.IsMalicious {
+			if r.IsIPaddrMalicious {
 				malicious++
 			}
 		}

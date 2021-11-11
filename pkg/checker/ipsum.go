@@ -3,11 +3,12 @@ package checker
 import (
 	"bufio"
 	"fmt"
-	"github.com/jreisinger/checkip/pkg/check"
 	"net"
 	"os"
 	"strconv"
 	"strings"
+
+	"github.com/jreisinger/checkip/pkg/check"
 )
 
 // CheckIPSum checks how many blacklists the IP address is found on.
@@ -25,10 +26,10 @@ func CheckIPSum(ipaddr net.IP) check.Result {
 	}
 
 	return check.Result{
-		Name:        "github.com/stamparm/ipsum",
-		Type:        check.TypeSec,
-		Data:        check.EmptyData{},
-		IsMalicious: blackLists > 0,
+		CheckName:         "github.com/stamparm/ipsum",
+		CheckType:         check.TypeSec,
+		Data:              check.EmptyData{},
+		IsIPaddrMalicious: blackLists > 0,
 	}
 }
 

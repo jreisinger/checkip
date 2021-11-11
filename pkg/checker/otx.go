@@ -2,8 +2,9 @@ package checker
 
 import (
 	"fmt"
-	"github.com/jreisinger/checkip/pkg/check"
 	"net"
+
+	"github.com/jreisinger/checkip/pkg/check"
 )
 
 // OTX holds information from otx.alienvault.com.
@@ -23,9 +24,9 @@ func CheckOTX(ipaddr net.IP) check.Result {
 	}
 
 	return check.Result{
-		Name:        "otx.alienvault.com",
-		Type:        check.TypeSec,
-		Data:        check.EmptyData{},
-		IsMalicious: otx.PulseInfo.Count > 10,
+		CheckName:         "otx.alienvault.com",
+		CheckType:         check.TypeSec,
+		Data:              check.EmptyData{},
+		IsIPaddrMalicious: otx.PulseInfo.Count > 10,
 	}
 }

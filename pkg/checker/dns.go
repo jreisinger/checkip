@@ -3,9 +3,10 @@ package checker
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/jreisinger/checkip/pkg/check"
 	"net"
 	"strings"
+
+	"github.com/jreisinger/checkip/pkg/check"
 )
 
 // DNS holds the DNS names from net.LookupAddr.
@@ -33,8 +34,8 @@ func CheckDNS(ipaddr net.IP) check.Result {
 	names, _ := net.LookupAddr(ipaddr.String())
 
 	return check.Result{
-		Name: "net.LookupAddr",
-		Type: check.TypeInfo,
-		Data: DNS{Names: names},
+		CheckName: "net.LookupAddr",
+		CheckType: check.TypeInfo,
+		Data:      DNS{Names: names},
 	}
 }

@@ -3,9 +3,10 @@ package checker
 import (
 	"encoding/json"
 	"fmt"
+	"net"
+
 	"github.com/jreisinger/checkip/pkg/check"
 	"github.com/oschwald/geoip2-golang"
-	"net"
 )
 
 // Geo holds geographic location of an IP address from maxmind.com GeoIP database.
@@ -57,8 +58,8 @@ func CheckGeo(ip net.IP) check.Result {
 	}
 
 	return check.Result{
-		Name: "maxmind.com",
-		Type: check.TypeInfo,
-		Data: geo,
+		CheckName: "maxmind.com",
+		CheckType: check.TypeInfo,
+		Data:      geo,
 	}
 }

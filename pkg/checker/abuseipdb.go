@@ -3,9 +3,10 @@ package checker
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/jreisinger/checkip/pkg/check"
 	"net"
 	"time"
+
+	"github.com/jreisinger/checkip/pkg/check"
 )
 
 // Only return reports within the last x amount of days. Default is 30.
@@ -59,9 +60,9 @@ func CheckAbuseIPDB(ipaddr net.IP) check.Result {
 	}
 
 	return check.Result{
-		Name:        "abuseipdb.com",
-		Type:        check.TypeInfoSec,
-		Data:        data,
-		IsMalicious: data.TotalReports > 0 && !data.IsWhitelisted && data.AbuseConfidenceScore > 25,
+		CheckName:         "abuseipdb.com",
+		CheckType:         check.TypeInfoSec,
+		Data:              data,
+		IsIPaddrMalicious: data.TotalReports > 0 && !data.IsWhitelisted && data.AbuseConfidenceScore > 25,
 	}
 }
