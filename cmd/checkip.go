@@ -30,5 +30,5 @@ func CheckIP() {
 
 	results := check.Run(checker.DefaultCheckers, ipaddr)
 	results.SortByName()
-	check.Print(results)
+	results.Print()
 }
