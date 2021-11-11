@@ -1,8 +1,8 @@
-package cmd
+// Package cli contains functions for CLI tools.
+package cli
 
 import (
 	"encoding/json"
-	"flag"
 	"fmt"
 	"log"
 	"net"
@@ -11,44 +11,11 @@ import (
 	"sync"
 
 	"github.com/jreisinger/checkip/check"
-	"github.com/jreisinger/checkip/checker"
 	"github.com/logrusorgru/aurora"
 )
 
-func init() {
-	log.SetFlags(0)
-	log.SetPrefix(os.Args[0] + ": ")
-}
-
-var j = flag.Bool("j", false, "output all results in JSON")
-
-func Exec() {
-	flag.Parse()
-
-	if len(flag.Args()) != 1 {
-		log.Fatal("supply an IP address")
-	}
-
-	ipaddr := net.ParseIP(flag.Args()[0])
-	if ipaddr == nil {
-		log.Fatalf("wrong IP address: %s\n", flag.Args()[0])
-	}
-
-	results, errors := run(checker.DefaultCheckers, ipaddr)
-	for _, e := range errors {
-		log.Print(e)
-	}
-	results.SortByName()
-	if *j {
-		results.printJSON()
-	} else {
-		results.printInfo()
-		results.printProbabilityMalicious()
-	}
-}
-
-func run(checks []check.Check, ipaddr net.IP) (results, []error) {
-	var results results
+func Run(checks []check.Check, ipaddr net.IP) (Results, []error) {
+	var results Results
 	var errors []error
 
 	var wg sync.WaitGroup
@@ -69,9 +36,9 @@ func run(checks []check.Check, ipaddr net.IP) (results, []error) {
 	return results, errors
 }
 
-type results []check.Result
+type Results []check.Result
 
-func (rs results) printJSON() {
+func (rs Results) PrintJSON() {
 	if len(rs) == 0 {
 		return
 	}
@@ -81,14 +48,14 @@ func (rs results) printJSON() {
 	}
 }
 
-func (rs results) SortByName() {
+func (rs Results) SortByName() {
 	sort.Slice(rs, func(i, j int) bool {
 		return rs[i].Name < rs[j].Name
 	})
 }
 
-// printInfo prints results from Info and InfoSec checkers.
-func (rs results) printInfo() {
+// PrintInfo prints results from Info and InfoSec checkers.
+func (rs Results) PrintInfo() {
 	for _, r := range rs {
 		if r.Type == "Info" || r.Type == "InfoSec" {
 			fmt.Printf("%-15s %s\n", r.Name, r.Info.String())
@@ -96,8 +63,8 @@ func (rs results) printInfo() {
 	}
 }
 
-// printProbabilityMalicious prints the probability the IP address is malicious.
-func (rs results) printProbabilityMalicious() {
+// PrintProbabilityMalicious prints the probability the IP address is malicious.
+func (rs Results) PrintProbabilityMalicious() {
 	var msg string
 	switch {
 	case rs.probabilityMalicious() <= 0.15:
@@ -111,7 +78,7 @@ func (rs results) printProbabilityMalicious() {
 	fmt.Printf("%s\t%.0f%%\n", msg, rs.probabilityMalicious()*100)
 }
 
-func (rs results) probabilityMalicious() float64 {
+func (rs Results) probabilityMalicious() float64 {
 	var malicious, totalSec float64
 	for _, r := range rs {
 		if r.Type == "Sec" || r.Type == "InfoSec" {

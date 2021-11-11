@@ -1,5 +1,4 @@
-// Package check checks an IP address using various public services. An IP
-// address is checked by running one or more Checkers.
+// Package check checks an IP address using various public services.
 package check
 
 import (
@@ -21,9 +20,6 @@ type Result struct {
 	Type            Type
 	IPaddrMalicious bool
 	Info            Info
-	// Error           *ResultError
-	// Error error
-	// ErrorRedacted string
 }
 
 type Info interface {

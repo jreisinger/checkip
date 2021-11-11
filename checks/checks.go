@@ -1,10 +1,11 @@
-package checker
+// Package checks contains functions that can check an IP address.
+package checks
 
 import "github.com/jreisinger/checkip/check"
 
-var DefaultCheckers = []check.Check{
+var Default = []check.Check{
 	CheckAbuseIPDB,
-	CheckAs,
+	CheckAS,
 	CheckBlockList,
 	CheckCins,
 	CheckDNS,

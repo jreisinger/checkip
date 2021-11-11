@@ -5,6 +5,8 @@ generic and security information in a quick and simple way.
 
 <img src="checkip.png" width="800">
 
+The CLI tool supports also JSON output.
+
 ## Installation and configuration
 
 To install the CLI tool

@@ -1,4 +1,4 @@
-package checker
+package checks
 
 import (
 	"bufio"
@@ -31,10 +31,10 @@ func (a AS) JsonString() (string, error) {
 	return string(b), err
 }
 
-// CheckAs fills in AS data for a given IP address. The data is taken from a TSV
+// CheckAS fills in AS data for a given IP address. The data is taken from a TSV
 // file ip2asn-combined downloaded from iptoasn.com. The file is created or
 // updated as needed.
-func CheckAs(ipaddr net.IP) (check.Result, error) {
+func CheckAS(ipaddr net.IP) (check.Result, error) {
 	file := "/var/tmp/ip2asn-combined.tsv"
 	url := "https://iptoasn.com/data/ip2asn-combined.tsv.gz"
 

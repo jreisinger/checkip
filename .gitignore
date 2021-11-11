@@ -1,7 +1,6 @@
 .*
 !.gitignore
-checkip
-
-dist/
-!.goreleaser.yml
 !.github
+!.goreleaser.yml
+checkip
+dist/
