@@ -1,14 +1,13 @@
 # checkip
 
 Checkip checks an IP address using various public services. It provides
-generic and security information in a quick and simple way. It can be run as
-a CLI tool or as JSON API server.
+generic and security information in a quick and simple way.
 
 <img src="checkip.png" width="800">
 
 ## Installation and configuration
 
-To install the CLI/API tool
+To install the CLI tool
 
 ```
 git clone git@github.com:jreisinger/checkip.git
