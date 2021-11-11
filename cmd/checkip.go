@@ -1,31 +1,25 @@
 package cmd
 
 import (
-	"flag"
-	"github.com/jreisinger/checkip/pkg/check"
-	"github.com/jreisinger/checkip/pkg/checker"
 	"log"
 	"net"
 	"os"
+
+	"github.com/jreisinger/checkip/pkg/check"
+	"github.com/jreisinger/checkip/pkg/checker"
 )
 
-func init() {
+func Exec() {
 	log.SetFlags(0)
 	log.SetPrefix(os.Args[0] + ": ")
-}
 
-var j = flag.Bool("j", false, "print all data in JSON")
-
-func CheckIP() {
-	flag.Parse()
-
-	if len(flag.Args()) != 1 {
-		log.Fatal("missing IP address")
+	if len(os.Args[1:]) != 1 {
+		log.Fatal("supply an IP address")
 	}
 
-	ipaddr := net.ParseIP(flag.Arg(0))
+	ipaddr := net.ParseIP(os.Args[1])
 	if ipaddr == nil {
-		log.Fatalf("wrong IP address: %s\n", flag.Arg(0))
+		log.Fatalf("wrong IP address: %s\n", os.Args[1])
 	}
 
 	results := check.Run(checker.DefaultCheckers, ipaddr)

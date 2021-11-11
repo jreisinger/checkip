@@ -30,26 +30,3 @@ VIRUSTOTAL_API_KEY: aaaaaaaabbbbbbbbccccccccddddddddeeeeeeeeffffffff111111112222
 ```
 
 You can also use environment variables with the same names.
-
-## Development and releasing
-
-An IP address is checked by running one or more
-[Checker](https://pkg.go.dev/github.com/jreisinger/checkip#Checker)s. To add
-a new way for checking IP addresses just implement the
-[InfoChecker](https://pkg.go.dev/github.com/jreisinger/checkip#InfoChecker),
-[SecChecker](https://pkg.go.dev/github.com/jreisinger/checkip#SecChecker) or
-[InfoSecChecker](https://pkg.go.dev/github.com/jreisinger/checkip#InfoSecChecker)
-interface and add it to `main.go`. Then
-
-```
-make run # see the picture above
-```
-
-If you are satisfied commit, push and add new [tag](https://reisinge.net/notes/prog/git#tags)
-
-```
-git tag -a v0.6.9 -m "goreleaser with GitHub Actions"
-git push --tags
-```
-
-GitHub Actions with goreleaser will make and publish the release.

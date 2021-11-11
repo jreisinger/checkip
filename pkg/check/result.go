@@ -2,16 +2,18 @@ package check
 
 import (
 	"fmt"
-	"github.com/logrusorgru/aurora"
 	"log"
 	"sort"
+
+	"github.com/logrusorgru/aurora"
 )
 
 type Result struct {
 	Name        string
 	Type        Type
-	Data        Data
+	Info        string
 	IsMalicious bool
+	Data        Data
 	Error       *ResultError
 }
 
