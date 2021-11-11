@@ -1,20 +1,16 @@
-package checkip
+package checker
 
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/jreisinger/checkip/pkg/check"
 	"net"
-	"net/http"
 	"time"
 )
 
 // Only return reports within the last x amount of days. Default is 30.
-var maxAgeInDays = "90"
+const abuseIPDBMaxAgeInDays = "90"
 
-// AbuseIPDB holds information about an IP address from abuseipdb.com database.
-type AbuseIPDB struct {
-	Data Data `json:"data"`
-}
 type Data struct {
 	IsWhitelisted        bool          `json:"isWhitelisted"`
 	AbuseConfidenceScore int           `json:"abuseConfidenceScore"`
@@ -29,14 +25,21 @@ type Data struct {
 	LastReportedAt       time.Time     `json:"lastReportedAt"`
 }
 
-func (a *AbuseIPDB) String() string { return "abuseipdb.com" }
+func (d Data) String() string {
+	return fmt.Sprintf("domain: %s, usage type: %s", check.Na(d.Domain), check.Na(d.UsageType))
+}
 
-// Check fills in AbuseIPDB data for a given IP address. It gets the data from
+func (d Data) JsonString() (string, error) {
+	b, err := json.Marshal(d)
+	return string(b), err
+}
+
+// CheckAbuseIPDB fills in AbuseIPDB data for a given IP address. It gets the data from
 // api.abuseipdb.com/api/v2/check (docs.abuseipdb.com/#check-endpoint).
-func (a *AbuseIPDB) Check(ipaddr net.IP) error {
-	apiKey, err := getConfigValue("ABUSEIPDB_API_KEY")
+func CheckAbuseIPDB(ipaddr net.IP) check.Result {
+	apiKey, err := check.GetConfigValue("ABUSEIPDB_API_KEY")
 	if err != nil {
-		return fmt.Errorf("can't call API: %w", err)
+		return check.Result{Error: check.NewResultError(err)}
 	}
 
 	headers := map[string]string{
@@ -47,30 +50,18 @@ func (a *AbuseIPDB) Check(ipaddr net.IP) error {
 
 	queryParams := map[string]string{
 		"ipAddress":    ipaddr.String(),
-		"maxAgeInDays": maxAgeInDays,
+		"maxAgeInDays": abuseIPDBMaxAgeInDays,
 	}
 
-	resp, err := makeAPIcall("https://api.abuseipdb.com/api/v2/check", headers, queryParams)
-	if err != nil {
-		return err
-	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode != http.StatusOK {
-		return fmt.Errorf("calling API: %s", resp.Status)
+	var data Data
+	if err := check.DefaultHttpClient.GetJson("https://api.abuseipdb.com/api/v2/check", headers, queryParams, &data); err != nil {
+		return check.Result{Error: check.NewResultError(err)}
 	}
 
-	if err := json.NewDecoder(resp.Body).Decode(a); err != nil {
-		return err
+	return check.Result{
+		Name:        "abuseipdb.com",
+		Type:        check.TypeInfoSec,
+		Data:        data,
+		IsMalicious: data.TotalReports > 0 && !data.IsWhitelisted && data.AbuseConfidenceScore > 25,
 	}
-
-	return nil
-}
-
-func (a *AbuseIPDB) IsMalicious() bool {
-	return a.Data.TotalReports > 0 && !a.Data.IsWhitelisted && a.Data.AbuseConfidenceScore > 25
-}
-
-func (a *AbuseIPDB) Info() string {
-	return fmt.Sprintf("domain: %s, usage type: %s", na(a.Data.Domain), na(a.Data.UsageType))
 }

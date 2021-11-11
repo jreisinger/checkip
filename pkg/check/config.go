@@ -1,17 +1,17 @@
-package checkip
+package check
 
 import (
 	"fmt"
+	"gopkg.in/yaml.v3"
+	"io/ioutil"
 	"os"
 	"os/user"
 	"path/filepath"
-
-	"github.com/kylelemons/go-gypsy/yaml"
 )
 
-// getConfigValue tries to get value for key first from an environment variable
+// GetConfigValue tries to get value for key first from an environment variable
 // then from a configuration file at $HOME/.checkip.yaml
-func getConfigValue(key string) (string, error) {
+func GetConfigValue(key string) (string, error) {
 	var v string
 
 	// Try to get the key from environment.
@@ -25,14 +25,19 @@ func getConfigValue(key string) (string, error) {
 		return "", err
 	}
 	confFile := filepath.Join(usr.HomeDir, ".checkip.yaml")
-	cfg, err := yaml.ReadFile(confFile)
+	buf, err := ioutil.ReadFile(confFile)
 	if err != nil {
 		return "", err
 	}
-	v, err = cfg.Get(key)
+
+	var data map[string]string
+	err = yaml.Unmarshal(buf, &data)
 	if err != nil {
-		return "", fmt.Errorf("%s not found in %s", key, confFile)
+		return "", err
 	}
 
-	return v, nil
+	if v, ok := data[key]; ok {
+		return v, nil
+	}
+	return "", fmt.Errorf("%s not found in %s", key, confFile)
 }

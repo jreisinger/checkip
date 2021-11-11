@@ -1,4 +1,4 @@
-package checkip
+package check
 
 import (
 	"archive/tar"
@@ -11,10 +11,10 @@ import (
 	"time"
 )
 
-// updateFile updates file from url if the file is older than a week. If file
+// UpdateFile updates file from url if the file is older than a week. If file
 // does not exist it downloads and creates it. compressFmt is the compression
 // format of the file to download; gz or tgz. Empty string means no compression.
-func updateFile(file, url string, compressFmt string) error {
+func UpdateFile(file, url string, compressFmt string) error {
 	f, err := os.Stat(file)
 
 	if os.IsNotExist(err) {
@@ -139,16 +139,22 @@ func extractTgzFile(outFile string, r io.ReadCloser) error {
 		}
 		if tarHeader.Typeflag == tar.TypeReg {
 			if filepath.Base(tarHeader.Name) == filepath.Base(outFile) {
-				outFile, err := os.Create(outFile)
-				if err != nil {
-					return err
-				}
-				defer outFile.Close()
-				if _, err := io.Copy(outFile, tarReader); err != nil {
+				if err := writeTarEntry(outFile, tarReader); err != nil {
 					return err
 				}
 			}
 		}
 	}
 	return nil
+}
+
+func writeTarEntry(outFile string, tarReader *tar.Reader) error {
+	f, err := os.Create(outFile)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+
+	_, err = io.Copy(f, tarReader)
+	return err
 }

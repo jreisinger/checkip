@@ -1,66 +1,58 @@
-package checkip
+package checker
 
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/jreisinger/checkip/pkg/check"
 	"net"
-	"net/http"
 	"sort"
 	"strings"
 )
 
 // Shodan holds information about an IP address from shodan.io scan data.
 type Shodan struct {
-	Org   string `json:"org"`
-	Data  data   `json:"data"`
-	OS    string `json:"os"`
-	Ports []int  `json:"ports"`
+	Org   string     `json:"org"`
+	Data  ShodanData `json:"data"`
+	OS    string     `json:"os"`
+	Ports []int      `json:"ports"`
 }
 
-type data []struct {
+type ShodanData []struct {
 	Product   string `json:"product"`
 	Version   string `json:"version"`
 	Port      int    `json:"port"`
 	Transport string `json:"transport"` // tcp, udp
 }
 
-func (s *Shodan) String() string { return "shodan.io" }
-
-// Check fills in Shodan data for a given IP address. Its get the data from
+// CheckShodan fills in Shodan data for a given IP address. Its get the data from
 // https://api.shodan.io.
-func (s *Shodan) Check(ipaddr net.IP) error {
-	apiKey, err := getConfigValue("SHODAN_API_KEY")
+func CheckShodan(ipaddr net.IP) check.Result {
+	apiKey, err := check.GetConfigValue("SHODAN_API_KEY")
 	if err != nil {
-		return fmt.Errorf("can't call API: %w", err)
+		return check.Result{Error: check.NewResultError(err)}
 	}
 
+	var shodan Shodan
 	apiURL := fmt.Sprintf("https://api.shodan.io/shodan/host/%s?key=%s", ipaddr, apiKey)
-	resp, err := makeAPIcall(apiURL, map[string]string{}, map[string]string{})
-	if err != nil {
-		return err
-	}
-	defer resp.Body.Close()
-
-	// StatusNotFound is returned when shodan doesn't know the IP address.
-	if resp.StatusCode != http.StatusOK && resp.StatusCode != http.StatusNotFound {
-		return fmt.Errorf("calling %s: %s", apiURL, resp.Status)
+	if err := check.DefaultHttpClient.GetJson(apiURL, map[string]string{}, map[string]string{}, &shodan); err != nil {
+		return check.Result{Error: check.NewResultError(err)}
 	}
 
-	if err := json.NewDecoder(resp.Body).Decode(&s); err != nil {
-		return err
+	return check.Result{
+		Name: "shodan.io",
+		Type: check.TypeInfo,
+		Data: shodan,
 	}
-
-	return nil
 }
 
-type byPort data
+type byPort ShodanData
 
 func (x byPort) Len() int           { return len(x) }
 func (x byPort) Less(i, j int) bool { return x[i].Port < x[j].Port }
 func (x byPort) Swap(i, j int)      { x[i], x[j] = x[j], x[i] }
 
 // Info returns interesting information from the check.
-func (s *Shodan) Info() string {
+func (s Shodan) String() string {
 	var portInfo []string
 	sort.Sort(byPort(s.Data))
 	for _, d := range s.Data {
@@ -77,7 +69,7 @@ func (s *Shodan) Info() string {
 		if product == "" && version == "" {
 			portInfo = append(portInfo, fmt.Sprintf("%s/%d", d.Transport, d.Port))
 		} else {
-			ss := nonEmpty(product, version)
+			ss := check.NonEmpty(product, version)
 			portInfo = append(portInfo, fmt.Sprintf("%s/%d (%s)", d.Transport, d.Port, strings.Join(ss, ", ")))
 		}
 	}
@@ -89,6 +81,10 @@ func (s *Shodan) Info() string {
 	if len(portInfo) > 0 {
 		portStr += ":"
 	}
+	return fmt.Sprintf("OS: %s, %d open %s %s", check.Na(s.OS), len(portInfo), portStr, strings.Join(portInfo, ", "))
+}
 
-	return fmt.Sprintf("OS: %s, %d open %s %s", na(s.OS), len(portInfo), portStr, strings.Join(portInfo, ", "))
+func (s Shodan) JsonString() (string, error) {
+	b, err := json.Marshal(s)
+	return string(b), err
 }

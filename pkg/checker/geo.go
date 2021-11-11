@@ -1,0 +1,64 @@
+package checker
+
+import (
+	"encoding/json"
+	"fmt"
+	"github.com/jreisinger/checkip/pkg/check"
+	"github.com/oschwald/geoip2-golang"
+	"net"
+)
+
+// Geo holds geographic location of an IP address from maxmind.com GeoIP database.
+type Geo struct {
+	City    string `json:"city"`
+	Country string `json:"country"`
+	IsoCode string `json:"iso_code"`
+}
+
+func (g Geo) String() string {
+	return fmt.Sprintf("city: %s, country: %s, ISO code: %s", check.Na(g.City), check.Na(g.Country), check.Na(g.IsoCode))
+}
+
+func (g Geo) JsonString() (string, error) {
+	b, err := json.Marshal(g)
+	return string(b), err
+}
+
+// CheckGeo fills in the geolocation data. The data is taken from
+// GeoLite2-City.mmdb file that gets downloaded and regularly updated.
+func CheckGeo(ip net.IP) check.Result {
+	licenseKey, err := check.GetConfigValue("MAXMIND_LICENSE_KEY")
+	if err != nil {
+		return check.Result{Error: check.NewResultError(err)}
+	}
+
+	file := "/var/tmp/GeoLite2-City.mmdb"
+	url := "https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-City&license_key=" + licenseKey + "&suffix=tar.gz"
+
+	if err := check.UpdateFile(file, url, "tgz"); err != nil {
+		return check.Result{Error: check.NewResultError(err)}
+	}
+
+	db, err := geoip2.Open(file)
+	if err != nil {
+		return check.Result{Error: check.NewResultError(fmt.Errorf("can't load DB file: %v", err))}
+	}
+	defer db.Close()
+
+	record, err := db.City(ip)
+	if err != nil {
+		return check.Result{Error: check.NewResultError(err)}
+	}
+
+	geo := Geo{
+		City:    record.City.Names["en"],
+		Country: record.Country.Names["en"],
+		IsoCode: record.Country.IsoCode,
+	}
+
+	return check.Result{
+		Name: "maxmind.com",
+		Type: check.TypeInfo,
+		Data: geo,
+	}
+}

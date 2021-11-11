@@ -1,32 +1,38 @@
-// Checkip quickly finds information about an IP address from a CLI.
-package cmd
+package check
 
 import (
 	"fmt"
+	"github.com/logrusorgru/aurora"
 	"log"
 	"sort"
-
-	checkip "github.com/jreisinger/checkip/pkg"
-	"github.com/logrusorgru/aurora"
 )
 
-type byName []checkip.Result
+type Result struct {
+	Name        string
+	Type        Type
+	Data        Data
+	IsMalicious bool
+	Error       *ResultError
+}
 
-func (x byName) Len() int           { return len(x) }
-func (x byName) Less(i, j int) bool { return x[i].Name < x[j].Name }
-func (x byName) Swap(i, j int)      { x[i], x[j] = x[j], x[i] }
+type Results []Result
+
+func (rs Results) SortByName() {
+	sort.Slice(rs, func(i, j int) bool {
+		return rs[i].Name < rs[j].Name
+	})
+}
 
 // Print prints condensed results to stdout.
-func Print(results []checkip.Result) error {
-	sort.Sort(byName(results))
+func (rs Results) Print() error {
 
 	var malicious, totalSec float64
-	for _, r := range results {
-		if r.Err != nil {
-			log.Print(r.ErrMsg)
+	for _, r := range rs {
+		if r.Error != nil {
+			log.Print(r.Error.Error())
 		}
 		if r.Type == "Info" || r.Type == "InfoSec" {
-			fmt.Printf("%-15s %s\n", r.Name, r.Info)
+			fmt.Printf("%-15s %s\n", r.Name, r.Data.String())
 		}
 		if r.Type == "Sec" || r.Type == "InfoSec" {
 			totalSec++
