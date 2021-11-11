@@ -25,30 +25,30 @@ func (g Geo) JsonString() (string, error) {
 	return string(b), err
 }
 
-// CheckGeo fills in the geolocation data. The data is taken from
-// GeoLite2-City.mmdb file that gets downloaded and regularly updated.
-func CheckGeo(ip net.IP) check.Result {
+// CheckGeo gets data from GeoLite2-City.mmdb that is downloaded and regularly
+// updated.
+func CheckGeo(ip net.IP) (check.Result, error) {
 	licenseKey, err := check.GetConfigValue("MAXMIND_LICENSE_KEY")
 	if err != nil {
-		return check.Result{Error: check.NewResultError(err)}
+		return check.Result{}, check.NewError(err)
 	}
 
 	file := "/var/tmp/GeoLite2-City.mmdb"
 	url := "https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-City&license_key=" + licenseKey + "&suffix=tar.gz"
 
 	if err := check.UpdateFile(file, url, "tgz"); err != nil {
-		return check.Result{Error: check.NewResultError(err)}
+		return check.Result{}, check.NewError(err)
 	}
 
 	db, err := geoip2.Open(file)
 	if err != nil {
-		return check.Result{Error: check.NewResultError(fmt.Errorf("can't load DB file: %v", err))}
+		return check.Result{}, check.NewError(fmt.Errorf("can't load DB file: %v", err))
 	}
 	defer db.Close()
 
 	record, err := db.City(ip)
 	if err != nil {
-		return check.Result{Error: check.NewResultError(err)}
+		return check.Result{}, check.NewError(err)
 	}
 
 	geo := Geo{
@@ -60,6 +60,6 @@ func CheckGeo(ip net.IP) check.Result {
 	return check.Result{
 		Name: "maxmind.com",
 		Type: check.TypeInfo,
-		Data: geo,
-	}
+		Info: geo,
+	}, nil
 }

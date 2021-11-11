@@ -25,25 +25,24 @@ type ShodanData []struct {
 	Transport string `json:"transport"` // tcp, udp
 }
 
-// CheckShodan fills in Shodan data for a given IP address. Its get the data from
-// https://api.shodan.io.
-func CheckShodan(ipaddr net.IP) check.Result {
+// CheckShodan gets data from https://api.shodan.io.
+func CheckShodan(ipaddr net.IP) (check.Result, error) {
 	apiKey, err := check.GetConfigValue("SHODAN_API_KEY")
 	if err != nil {
-		return check.Result{Error: check.NewResultError(err)}
+		return check.Result{}, check.NewError(err)
 	}
 
 	var shodan Shodan
 	apiURL := fmt.Sprintf("https://api.shodan.io/shodan/host/%s?key=%s", ipaddr, apiKey)
 	if err := check.DefaultHttpClient.GetJson(apiURL, map[string]string{}, map[string]string{}, &shodan); err != nil {
-		return check.Result{Error: check.NewResultError(err)}
+		return check.Result{}, check.NewError(err)
 	}
 
 	return check.Result{
 		Name: "shodan.io",
 		Type: check.TypeInfo,
-		Data: shodan,
-	}
+		Info: shodan,
+	}, nil
 }
 
 type byPort ShodanData

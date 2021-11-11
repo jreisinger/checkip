@@ -12,6 +12,7 @@ import (
 // Only return reports within the last x amount of days. Default is 30.
 const abuseIPDBMaxAgeInDays = "90"
 
+// AbuseIPDB holds information from abuseipdb.com.
 type AbuseIPDB struct {
 	IsWhitelisted        bool          `json:"isWhitelisted"`
 	AbuseConfidenceScore int           `json:"abuseConfidenceScore"`
@@ -35,12 +36,10 @@ func (d AbuseIPDB) JsonString() (string, error) {
 	return string(b), err
 }
 
-// CheckAbuseIPDB fills in AbuseIPDB data for a given IP address. It gets the data from
-// api.abuseipdb.com/api/v2/check (docs.abuseipdb.com/#check-endpoint).
-func CheckAbuseIPDB(ipaddr net.IP) check.Result {
+func CheckAbuseIPDB(ipaddr net.IP) (check.Result, error) {
 	apiKey, err := check.GetConfigValue("ABUSEIPDB_API_KEY")
 	if err != nil {
-		return check.Result{Error: check.NewResultError(err)}
+		return check.Result{}, check.NewError(err)
 	}
 
 	headers := map[string]string{
@@ -57,14 +56,15 @@ func CheckAbuseIPDB(ipaddr net.IP) check.Result {
 	var data struct {
 		AbuseIPDB AbuseIPDB `json:"data"`
 	}
+	// docs.abuseipdb.com/#check-endpoint
 	if err := check.DefaultHttpClient.GetJson("https://api.abuseipdb.com/api/v2/check", headers, queryParams, &data); err != nil {
-		return check.Result{Error: check.NewResultError(err)}
+		return check.Result{}, check.NewError(err)
 	}
 
 	return check.Result{
 		Name:            "abuseipdb.com",
 		Type:            check.TypeInfoSec,
-		Data:            data.AbuseIPDB,
+		Info:            data.AbuseIPDB,
 		IPaddrMalicious: data.AbuseIPDB.TotalReports > 0 && !data.AbuseIPDB.IsWhitelisted && data.AbuseIPDB.AbuseConfidenceScore > 25,
-	}
+	}, nil
 }

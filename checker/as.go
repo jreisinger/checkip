@@ -34,24 +34,24 @@ func (a AS) JsonString() (string, error) {
 // CheckAs fills in AS data for a given IP address. The data is taken from a TSV
 // file ip2asn-combined downloaded from iptoasn.com. The file is created or
 // updated as needed.
-func CheckAs(ipaddr net.IP) check.Result {
+func CheckAs(ipaddr net.IP) (check.Result, error) {
 	file := "/var/tmp/ip2asn-combined.tsv"
 	url := "https://iptoasn.com/data/ip2asn-combined.tsv.gz"
 
 	if err := check.UpdateFile(file, url, "gz"); err != nil {
-		return check.Result{Error: check.NewResultError(err)}
+		return check.Result{}, check.NewError(err)
 	}
 
 	as, err := asSearch(ipaddr, file)
 	if err != nil {
-		return check.Result{Error: check.NewResultError(fmt.Errorf("searching %s in %s: %v", ipaddr, file, err))}
+		return check.Result{}, check.NewError(fmt.Errorf("searching %s in %s: %v", ipaddr, file, err))
 	}
 
 	return check.Result{
 		Name: "iptoasn.com",
 		Type: check.TypeInfo,
-		Data: as,
-	}
+		Info: as,
+	}, nil
 }
 
 // search the ippadrr in tsvFile and if found fills in AS data.

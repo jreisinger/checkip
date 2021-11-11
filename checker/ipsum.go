@@ -12,25 +12,25 @@ import (
 )
 
 // CheckIPSum checks how many blacklists the IP address is found on.
-func CheckIPSum(ipaddr net.IP) check.Result {
+func CheckIPSum(ipaddr net.IP) (check.Result, error) {
 	file := "/var/tmp/ipsum.txt"
 	url := "https://raw.githubusercontent.com/stamparm/ipsum/master/ipsum.txt"
 
 	if err := check.UpdateFile(file, url, ""); err != nil {
-		return check.Result{Error: check.NewResultError(err)}
+		return check.Result{}, check.NewError(err)
 	}
 
 	blackLists, err := searchIPSumBlacklists(ipaddr, file)
 	if err != nil {
-		return check.Result{Error: check.NewResultError(fmt.Errorf("searching %s in %s: %v", ipaddr, file, err))}
+		return check.Result{}, check.NewError(fmt.Errorf("searching %s in %s: %v", ipaddr, file, err))
 	}
 
 	return check.Result{
 		Name:            "github.com/stamparm/ipsum",
 		Type:            check.TypeSec,
-		Data:            check.EmptyData{},
+		Info:            check.EmptyInfo{},
 		IPaddrMalicious: blackLists > 0,
-	}
+	}, nil
 }
 
 // searchIPSumBlacklists searches the ippadrr in tsvFile for number of blacklists

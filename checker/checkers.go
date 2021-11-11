@@ -3,8 +3,8 @@ package checker
 import "github.com/jreisinger/checkip/check"
 
 var DefaultCheckers = []check.Check{
-	CheckAs,
 	CheckAbuseIPDB,
+	CheckAs,
 	CheckBlockList,
 	CheckCins,
 	CheckDNS,

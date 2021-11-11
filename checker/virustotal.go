@@ -41,11 +41,11 @@ func (v VirusTotal) JsonString() (string, error) {
 	return string(b), err
 }
 
-// CheckVirusTotal fills in data about ippaddr from https://www.virustotal.com/api
-func CheckVirusTotal(ipaddr net.IP) check.Result {
+// CheckVirusTotal gets data about ippaddr from https://www.virustotal.com/api.
+func CheckVirusTotal(ipaddr net.IP) (check.Result, error) {
 	apiKey, err := check.GetConfigValue("VIRUSTOTAL_API_KEY")
 	if err != nil {
-		return check.Result{Error: check.NewResultError(err)}
+		return check.Result{}, check.NewError(err)
 	}
 
 	// curl --header "x-apikey:$VIRUSTOTAL_API_KEY" https://www.virustotal.com/api/v3/ip_addresses/1.1.1.1
@@ -53,13 +53,13 @@ func CheckVirusTotal(ipaddr net.IP) check.Result {
 	apiUrl := "https://www.virustotal.com/api/v3/ip_addresses/" + ipaddr.String()
 	var virusTotal VirusTotal
 	if err := check.DefaultHttpClient.GetJson(apiUrl, headers, map[string]string{}, &virusTotal); err != nil {
-		return check.Result{Error: check.NewResultError(err)}
+		return check.Result{}, check.NewError(err)
 	}
 
 	return check.Result{
 		Name:            "virustotal.com",
 		Type:            check.TypeInfoSec,
-		Data:            virusTotal,
+		Info:            virusTotal,
 		IPaddrMalicious: virusTotal.Data.Attributes.Reputation < 0,
-	}
+	}, nil
 }

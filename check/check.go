@@ -4,8 +4,9 @@ package check
 
 import (
 	"net"
-	"sync"
 )
+
+type Type string
 
 const (
 	TypeInfo    Type = "Info" // provides some useful information about the IP address
@@ -13,22 +14,47 @@ const (
 	TypeInfoSec Type = "InfoSec"
 )
 
-type Type string
+type Check func(ipaddr net.IP) (Result, error)
 
-type Check func(ipaddr net.IP) Result
+type Result struct {
+	Name            string
+	Type            Type
+	IPaddrMalicious bool
+	Info            Info
+	// Error           *ResultError
+	// Error error
+	// ErrorRedacted string
+}
 
-// Run runs checkers concurrently checking the ipaddr.
-func Run(checks []Check, ipaddr net.IP) Results {
-	var res []Result
+type Info interface {
+	String() string
+	JsonString() (string, error)
+}
 
-	var wg sync.WaitGroup
-	for _, chk := range checks {
-		wg.Add(1)
-		go func(c Check) {
-			defer wg.Done()
-			res = append(res, c(ipaddr))
-		}(chk)
+type EmptyInfo struct {
+}
+
+func (EmptyInfo) String() string {
+	return Na("")
+}
+
+func (EmptyInfo) JsonString() (string, error) {
+	return "{}", nil
+}
+
+func Na(s string) string {
+	if s == "" {
+		return "n/a"
 	}
-	wg.Wait()
-	return res
+	return s
+}
+
+func NonEmpty(strings ...string) []string {
+	var ss []string
+	for _, s := range strings {
+		if s != "" {
+			ss = append(ss, s)
+		}
+	}
+	return ss
 }

@@ -13,7 +13,7 @@ type ThreatCrowd struct {
 
 // CheckThreadCrowd retrieves information from
 // https://www.threatcrowd.org/searchApi/v2/ip/report.
-func CheckThreadCrowd(ipaddr net.IP) check.Result {
+func CheckThreadCrowd(ipaddr net.IP) (check.Result, error) {
 	queryParams := map[string]string{
 		"ip": ipaddr.String(),
 	}
@@ -24,13 +24,13 @@ func CheckThreadCrowd(ipaddr net.IP) check.Result {
 	// 1:  	voted harmless by most users
 	var threadCrowd ThreatCrowd
 	if err := check.DefaultHttpClient.GetJson("https://www.threatcrowd.org/searchApi/v2/ip/report", map[string]string{}, queryParams, &threadCrowd); err != nil {
-		return check.Result{Error: check.NewResultError(err)}
+		return check.Result{}, check.NewError(err)
 	}
 
 	return check.Result{
 		Name:            "threatcrowd.org",
 		Type:            check.TypeSec,
-		Data:            check.EmptyData{},
+		Info:            check.EmptyInfo{},
 		IPaddrMalicious: threadCrowd.Votes < 0,
-	}
+	}, nil
 }

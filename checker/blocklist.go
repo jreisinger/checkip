@@ -9,14 +9,13 @@ import (
 	"github.com/jreisinger/checkip/check"
 )
 
-// CheckBlockList fills in BlockList data for a given IP address. It gets the data from
-// http://api.blocklist.de
-func CheckBlockList(ipddr net.IP) check.Result {
+// CheckBlockList searches the ipaddr in http://api.blocklist.de.
+func CheckBlockList(ipddr net.IP) (check.Result, error) {
 	url := fmt.Sprintf("http://api.blocklist.de/api.php?ip=%s&start=1", ipddr)
 
 	resp, err := check.DefaultHttpClient.Get(url, map[string]string{}, map[string]string{})
 	if err != nil {
-		return check.Result{Error: check.NewResultError(err)}
+		return check.Result{}, check.NewError(err)
 	}
 
 	number := regexp.MustCompile(`\d+`)
@@ -24,17 +23,17 @@ func CheckBlockList(ipddr net.IP) check.Result {
 
 	attacks, err := strconv.Atoi(string(numbers[0]))
 	if err != nil {
-		return check.Result{Error: check.NewResultError(err)}
+		return check.Result{}, check.NewError(err)
 	}
 	reports, err := strconv.Atoi(string(numbers[1]))
 	if err != nil {
-		return check.Result{Error: check.NewResultError(err)}
+		return check.Result{}, check.NewError(err)
 	}
 
 	return check.Result{
 		Name:            "blocklist.de",
 		Type:            check.TypeSec,
-		Data:            check.EmptyData{},
+		Info:            check.EmptyInfo{},
 		IPaddrMalicious: attacks > 0 && reports > 0,
-	}
+	}, nil
 }

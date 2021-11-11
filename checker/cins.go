@@ -17,26 +17,25 @@ type CINSArmy struct {
 	CountIPs int
 }
 
-// CheckCins fills in the CINSArmy data.
-func CheckCins(ipaddr net.IP) check.Result {
+func CheckCins(ipaddr net.IP) (check.Result, error) {
 	file := "/var/tmp/cins.txt"
 	url := "http://cinsscore.com/list/ci-badguys.txt"
 
 	if err := check.UpdateFile(file, url, ""); err != nil {
-		return check.Result{Error: check.NewResultError(err)}
+		return check.Result{}, check.NewError(err)
 	}
 
 	cins, err := cinsSearch(ipaddr, file)
 	if err != nil {
-		return check.Result{Error: check.NewResultError(fmt.Errorf("searching %s in %s: %v", ipaddr, file, err))}
+		return check.Result{}, check.NewError(fmt.Errorf("searching %s in %s: %v", ipaddr, file, err))
 	}
 
 	return check.Result{
 		Name:            "cinsscore.com",
 		Type:            check.TypeSec,
-		Data:            check.EmptyData{},
+		Info:            check.EmptyInfo{},
 		IPaddrMalicious: cins.BadGuyIP,
-	}
+	}, nil
 }
 
 // search searches the ippadrr in filename fills in ET data.

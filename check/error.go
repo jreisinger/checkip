@@ -2,16 +2,17 @@ package check
 
 import "regexp"
 
-type ResultError struct {
-	err error
+type Error struct {
+	err       error
+	ErrString string `json:"error"`
 }
 
-func NewResultError(err error) *ResultError {
-	return &ResultError{err: err}
+func NewError(err error) *Error {
+	return &Error{err: err, ErrString: redactSecrets(err.Error())}
 }
 
-func (e *ResultError) Error() string {
-	return redactSecrets(e.err.Error())
+func (e *Error) Error() string {
+	return e.ErrString
 }
 
 func redactSecrets(s string) string {

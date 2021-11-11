@@ -14,19 +14,18 @@ type OTX struct {
 	} `json:"pulse_info"`
 }
 
-// CheckOTX gets data from https://otx.alienvault.com/api.
-func CheckOTX(ipaddr net.IP) check.Result {
+func CheckOTX(ipaddr net.IP) (check.Result, error) {
 	apiurl := fmt.Sprintf("https://otx.alienvault.com/api/v1/indicators/IPv4/%s/", ipaddr.String())
 
 	var otx OTX
 	if err := check.DefaultHttpClient.GetJson(apiurl, map[string]string{}, map[string]string{}, &otx); err != nil {
-		return check.Result{Error: check.NewResultError(err)}
+		return check.Result{}, check.NewError(err)
 	}
 
 	return check.Result{
 		Name:            "otx.alienvault.com",
 		Type:            check.TypeSec,
-		Data:            check.EmptyData{},
+		Info:            check.EmptyInfo{},
 		IPaddrMalicious: otx.PulseInfo.Count > 10,
-	}
+	}, nil
 }

@@ -28,14 +28,17 @@ func (d DNS) JsonString() (string, error) {
 }
 
 // CheckDNS does a reverse lookup for a given IP address.
-func CheckDNS(ipaddr net.IP) check.Result {
+func CheckDNS(ipaddr net.IP) (check.Result, error) {
 	// NOTE: We are ignoring error. It says: "nodename nor servname
 	// provided, or not known" if there is no DNS name for the IP address.
 	names, _ := net.LookupAddr(ipaddr.String())
+	// if err != nil {
+	// 	return check.Result{}, check.NewError(err)
+	// }
 
 	return check.Result{
 		Name: "net.LookupAddr",
 		Type: check.TypeInfo,
-		Data: DNS{Names: names},
-	}
+		Info: DNS{Names: names},
+	}, nil
 }

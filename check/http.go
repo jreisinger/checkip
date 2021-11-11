@@ -64,7 +64,7 @@ func (c HttpClient) GetJson(apiUrl string, headers map[string]string, queryParam
 	}
 	if response != nil {
 		if err := json.Unmarshal(b, response); err != nil {
-			return err
+			return fmt.Errorf("unmarshalling JSON from %s: %v", apiUrl, err)
 		}
 	}
 	return nil
