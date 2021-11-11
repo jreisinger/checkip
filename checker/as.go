@@ -48,9 +48,9 @@ func CheckAs(ipaddr net.IP) check.Result {
 	}
 
 	return check.Result{
-		CheckName: "iptoasn.com",
-		CheckType: check.TypeInfo,
-		Data:      as,
+		Name: "iptoasn.com",
+		Type: check.TypeInfo,
+		Data: as,
 	}
 }
 

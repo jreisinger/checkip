@@ -58,8 +58,8 @@ func CheckGeo(ip net.IP) check.Result {
 	}
 
 	return check.Result{
-		CheckName: "maxmind.com",
-		CheckType: check.TypeInfo,
-		Data:      geo,
+		Name: "maxmind.com",
+		Type: check.TypeInfo,
+		Data: geo,
 	}
 }

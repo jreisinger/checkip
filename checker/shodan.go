@@ -40,9 +40,9 @@ func CheckShodan(ipaddr net.IP) check.Result {
 	}
 
 	return check.Result{
-		CheckName: "shodan.io",
-		CheckType: check.TypeInfo,
-		Data:      shodan,
+		Name: "shodan.io",
+		Type: check.TypeInfo,
+		Data: shodan,
 	}
 }
 

@@ -32,10 +32,10 @@ func CheckCins(ipaddr net.IP) check.Result {
 	}
 
 	return check.Result{
-		CheckName:         "cinsscore.com",
-		CheckType:         check.TypeSec,
-		Data:              check.EmptyData{},
-		IsIPaddrMalicious: cins.BadGuyIP,
+		Name:            "cinsscore.com",
+		Type:            check.TypeSec,
+		Data:            check.EmptyData{},
+		IPaddrMalicious: cins.BadGuyIP,
 	}
 }
 

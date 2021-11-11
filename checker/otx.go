@@ -24,9 +24,9 @@ func CheckOTX(ipaddr net.IP) check.Result {
 	}
 
 	return check.Result{
-		CheckName:         "otx.alienvault.com",
-		CheckType:         check.TypeSec,
-		Data:              check.EmptyData{},
-		IsIPaddrMalicious: otx.PulseInfo.Count > 10,
+		Name:            "otx.alienvault.com",
+		Type:            check.TypeSec,
+		Data:            check.EmptyData{},
+		IPaddrMalicious: otx.PulseInfo.Count > 10,
 	}
 }

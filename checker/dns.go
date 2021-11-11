@@ -34,8 +34,8 @@ func CheckDNS(ipaddr net.IP) check.Result {
 	names, _ := net.LookupAddr(ipaddr.String())
 
 	return check.Result{
-		CheckName: "net.LookupAddr",
-		CheckType: check.TypeInfo,
-		Data:      DNS{Names: names},
+		Name: "net.LookupAddr",
+		Type: check.TypeInfo,
+		Data: DNS{Names: names},
 	}
 }

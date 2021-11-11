@@ -26,10 +26,10 @@ func CheckIPSum(ipaddr net.IP) check.Result {
 	}
 
 	return check.Result{
-		CheckName:         "github.com/stamparm/ipsum",
-		CheckType:         check.TypeSec,
-		Data:              check.EmptyData{},
-		IsIPaddrMalicious: blackLists > 0,
+		Name:            "github.com/stamparm/ipsum",
+		Type:            check.TypeSec,
+		Data:            check.EmptyData{},
+		IPaddrMalicious: blackLists > 0,
 	}
 }
 

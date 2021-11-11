@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"encoding/json"
 	"flag"
 	"log"
 	"net"
@@ -11,7 +10,7 @@ import (
 	"github.com/jreisinger/checkip/checker"
 )
 
-var j = flag.Bool("j", false, "output all data in JSON")
+var j = flag.Bool("j", false, "output all results in JSON")
 
 func Exec() {
 	flag.Parse()
@@ -31,11 +30,9 @@ func Exec() {
 	results := check.Run(checker.DefaultCheckers, ipaddr)
 	results.SortByName()
 	if *j {
-		enc := json.NewEncoder(os.Stdout)
-		if err := enc.Encode(results); err != nil {
-			log.Fatal(err)
-		}
+		results.PrintJSON()
 	} else {
-		results.Print()
+		results.PrintInfo()
+		results.PrintProbabilityMalicious()
 	}
 }

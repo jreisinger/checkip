@@ -57,9 +57,9 @@ func CheckVirusTotal(ipaddr net.IP) check.Result {
 	}
 
 	return check.Result{
-		CheckName:         "virustotal.com",
-		CheckType:         check.TypeInfoSec,
-		Data:              virusTotal,
-		IsIPaddrMalicious: virusTotal.Data.Attributes.Reputation < 0,
+		Name:            "virustotal.com",
+		Type:            check.TypeInfoSec,
+		Data:            virusTotal,
+		IPaddrMalicious: virusTotal.Data.Attributes.Reputation < 0,
 	}
 }

@@ -1,59 +1,76 @@
 package check
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
+	"os"
 	"sort"
 
 	"github.com/logrusorgru/aurora"
 )
 
 type Result struct {
-	CheckName         string
-	CheckType         Type
-	IsIPaddrMalicious bool
-	Data              Data
-	Error             *ResultError
+	Name            string
+	Type            Type
+	IPaddrMalicious bool
+	Data            Data
+	Error           *ResultError
 }
 
 type Results []Result
 
+// PrintJSON prints all results in JSON.
+func (rs Results) PrintJSON() {
+	enc := json.NewEncoder(os.Stdout)
+	if err := enc.Encode(rs); err != nil {
+		log.Fatal(err)
+	}
+}
+
+// SortByName sorts results by the checker name.
 func (rs Results) SortByName() {
 	sort.Slice(rs, func(i, j int) bool {
-		return rs[i].CheckName < rs[j].CheckName
+		return rs[i].Name < rs[j].Name
 	})
 }
 
-// Print prints condensed results to stdout.
-func (rs Results) Print() error {
-
-	var malicious, totalSec float64
+// PrintInfo prints results from Info and InfoSec checkers.
+func (rs Results) PrintInfo() {
 	for _, r := range rs {
 		if r.Error != nil {
 			log.Print(r.Error.Error())
 		}
-		if r.CheckType == "Info" || r.CheckType == "InfoSec" {
-			fmt.Printf("%-15s %s\n", r.CheckName, r.Data.String())
-		}
-		if r.CheckType == "Sec" || r.CheckType == "InfoSec" {
-			totalSec++
-			if r.IsIPaddrMalicious {
-				malicious++
-			}
+		if r.Type == "Info" || r.Type == "InfoSec" {
+			fmt.Printf("%-15s %s\n", r.Name, r.Data.String())
 		}
 	}
-	probabilityMalicious := malicious / totalSec
+}
 
+// PrintProbabilityMalicious prints the probability the IP address is malicious.
+func (rs Results) PrintProbabilityMalicious() {
 	var msg string
 	switch {
-	case probabilityMalicious <= 0.15:
+	case rs.probabilityMalicious() <= 0.15:
 		msg = fmt.Sprint(aurora.Green("Malicious"))
-	case probabilityMalicious <= 0.50:
+	case rs.probabilityMalicious() <= 0.50:
 		msg = fmt.Sprint(aurora.Yellow("Malicious"))
 	default:
 		msg = fmt.Sprint(aurora.Red("Malicious"))
 	}
 
-	_, err := fmt.Printf("%s\t%.0f%% (%d/%d)\n", msg, probabilityMalicious*100, int(malicious), int(totalSec))
-	return err
+	fmt.Printf("%s\t%.0f%%\n", msg, rs.probabilityMalicious()*100)
+}
+
+func (rs Results) probabilityMalicious() float64 {
+	var malicious, totalSec float64
+	for _, r := range rs {
+		if r.Type == "Sec" || r.Type == "InfoSec" {
+			totalSec++
+			if r.IPaddrMalicious {
+				malicious++
+			}
+		}
+	}
+	return malicious / totalSec
 }
