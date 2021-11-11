@@ -11,7 +11,6 @@ import (
 	"github.com/jreisinger/checkip/checker"
 )
 
-// var v = flag.Bool("v", false, "be verbose")
 var j = flag.Bool("j", false, "output all data in JSON")
 
 func Exec() {
