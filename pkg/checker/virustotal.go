@@ -44,7 +44,7 @@ func (v VirusTotal) JsonString() (string, error) {
 func CheckVirusTotal(ipaddr net.IP) check.Result {
 	apiKey, err := check.GetConfigValue("VIRUSTOTAL_API_KEY")
 	if err != nil {
-		return check.Result{ResultError: check.NewResultError(err)}
+		return check.Result{Error: check.NewResultError(err)}
 	}
 
 	// curl --header "x-apikey:$VIRUSTOTAL_API_KEY" https://www.virustotal.com/api/v3/ip_addresses/1.1.1.1
@@ -52,7 +52,7 @@ func CheckVirusTotal(ipaddr net.IP) check.Result {
 	apiUrl := "https://www.virustotal.com/api/v3/ip_addresses/" + ipaddr.String()
 	var virusTotal VirusTotal
 	if err := check.DefaultHttpClient.GetJson(apiUrl, headers, map[string]string{}, &virusTotal); err != nil {
-		return check.Result{ResultError: check.NewResultError(err)}
+		return check.Result{Error: check.NewResultError(err)}
 	}
 
 	return check.Result{

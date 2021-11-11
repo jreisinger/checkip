@@ -29,13 +29,13 @@ type ShodanData []struct {
 func CheckShodan(ipaddr net.IP) check.Result {
 	apiKey, err := check.GetConfigValue("SHODAN_API_KEY")
 	if err != nil {
-		return check.Result{ResultError: check.NewResultError(err)}
+		return check.Result{Error: check.NewResultError(err)}
 	}
 
 	var shodan Shodan
 	apiURL := fmt.Sprintf("https://api.shodan.io/shodan/host/%s?key=%s", ipaddr, apiKey)
 	if err := check.DefaultHttpClient.GetJson(apiURL, map[string]string{}, map[string]string{}, &shodan); err != nil {
-		return check.Result{ResultError: check.NewResultError(err)}
+		return check.Result{Error: check.NewResultError(err)}
 	}
 
 	return check.Result{

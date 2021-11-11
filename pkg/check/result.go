@@ -9,7 +9,7 @@ type Result struct {
 	Type        Type
 	Data        Data
 	IsMalicious bool
-	ResultError *ResultError
+	Error       *ResultError
 }
 
 type Results []Result

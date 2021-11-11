@@ -15,7 +15,7 @@ func CheckBlockList(ipddr net.IP) check.Result {
 
 	resp, err := check.DefaultHttpClient.Get(url, map[string]string{}, map[string]string{})
 	if err != nil {
-		return check.Result{ResultError: check.NewResultError(err)}
+		return check.Result{Error: check.NewResultError(err)}
 	}
 
 	number := regexp.MustCompile(`\d+`)
@@ -23,11 +23,11 @@ func CheckBlockList(ipddr net.IP) check.Result {
 
 	attacks, err := strconv.Atoi(string(numbers[0]))
 	if err != nil {
-		return check.Result{ResultError: check.NewResultError(err)}
+		return check.Result{Error: check.NewResultError(err)}
 	}
 	reports, err := strconv.Atoi(string(numbers[1]))
 	if err != nil {
-		return check.Result{ResultError: check.NewResultError(err)}
+		return check.Result{Error: check.NewResultError(err)}
 	}
 
 	return check.Result{

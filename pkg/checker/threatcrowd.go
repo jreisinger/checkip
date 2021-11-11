@@ -23,7 +23,7 @@ func CheckThreadCrowd(ipaddr net.IP) check.Result {
 	// 1:  	voted harmless by most users
 	var threadCrowd ThreatCrowd
 	if err := check.DefaultHttpClient.GetJson("https://www.threatcrowd.org/searchApi/v2/ip/report", map[string]string{}, queryParams, &threadCrowd); err != nil {
-		return check.Result{ResultError: check.NewResultError(err)}
+		return check.Result{Error: check.NewResultError(err)}
 	}
 
 	return check.Result{

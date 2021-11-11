@@ -16,12 +16,12 @@ func CheckIPSum(ipaddr net.IP) check.Result {
 	url := "https://raw.githubusercontent.com/stamparm/ipsum/master/ipsum.txt"
 
 	if err := check.UpdateFile(file, url, ""); err != nil {
-		return check.Result{ResultError: check.NewResultError(err)}
+		return check.Result{Error: check.NewResultError(err)}
 	}
 
 	blackLists, err := searchIPSumBlacklists(ipaddr, file)
 	if err != nil {
-		return check.Result{ResultError: check.NewResultError(fmt.Errorf("searching %s in %s: %v", ipaddr, file, err))}
+		return check.Result{Error: check.NewResultError(fmt.Errorf("searching %s in %s: %v", ipaddr, file, err))}
 	}
 
 	return check.Result{

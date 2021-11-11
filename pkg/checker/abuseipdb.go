@@ -39,7 +39,7 @@ func (d Data) JsonString() (string, error) {
 func CheckAbuseIPDB(ipaddr net.IP) check.Result {
 	apiKey, err := check.GetConfigValue("ABUSEIPDB_API_KEY")
 	if err != nil {
-		return check.Result{ResultError: check.NewResultError(err)}
+		return check.Result{Error: check.NewResultError(err)}
 	}
 
 	headers := map[string]string{
@@ -55,7 +55,7 @@ func CheckAbuseIPDB(ipaddr net.IP) check.Result {
 
 	var data Data
 	if err := check.DefaultHttpClient.GetJson("https://api.abuseipdb.com/api/v2/check", headers, queryParams, &data); err != nil {
-		return check.Result{ResultError: check.NewResultError(err)}
+		return check.Result{Error: check.NewResultError(err)}
 	}
 
 	return check.Result{

@@ -38,12 +38,12 @@ func CheckAs(ipaddr net.IP) check.Result {
 	url := "https://iptoasn.com/data/ip2asn-combined.tsv.gz"
 
 	if err := check.UpdateFile(file, url, "gz"); err != nil {
-		return check.Result{ResultError: check.NewResultError(err)}
+		return check.Result{Error: check.NewResultError(err)}
 	}
 
 	as, err := asSearch(ipaddr, file)
 	if err != nil {
-		return check.Result{ResultError: check.NewResultError(fmt.Errorf("searching %s in %s: %v", ipaddr, file, err))}
+		return check.Result{Error: check.NewResultError(fmt.Errorf("searching %s in %s: %v", ipaddr, file, err))}
 	}
 
 	return check.Result{

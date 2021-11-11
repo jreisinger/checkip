@@ -19,7 +19,7 @@ func CheckOTX(ipaddr net.IP) check.Result {
 
 	var otx OTX
 	if err := check.DefaultHttpClient.GetJson(apiurl, map[string]string{}, map[string]string{}, &otx); err != nil {
-		return check.Result{ResultError: check.NewResultError(err)}
+		return check.Result{Error: check.NewResultError(err)}
 	}
 
 	return check.Result{

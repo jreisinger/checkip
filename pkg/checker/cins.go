@@ -22,12 +22,12 @@ func CheckCins(ipaddr net.IP) check.Result {
 	url := "http://cinsscore.com/list/ci-badguys.txt"
 
 	if err := check.UpdateFile(file, url, ""); err != nil {
-		return check.Result{ResultError: check.NewResultError(err)}
+		return check.Result{Error: check.NewResultError(err)}
 	}
 
 	cins, err := cinsSearch(ipaddr, file)
 	if err != nil {
-		return check.Result{ResultError: check.NewResultError(fmt.Errorf("searching %s in %s: %v", ipaddr, file, err))}
+		return check.Result{Error: check.NewResultError(fmt.Errorf("searching %s in %s: %v", ipaddr, file, err))}
 	}
 
 	return check.Result{
