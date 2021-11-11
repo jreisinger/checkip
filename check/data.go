@@ -8,11 +8,11 @@ type Data interface {
 type EmptyData struct {
 }
 
-func (_ EmptyData) String() string {
+func (EmptyData) String() string {
 	return Na("")
 }
 
-func (_ EmptyData) JsonString() (string, error) {
+func (EmptyData) JsonString() (string, error) {
 	return "{}", nil
 }
 

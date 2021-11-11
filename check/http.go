@@ -47,6 +47,10 @@ func (c HttpClient) Get(apiUrl string, headers map[string]string, queryParams ma
 	defer resp.Body.Close()
 
 	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
 	if resp.StatusCode/100 != 2 {
 		return nil, fmt.Errorf("GET %s: %s", apiUrl, resp.Status)
 	}
@@ -54,12 +58,10 @@ func (c HttpClient) Get(apiUrl string, headers map[string]string, queryParams ma
 }
 
 func (c HttpClient) GetJson(apiUrl string, headers map[string]string, queryParams map[string]string, response interface{}) error {
-
 	b, err := c.Get(apiUrl, headers, queryParams)
 	if err != nil {
 		return err
 	}
-
 	if response != nil {
 		if err := json.Unmarshal(b, response); err != nil {
 			return err

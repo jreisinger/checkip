@@ -12,7 +12,7 @@ import (
 // Only return reports within the last x amount of days. Default is 30.
 const abuseIPDBMaxAgeInDays = "90"
 
-type Data struct {
+type AbuseIPDB struct {
 	IsWhitelisted        bool          `json:"isWhitelisted"`
 	AbuseConfidenceScore int           `json:"abuseConfidenceScore"`
 	CountryCode          string        `json:"countryCode"`
@@ -26,11 +26,11 @@ type Data struct {
 	LastReportedAt       time.Time     `json:"lastReportedAt"`
 }
 
-func (d Data) String() string {
+func (d AbuseIPDB) String() string {
 	return fmt.Sprintf("domain: %s, usage type: %s", check.Na(d.Domain), check.Na(d.UsageType))
 }
 
-func (d Data) JsonString() (string, error) {
+func (d AbuseIPDB) JsonString() (string, error) {
 	b, err := json.Marshal(d)
 	return string(b), err
 }
@@ -54,7 +54,9 @@ func CheckAbuseIPDB(ipaddr net.IP) check.Result {
 		"maxAgeInDays": abuseIPDBMaxAgeInDays,
 	}
 
-	var data Data
+	var data struct {
+		AbuseIPDB AbuseIPDB `json:"data"`
+	}
 	if err := check.DefaultHttpClient.GetJson("https://api.abuseipdb.com/api/v2/check", headers, queryParams, &data); err != nil {
 		return check.Result{Error: check.NewResultError(err)}
 	}
@@ -62,7 +64,7 @@ func CheckAbuseIPDB(ipaddr net.IP) check.Result {
 	return check.Result{
 		CheckName:         "abuseipdb.com",
 		CheckType:         check.TypeInfoSec,
-		Data:              data,
-		IsIPaddrMalicious: data.TotalReports > 0 && !data.IsWhitelisted && data.AbuseConfidenceScore > 25,
+		Data:              data.AbuseIPDB,
+		IsIPaddrMalicious: data.AbuseIPDB.TotalReports > 0 && !data.AbuseIPDB.IsWhitelisted && data.AbuseIPDB.AbuseConfidenceScore > 25,
 	}
 }

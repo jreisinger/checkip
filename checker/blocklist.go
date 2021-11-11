@@ -33,7 +33,7 @@ func CheckBlockList(ipddr net.IP) check.Result {
 
 	return check.Result{
 		CheckName:         "blocklist.de",
-		CheckType:         check.TypeInfoSec,
+		CheckType:         check.TypeSec,
 		Data:              check.EmptyData{},
 		IsIPaddrMalicious: attacks > 0 && reports > 0,
 	}
