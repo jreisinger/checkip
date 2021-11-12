@@ -9,7 +9,7 @@ import (
 	"github.com/jreisinger/checkip/check"
 )
 
-type CINSArmy struct {
+type cins struct {
 	BadGuyIP bool
 	CountIPs int
 }
@@ -37,13 +37,13 @@ func CheckCins(ipaddr net.IP) (check.Result, error) {
 }
 
 // search searches the ippadrr in filename fills in ET data.
-func cinsSearch(ipaddr net.IP, filename string) (CINSArmy, error) {
+func cinsSearch(ipaddr net.IP, filename string) (cins, error) {
 	file, err := os.Open(filename)
 	if err != nil {
-		return CINSArmy{}, err
+		return cins{}, err
 	}
 
-	var cinsArmy CINSArmy
+	var cinsArmy cins
 	s := bufio.NewScanner(file)
 	for s.Scan() {
 		line := s.Text()
@@ -53,7 +53,7 @@ func cinsSearch(ipaddr net.IP, filename string) (CINSArmy, error) {
 		}
 	}
 	if s.Err() != nil {
-		return CINSArmy{}, err
+		return cins{}, err
 	}
 	return cinsArmy, nil
 }

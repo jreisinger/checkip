@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-// DefaultHttpClient is reused by checks making HTTP requests.
+// DefaultHttpClient is reused by checks that make HTTP requests.
 var DefaultHttpClient = HttpClient{client: &http.Client{Timeout: 5 * time.Second}}
 
 type HttpClient struct {

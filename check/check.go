@@ -1,14 +1,16 @@
-// Package check defines how to check an IP address.
+// Package check defines how to check an IP address. It provides types and
+// functions that are useful when writing checks.
 package check
 
 import (
 	"net"
 )
 
+// Type is the type of a check.
 type Type string
 
 const (
-	TypeInfo    Type = "Info" // provides some useful information about the IP address
+	TypeInfo    Type = "Info" // provides generic information about the IP address
 	TypeSec     Type = "Sec"  // says whether the IP address is considered malicious
 	TypeInfoSec Type = "InfoSec"
 )
@@ -16,13 +18,15 @@ const (
 // Check checks an IP address providing generic and/or security information.
 type Check func(ipaddr net.IP) (Result, error)
 
+// Result is the results of a check.
 type Result struct {
-	Name            string
-	Type            Type
-	IPaddrMalicious bool
-	Info            Info
+	Name            string // check name
+	Type            Type   // check type
+	Info            Info   // provided by Info check
+	IPaddrMalicious bool   // provided by Sec check
 }
 
+// Info is some generic information provided by an Info check.
 type Info interface {
 	String() string
 	JsonString() (string, error)
