@@ -9,8 +9,7 @@ import (
 	"github.com/jreisinger/checkip/check"
 )
 
-// VirusTotal holds information about an IP address from virustotal.com.
-type VirusTotal struct {
+type virusTotal struct {
 	Data struct {
 		Attributes struct {
 			Reputation        int    `json:"reputation"`
@@ -32,16 +31,17 @@ type VirusTotal struct {
 	} `json:"data"`
 }
 
-func (v VirusTotal) String() string {
+func (v virusTotal) String() string {
 	return fmt.Sprintf("AS onwer: %s, network: %s, SAN: %s", check.Na(v.Data.Attributes.ASowner), check.Na(v.Data.Attributes.Network), check.Na(strings.Join(v.Data.Attributes.LastHTTPScert.Extensions.SAN, ", ")))
 }
 
-func (v VirusTotal) JsonString() (string, error) {
+func (v virusTotal) JsonString() (string, error) {
 	b, err := json.Marshal(v)
 	return string(b), err
 }
 
-// CheckVirusTotal gets data about ippaddr from https://www.virustotal.com/api.
+// CheckVirusTotal gets generic information and security reputation about the
+// ippaddr from https://www.virustotal.com/api.
 func CheckVirusTotal(ipaddr net.IP) (check.Result, error) {
 	apiKey, err := check.GetConfigValue("VIRUSTOTAL_API_KEY")
 	if err != nil {
@@ -51,7 +51,7 @@ func CheckVirusTotal(ipaddr net.IP) (check.Result, error) {
 	// curl --header "x-apikey:$VIRUSTOTAL_API_KEY" https://www.virustotal.com/api/v3/ip_addresses/1.1.1.1
 	headers := map[string]string{"x-apikey": apiKey}
 	apiUrl := "https://www.virustotal.com/api/v3/ip_addresses/" + ipaddr.String()
-	var virusTotal VirusTotal
+	var virusTotal virusTotal
 	if err := check.DefaultHttpClient.GetJson(apiUrl, headers, map[string]string{}, &virusTotal); err != nil {
 		return check.Result{}, check.NewError(err)
 	}

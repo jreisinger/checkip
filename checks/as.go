@@ -13,8 +13,7 @@ import (
 	"github.com/jreisinger/checkip/check"
 )
 
-// AS holds information about an Autonomous System from iptoasn.com.
-type AS struct {
+type autonomousSystem struct {
 	Number      int    `json:"-"`
 	FirstIP     net.IP `json:"-"`
 	LastIP      net.IP `json:"-"`
@@ -22,18 +21,17 @@ type AS struct {
 	CountryCode string `json:"-"`
 }
 
-func (a AS) String() string {
+func (a autonomousSystem) String() string {
 	return fmt.Sprintf("AS description: %s", check.Na(a.Description))
 }
 
-func (a AS) JsonString() (string, error) {
+func (a autonomousSystem) JsonString() (string, error) {
 	b, err := json.Marshal(a)
 	return string(b), err
 }
 
-// CheckAS fills in AS data for a given IP address. The data is taken from a TSV
-// file ip2asn-combined downloaded from iptoasn.com. The file is created or
-// updated as needed.
+// CheckAS gets info about autonomous system (AS) of the ipaddr. The data is
+// taken from a TSV file ip2asn-combined downloaded from iptoasn.com.
 func CheckAS(ipaddr net.IP) (check.Result, error) {
 	file := "/var/tmp/ip2asn-combined.tsv"
 	url := "https://iptoasn.com/data/ip2asn-combined.tsv.gz"
@@ -55,13 +53,13 @@ func CheckAS(ipaddr net.IP) (check.Result, error) {
 }
 
 // search the ippadrr in tsvFile and if found fills in AS data.
-func asSearch(ipaddr net.IP, tsvFile string) (AS, error) {
+func asSearch(ipaddr net.IP, tsvFile string) (autonomousSystem, error) {
 	tsv, err := os.Open(tsvFile)
 	if err != nil {
-		return AS{}, err
+		return autonomousSystem{}, err
 	}
 
-	as := AS{}
+	as := autonomousSystem{}
 	s := bufio.NewScanner(tsv)
 	for s.Scan() {
 		line := s.Text()
@@ -71,7 +69,7 @@ func asSearch(ipaddr net.IP, tsvFile string) (AS, error) {
 		if ipIsBetween(ipaddr, as.FirstIP, as.LastIP) {
 			as.Number, err = strconv.Atoi(fields[2])
 			if err != nil {
-				return AS{}, fmt.Errorf("converting string to int: %v", err)
+				return autonomousSystem{}, fmt.Errorf("converting string to int: %v", err)
 			}
 			as.CountryCode = fields[3]
 			as.Description = fields[4]
@@ -79,7 +77,7 @@ func asSearch(ipaddr net.IP, tsvFile string) (AS, error) {
 		}
 	}
 	if s.Err() != nil {
-		return AS{}, err
+		return autonomousSystem{}, err
 	}
 	return as, nil
 }

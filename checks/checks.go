@@ -1,8 +1,9 @@
-// Package checks contains functions that can check an IP address.
+// Package checks contains functions that check an IP address.
 package checks
 
 import "github.com/jreisinger/checkip/check"
 
+// Default checks you should use.
 var Default = []check.Check{
 	CheckAbuseIPDB,
 	CheckAS,

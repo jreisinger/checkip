@@ -10,29 +10,28 @@ import (
 	"github.com/jreisinger/checkip/check"
 )
 
-// Shodan holds information about an IP address from shodan.io scan data.
-type Shodan struct {
+type shodan struct {
 	Org   string     `json:"org"`
-	Data  ShodanData `json:"data"`
+	Data  shodanData `json:"data"`
 	OS    string     `json:"os"`
 	Ports []int      `json:"ports"`
 }
 
-type ShodanData []struct {
+type shodanData []struct {
 	Product   string `json:"product"`
 	Version   string `json:"version"`
 	Port      int    `json:"port"`
 	Transport string `json:"transport"` // tcp, udp
 }
 
-// CheckShodan gets data from https://api.shodan.io.
+// CheckShodan gets generic information from https://api.shodan.io.
 func CheckShodan(ipaddr net.IP) (check.Result, error) {
 	apiKey, err := check.GetConfigValue("SHODAN_API_KEY")
 	if err != nil {
 		return check.Result{}, check.NewError(err)
 	}
 
-	var shodan Shodan
+	var shodan shodan
 	apiURL := fmt.Sprintf("https://api.shodan.io/shodan/host/%s?key=%s", ipaddr, apiKey)
 	if err := check.DefaultHttpClient.GetJson(apiURL, map[string]string{}, map[string]string{}, &shodan); err != nil {
 		return check.Result{}, check.NewError(err)
@@ -45,14 +44,14 @@ func CheckShodan(ipaddr net.IP) (check.Result, error) {
 	}, nil
 }
 
-type byPort ShodanData
+type byPort shodanData
 
 func (x byPort) Len() int           { return len(x) }
 func (x byPort) Less(i, j int) bool { return x[i].Port < x[j].Port }
 func (x byPort) Swap(i, j int)      { x[i], x[j] = x[j], x[i] }
 
 // Info returns interesting information from the check.
-func (s Shodan) String() string {
+func (s shodan) String() string {
 	var portInfo []string
 	sort.Sort(byPort(s.Data))
 	for _, d := range s.Data {
@@ -84,7 +83,7 @@ func (s Shodan) String() string {
 	return fmt.Sprintf("OS: %s, %d open %s %s", check.Na(s.OS), len(portInfo), portStr, strings.Join(portInfo, ", "))
 }
 
-func (s Shodan) JsonString() (string, error) {
+func (s shodan) JsonString() (string, error) {
 	b, err := json.Marshal(s)
 	return string(b), err
 }

@@ -7,17 +7,18 @@ import (
 	"github.com/jreisinger/checkip/check"
 )
 
-// OTX holds information from otx.alienvault.com.
-type OTX struct {
+type otx struct {
 	PulseInfo struct {
 		Count int `json:"count"`
 	} `json:"pulse_info"`
 }
 
+// CheckOTX counts pulses on otx.alienvault.com to find out whether the ipaddr
+// is malicious.
 func CheckOTX(ipaddr net.IP) (check.Result, error) {
 	apiurl := fmt.Sprintf("https://otx.alienvault.com/api/v1/indicators/IPv4/%s/", ipaddr.String())
 
-	var otx OTX
+	var otx otx
 	if err := check.DefaultHttpClient.GetJson(apiurl, map[string]string{}, map[string]string{}, &otx); err != nil {
 		return check.Result{}, check.NewError(err)
 	}

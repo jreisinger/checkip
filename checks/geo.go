@@ -9,24 +9,22 @@ import (
 	"github.com/oschwald/geoip2-golang"
 )
 
-// Geo holds geographic location of an IP address from maxmind.com GeoIP database.
-type Geo struct {
+type geo struct {
 	City    string `json:"city"`
 	Country string `json:"country"`
 	IsoCode string `json:"iso_code"`
 }
 
-func (g Geo) String() string {
+func (g geo) String() string {
 	return fmt.Sprintf("city: %s, country: %s, ISO code: %s", check.Na(g.City), check.Na(g.Country), check.Na(g.IsoCode))
 }
 
-func (g Geo) JsonString() (string, error) {
+func (g geo) JsonString() (string, error) {
 	b, err := json.Marshal(g)
 	return string(b), err
 }
 
-// CheckGeo gets data from GeoLite2-City.mmdb that is downloaded and regularly
-// updated.
+// CheckGeo gets geolocation data from maxmind.com's GeoLite2-City.mmdb.
 func CheckGeo(ip net.IP) (check.Result, error) {
 	licenseKey, err := check.GetConfigValue("MAXMIND_LICENSE_KEY")
 	if err != nil {
@@ -51,7 +49,7 @@ func CheckGeo(ip net.IP) (check.Result, error) {
 		return check.Result{}, check.NewError(err)
 	}
 
-	geo := Geo{
+	geo := geo{
 		City:    record.City.Names["en"],
 		Country: record.Country.Names["en"],
 		IsoCode: record.Country.IsoCode,

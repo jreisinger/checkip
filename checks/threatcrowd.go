@@ -6,13 +6,12 @@ import (
 	"github.com/jreisinger/checkip/check"
 )
 
-// ThreatCrowd holds information about an IP address from threatcrowd.org.
-type ThreatCrowd struct {
+type threatCrowd struct {
 	Votes int `json:"votes"`
 }
 
-// CheckThreadCrowd retrieves information from
-// https://www.threatcrowd.org/searchApi/v2/ip/report.
+// CheckThreadCrowd threatcrowd.org to find out whether the ipaddr was voted
+// malicious.
 func CheckThreadCrowd(ipaddr net.IP) (check.Result, error) {
 	queryParams := map[string]string{
 		"ip": ipaddr.String(),
@@ -22,7 +21,7 @@ func CheckThreadCrowd(ipaddr net.IP) (check.Result, error) {
 	// -1 	voted malicious by most users
 	// 0 	voted malicious/harmless by equal number of users
 	// 1:  	voted harmless by most users
-	var threadCrowd ThreatCrowd
+	var threadCrowd threatCrowd
 	if err := check.DefaultHttpClient.GetJson("https://www.threatcrowd.org/searchApi/v2/ip/report", map[string]string{}, queryParams, &threadCrowd); err != nil {
 		return check.Result{}, check.NewError(err)
 	}

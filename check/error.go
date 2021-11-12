@@ -2,8 +2,9 @@ package check
 
 import "regexp"
 
+// Error is an error returned by a check.
 type Error struct {
-	err       error
+	err       error  // can contain API keys or other secrets
 	ErrString string `json:"error"`
 }
 

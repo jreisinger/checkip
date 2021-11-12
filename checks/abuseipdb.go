@@ -12,8 +12,7 @@ import (
 // Only return reports within the last x amount of days. Default is 30.
 const abuseIPDBMaxAgeInDays = "90"
 
-// AbuseIPDB holds information from abuseipdb.com.
-type AbuseIPDB struct {
+type abuseIPDB struct {
 	IsWhitelisted        bool          `json:"isWhitelisted"`
 	AbuseConfidenceScore int           `json:"abuseConfidenceScore"`
 	CountryCode          string        `json:"countryCode"`
@@ -27,15 +26,17 @@ type AbuseIPDB struct {
 	LastReportedAt       time.Time     `json:"lastReportedAt"`
 }
 
-func (d AbuseIPDB) String() string {
-	return fmt.Sprintf("domain: %s, usage type: %s", check.Na(d.Domain), check.Na(d.UsageType))
+func (a abuseIPDB) String() string {
+	return fmt.Sprintf("domain: %s, usage type: %s", check.Na(a.Domain), check.Na(a.UsageType))
 }
 
-func (d AbuseIPDB) JsonString() (string, error) {
+func (d abuseIPDB) JsonString() (string, error) {
 	b, err := json.Marshal(d)
 	return string(b), err
 }
 
+// CheckAbuseIPDB uses api.abuseipdb.com to get generic information about ipaddr
+// and see if the ipaddr has been reported as malicious.
 func CheckAbuseIPDB(ipaddr net.IP) (check.Result, error) {
 	apiKey, err := check.GetConfigValue("ABUSEIPDB_API_KEY")
 	if err != nil {
@@ -54,7 +55,7 @@ func CheckAbuseIPDB(ipaddr net.IP) (check.Result, error) {
 	}
 
 	var data struct {
-		AbuseIPDB AbuseIPDB `json:"data"`
+		AbuseIPDB abuseIPDB `json:"data"`
 	}
 	// docs.abuseipdb.com/#check-endpoint
 	if err := check.DefaultHttpClient.GetJson("https://api.abuseipdb.com/api/v2/check", headers, queryParams, &data); err != nil {

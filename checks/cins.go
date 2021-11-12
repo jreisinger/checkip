@@ -9,14 +9,12 @@ import (
 	"github.com/jreisinger/checkip/check"
 )
 
-// CINSArmy holds information about an IP address from
-// https://cinsscore.com/#list. I found CINSArmy mentioned at
-// https://logz.io/blog/open-source-threat-intelligence-feeds/.
 type CINSArmy struct {
 	BadGuyIP bool
 	CountIPs int
 }
 
+// CheckCins searches ipaddr in https://cinsscore.com/list/ci-badguys.txt.
 func CheckCins(ipaddr net.IP) (check.Result, error) {
 	file := "/var/tmp/cins.txt"
 	url := "http://cinsscore.com/list/ci-badguys.txt"
