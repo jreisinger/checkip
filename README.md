@@ -31,3 +31,8 @@ VIRUSTOTAL_API_KEY: aaaaaaaabbbbbbbbccccccccddddddddeeeeeeeeffffffff111111112222
 ```
 
 You can also use environment variables with the same names.
+
+## Development
+
+If you want to add a new way to check an IP address, just provide a function
+of type [Check](https://pkg.go.dev/github.com/jreisinger/checkip/check#Check).
