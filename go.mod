@@ -3,7 +3,6 @@ module github.com/jreisinger/checkip
 go 1.17
 
 require (
-	github.com/logrusorgru/aurora v2.0.3+incompatible
 	github.com/oschwald/geoip2-golang v1.5.0
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b
 )

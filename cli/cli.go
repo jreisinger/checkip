@@ -11,7 +11,6 @@ import (
 	"sync"
 
 	"github.com/jreisinger/checkip/check"
-	"github.com/logrusorgru/aurora"
 )
 
 func Run(checks []check.Check, ipaddr net.IP) (Results, []error) {
@@ -65,17 +64,16 @@ func (rs Results) PrintInfo() {
 
 // PrintProbabilityMalicious prints the probability the IP address is malicious.
 func (rs Results) PrintProbabilityMalicious() {
-	var msg string
+	msg := fmt.Sprintf("%s\t%.0f%% ", "Malicious", rs.probabilityMalicious()*100)
 	switch {
 	case rs.probabilityMalicious() <= 0.15:
-		msg = fmt.Sprint(aurora.Green("Malicious"))
+		msg += `✅`
 	case rs.probabilityMalicious() <= 0.50:
-		msg = fmt.Sprint(aurora.Yellow("Malicious"))
+		msg += `🤏`
 	default:
-		msg = fmt.Sprint(aurora.Red("Malicious"))
+		msg += `🚫`
 	}
-
-	fmt.Printf("%s\t%.0f%%\n", msg, rs.probabilityMalicious()*100)
+	fmt.Println(msg)
 }
 
 func (rs Results) probabilityMalicious() float64 {
