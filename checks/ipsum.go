@@ -12,7 +12,7 @@ import (
 )
 
 // CheckIPSum checks how many blacklists the ipaddr is found on.
-func CheckIPSum(ipaddr net.IP) (check.Result, error) {
+func CheckIPSum(ipaddr net.IP) (check.Result, *check.Error) {
 	file := "/var/tmp/ipsum.txt"
 	url := "https://raw.githubusercontent.com/stamparm/ipsum/master/ipsum.txt"
 

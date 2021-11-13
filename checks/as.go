@@ -32,7 +32,7 @@ func (a autonomousSystem) JsonString() (string, error) {
 
 // CheckAS gets info about autonomous system (AS) of the ipaddr. The data is
 // taken from a TSV file ip2asn-combined downloaded from iptoasn.com.
-func CheckAS(ipaddr net.IP) (check.Result, error) {
+func CheckAS(ipaddr net.IP) (check.Result, *check.Error) {
 	file := "/var/tmp/ip2asn-combined.tsv"
 	url := "https://iptoasn.com/data/ip2asn-combined.tsv.gz"
 

@@ -4,8 +4,8 @@ import "regexp"
 
 // Error is an error returned by a check.
 type Error struct {
-	err       error  // can contain API keys or other secrets
-	ErrString string `json:"error"`
+	err       error  // might contain secrets, like API keys
+	ErrString string `json:"error"` // secrets redacted
 }
 
 func NewError(err error) *Error {

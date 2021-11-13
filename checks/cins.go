@@ -15,7 +15,7 @@ type cins struct {
 }
 
 // CheckCins searches ipaddr in https://cinsscore.com/list/ci-badguys.txt.
-func CheckCins(ipaddr net.IP) (check.Result, error) {
+func CheckCins(ipaddr net.IP) (check.Result, *check.Error) {
 	file := "/var/tmp/cins.txt"
 	url := "http://cinsscore.com/list/ci-badguys.txt"
 

@@ -15,7 +15,7 @@ type otx struct {
 
 // CheckOTX counts pulses on otx.alienvault.com to find out whether the ipaddr
 // is malicious.
-func CheckOTX(ipaddr net.IP) (check.Result, error) {
+func CheckOTX(ipaddr net.IP) (check.Result, *check.Error) {
 	apiurl := fmt.Sprintf("https://otx.alienvault.com/api/v1/indicators/IPv4/%s/", ipaddr.String())
 
 	var otx otx
