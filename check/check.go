@@ -1,5 +1,5 @@
 // Package check defines how to check an IP address. It provides types and
-// functions that are useful when writing checks.
+// functions that are useful for writing checks.
 package check
 
 import (
