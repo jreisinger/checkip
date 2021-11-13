@@ -70,7 +70,7 @@ func (rs Results) PrintProbabilityMalicious() {
 		msg += `✅`
 	case rs.probabilityMalicious() <= 0.50:
 		msg += `🤏`
-	default:
+	case rs.probabilityMalicious() > 0.50:
 		msg += `🚫`
 	}
 	fmt.Println(msg)
