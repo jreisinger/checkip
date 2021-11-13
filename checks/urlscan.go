@@ -88,9 +88,14 @@ type urlscanResult struct {
 
 // Strings tells how many scanned URLs are associated with the IP address.
 func (u urlscan) String() string {
-	var urls []string
+	urlCnt := make(map[string]int)
 	for _, r := range u.Results {
-		urls = append(urls, r.Page.URL)
+		urlCnt[r.Page.URL]++
+	}
+
+	var urls []string
+	for url := range urlCnt {
+		urls = append(urls, url)
 	}
 
 	switch len(urls) {
@@ -99,7 +104,7 @@ func (u urlscan) String() string {
 	case 1:
 		return fmt.Sprintf("1 related URL: %s", urls[0])
 	default:
-		return fmt.Sprintf("%d related URLs: %s, ...", len(urls), strings.Join(urls[:3], ", "))
+		return fmt.Sprintf("%d related URLs: %s", len(urls), strings.Join(urls, ", "))
 	}
 }
 
