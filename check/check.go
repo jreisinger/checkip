@@ -29,7 +29,7 @@ type Result struct {
 // Info is some generic information provided by an Info check.
 type Info interface {
 	Summary() string
-	JsonString() (string, error)
+	JsonString() (string, error) // all data in JSON format
 }
 
 // EmptyInfo is returned by checks that don't provide generic information about
