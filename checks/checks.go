@@ -1,5 +1,5 @@
-// Package checks contains functions that check an IP address providing generic
-// and/or security information about it.
+// Package checks contains functions that check an IP address. Checks provide
+// generic and/or security information about the IP address.
 package checks
 
 import "github.com/jreisinger/checkip/check"
