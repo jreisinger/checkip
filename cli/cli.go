@@ -66,12 +66,12 @@ func (rs Results) PrintInfo() {
 func (rs Results) PrintProbabilityMalicious() {
 	msg := fmt.Sprintf("%s\t%.0f%% ", "Malicious", rs.probabilityMalicious()*100)
 	switch {
-	case rs.probabilityMalicious() <= 0.15:
-		msg += `✅`
-	case rs.probabilityMalicious() <= 0.50:
-		msg += `🤏`
-	case rs.probabilityMalicious() > 0.50:
+	case rs.probabilityMalicious() >= 0.50:
 		msg += `🚫`
+	case rs.probabilityMalicious() >= 0.10:
+		msg += `🤏`
+	default:
+		msg += `✅`
 	}
 	fmt.Println(msg)
 }

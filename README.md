@@ -1,6 +1,6 @@
 # checkip
 
-Checkip checks an IP address using various public services. It provides
+Checkip checks an IP address using various free public services. It provides
 generic and security information in a quick and simple way.
 
 <img src="checkip.png" width="800">
@@ -27,6 +27,7 @@ Then create a `$HOME/.checkip.yaml` using your editor of choice
 ABUSEIPDB_API_KEY: aaaaaaaabbbbbbbbccccccccddddddddeeeeeeeeffffffff11111111222222223333333344444444
 MAXMIND_LICENSE_KEY: abcdef1234567890
 SHODAN_API_KEY: aaaabbbbccccddddeeeeffff11112222
+URLSCAN_API_KEY: abcd1234-a123-4567-678z-a2b3c4b5d6e7
 VIRUSTOTAL_API_KEY: aaaaaaaabbbbbbbbccccccccddddddddeeeeeeeeffffffff1111111122222222
 ```
 
