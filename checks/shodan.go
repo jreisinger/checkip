@@ -51,7 +51,7 @@ func (x byPort) Less(i, j int) bool { return x[i].Port < x[j].Port }
 func (x byPort) Swap(i, j int)      { x[i], x[j] = x[j], x[i] }
 
 // Info returns interesting information from the check.
-func (s shodan) String() string {
+func (s shodan) Summary() string {
 	var portInfo []string
 	sort.Sort(byPort(s.Data))
 	for _, d := range s.Data {

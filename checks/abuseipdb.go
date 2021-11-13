@@ -26,7 +26,7 @@ type abuseIPDB struct {
 	LastReportedAt       time.Time     `json:"lastReportedAt"`
 }
 
-func (a abuseIPDB) String() string {
+func (a abuseIPDB) Summary() string {
 	return fmt.Sprintf("domain: %s, usage type: %s", check.Na(a.Domain), check.Na(a.UsageType))
 }
 

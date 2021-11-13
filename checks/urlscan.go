@@ -87,7 +87,7 @@ type urlscanResult struct {
 }
 
 // Strings tells how many scanned URLs are associated with the IP address.
-func (u urlscan) String() string {
+func (u urlscan) Summary() string {
 	urlCnt := make(map[string]int)
 	for _, r := range u.Results {
 		urlCnt[r.Page.URL]++

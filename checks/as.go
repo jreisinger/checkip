@@ -21,7 +21,7 @@ type autonomousSystem struct {
 	CountryCode string `json:"-"`
 }
 
-func (a autonomousSystem) String() string {
+func (a autonomousSystem) Summary() string {
 	return fmt.Sprintf("AS description: %s", check.Na(a.Description))
 }
 

@@ -31,7 +31,7 @@ type virusTotal struct {
 	} `json:"data"`
 }
 
-func (v virusTotal) String() string {
+func (v virusTotal) Summary() string {
 	return fmt.Sprintf("AS onwer: %s, network: %s, SAN: %s", check.Na(v.Data.Attributes.ASowner), check.Na(v.Data.Attributes.Network), check.Na(strings.Join(v.Data.Attributes.LastHTTPScert.Extensions.SAN, ", ")))
 }
 

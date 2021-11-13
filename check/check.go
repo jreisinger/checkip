@@ -28,7 +28,7 @@ type Result struct {
 
 // Info is some generic information provided by an Info check.
 type Info interface {
-	String() string
+	Summary() string
 	JsonString() (string, error)
 }
 
@@ -37,7 +37,7 @@ type Info interface {
 type EmptyInfo struct {
 }
 
-func (EmptyInfo) String() string {
+func (EmptyInfo) Summary() string {
 	return Na("")
 }
 

@@ -57,7 +57,7 @@ func (rs Results) SortByName() {
 func (rs Results) PrintInfo() {
 	for _, r := range rs {
 		if r.Type == "Info" || r.Type == "InfoSec" {
-			fmt.Printf("%-15s %s\n", r.Name, r.Info.String())
+			fmt.Printf("%-15s %s\n", r.Name, r.Info.Summary())
 		}
 	}
 }

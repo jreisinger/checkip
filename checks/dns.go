@@ -13,7 +13,7 @@ type dns struct {
 	Names []string `json:"names"`
 }
 
-func (d dns) String() string {
+func (d dns) Summary() string {
 	msg := "DNS name"
 	if len(d.Names) > 1 {
 		msg += "s"

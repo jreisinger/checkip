@@ -15,7 +15,7 @@ type geo struct {
 	IsoCode string `json:"iso_code"`
 }
 
-func (g geo) String() string {
+func (g geo) Summary() string {
 	return fmt.Sprintf("city: %s, country: %s, ISO code: %s", check.Na(g.City), check.Na(g.Country), check.Na(g.IsoCode))
 }
 
