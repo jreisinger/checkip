@@ -25,7 +25,7 @@ type shodanData []struct {
 }
 
 // CheckShodan gets generic information from https://api.shodan.io.
-func CheckShodan(ipaddr net.IP) (check.Result, *check.Error) {
+func CheckShodan(ipaddr net.IP) (check.Result, error) {
 	apiKey, err := check.GetConfigValue("SHODAN_API_KEY")
 	if err != nil {
 		return check.Result{}, check.NewError(err)

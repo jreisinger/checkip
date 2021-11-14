@@ -12,7 +12,7 @@ type threatCrowd struct {
 
 // CheckThreadCrowd threatcrowd.org to find out whether the ipaddr was voted
 // malicious.
-func CheckThreadCrowd(ipaddr net.IP) (check.Result, *check.Error) {
+func CheckThreadCrowd(ipaddr net.IP) (check.Result, error) {
 	queryParams := map[string]string{
 		"ip": ipaddr.String(),
 	}

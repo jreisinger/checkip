@@ -27,7 +27,7 @@ func (d dns) JsonString() (string, error) {
 }
 
 // CheckDNS does a reverse lookup for a given IP address to get its names.
-func CheckDNS(ipaddr net.IP) (check.Result, *check.Error) {
+func CheckDNS(ipaddr net.IP) (check.Result, error) {
 	names, err := net.LookupAddr(ipaddr.String())
 	if err != nil {
 		return check.Result{}, check.NewError(err)

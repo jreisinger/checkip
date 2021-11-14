@@ -10,7 +10,7 @@ import (
 	"github.com/jreisinger/checkip/check"
 )
 
-func CheckPing(ipaddr net.IP) (check.Result, *check.Error) {
+func CheckPing(ipaddr net.IP) (check.Result, error) {
 	pinger, err := ping.NewPinger(ipaddr.String())
 	if err != nil {
 		return check.Result{}, check.NewError(err)

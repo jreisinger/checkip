@@ -10,7 +10,7 @@ import (
 )
 
 // CheckBlockList searches the ipaddr in http://api.blocklist.de.
-func CheckBlockList(ipddr net.IP) (check.Result, *check.Error) {
+func CheckBlockList(ipddr net.IP) (check.Result, error) {
 	url := fmt.Sprintf("http://api.blocklist.de/api.php?ip=%s&start=1", ipddr)
 
 	resp, err := check.DefaultHttpClient.Get(url, map[string]string{}, map[string]string{})

@@ -16,7 +16,7 @@ const (
 )
 
 // Check checks an IP address providing generic and/or security information.
-type Check func(ipaddr net.IP) (Result, *Error)
+type Check func(ipaddr net.IP) (Result, error)
 
 // Result is the results of a check.
 type Result struct {
