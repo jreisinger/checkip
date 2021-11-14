@@ -14,6 +14,7 @@ var Default = []check.Check{
 	CheckGeo,
 	CheckIPSum,
 	CheckOTX,
+	CheckPing,
 	CheckShodan,
 	CheckThreadCrowd,
 	CheckUrlscan,
