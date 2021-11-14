@@ -14,7 +14,7 @@ type dns struct {
 }
 
 func (d dns) Summary() string {
-	msg := "DNS name"
+	msg := "name"
 	if len(d.Names) > 1 {
 		msg += "s"
 	}
@@ -28,15 +28,13 @@ func (d dns) JsonString() (string, error) {
 
 // CheckDNS does a reverse lookup for a given IP address to get its names.
 func CheckDNS(ipaddr net.IP) (check.Result, *check.Error) {
-	// NOTE: We are ignoring error. It says: "nodename nor servname
-	// provided, or not known" if there is no DNS name for the IP address.
-	names, _ := net.LookupAddr(ipaddr.String())
-	// if err != nil {
-	// 	return check.Result{}, check.NewError(err)
-	// }
+	names, err := net.LookupAddr(ipaddr.String())
+	if err != nil {
+		return check.Result{}, check.NewError(err)
+	}
 
 	return check.Result{
-		Name: "net.LookupAddr",
+		Name: "DNS",
 		Type: check.TypeInfo,
 		Info: dns{Names: names},
 	}, nil
