@@ -6,14 +6,28 @@ import (
 	"net"
 )
 
-// Type is the type of a check.
-type Type int
-
 const (
 	TypeInfo    Type = iota // provides generic information about the IP address
 	TypeSec                 // says whether the IP address is considered malicious
 	TypeInfoSec             // provides both generic and security information about the IP address
 )
+
+// Type is the type of a check.
+type Type int
+
+// String returns the name of the check type: Info, Sec or InfoSec.
+func (t Type) String() string {
+	switch t {
+	case TypeInfo:
+		return "Info"
+	case TypeSec:
+		return "Sec"
+	case TypeInfoSec:
+		return "InfoSec"
+	default:
+		return "Unknown check type"
+	}
+}
 
 // Check checks an IP address providing generic and/or security information.
 type Check func(ipaddr net.IP) (Result, error)
