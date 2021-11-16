@@ -26,7 +26,7 @@ func CheckPing(ipaddr net.IP) (check.Result, error) {
 
 	return check.Result{
 		Name:            "ping",
-		Type:            "Info",
+		Type:            check.TypeInfo,
 		Info:            stats(*ps),
 		IPaddrMalicious: false,
 	}, nil

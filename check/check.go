@@ -7,12 +7,12 @@ import (
 )
 
 // Type is the type of a check.
-type Type string
+type Type int
 
 const (
-	TypeInfo    Type = "Info" // provides generic information about the IP address
-	TypeSec     Type = "Sec"  // says whether the IP address is considered malicious
-	TypeInfoSec Type = "InfoSec"
+	TypeInfo    Type = iota // provides generic information about the IP address
+	TypeSec                 // says whether the IP address is considered malicious
+	TypeInfoSec             // provides both generic and security information about the IP address
 )
 
 // Check checks an IP address providing generic and/or security information.

@@ -56,7 +56,7 @@ func (rs Results) SortByName() {
 // PrintInfo prints results from Info and InfoSec checkers.
 func (rs Results) PrintInfo() {
 	for _, r := range rs {
-		if r.Type == "Info" || r.Type == "InfoSec" {
+		if r.Type == check.TypeInfo || r.Type == check.TypeInfoSec {
 			fmt.Printf("%-15s %s\n", r.Name, r.Info.Summary())
 		}
 	}
@@ -79,7 +79,7 @@ func (rs Results) PrintProbabilityMalicious() {
 func (rs Results) probabilityMalicious() float64 {
 	var malicious, totalSec float64
 	for _, r := range rs {
-		if r.Type == "Sec" || r.Type == "InfoSec" {
+		if r.Type == check.TypeSec || r.Type == check.TypeInfoSec {
 			totalSec++
 			if r.IPaddrMalicious {
 				malicious++
