@@ -62,15 +62,9 @@ type urlscan struct {
 	Results []struct {
 		IndexedAt time.Time `json:"indexedAt"`
 		Page      struct {
-			Country  string `json:"country"`
-			Server   string `json:"server"`
-			Domain   string `json:"domain"`
 			IP       string `json:"ip"`
 			MimeType string `json:"mimeType"`
-			Asnname  string `json:"asnname"`
-			Asn      string `json:"asn"`
 			URL      string `json:"url"`
-			Ptr      string `json:"ptr"`
 			Status   string `json:"status"`
 		} `json:"page"`
 		Result     string `json:"result"`
