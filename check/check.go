@@ -34,10 +34,10 @@ type Check func(ipaddr net.IP) (Result, error)
 
 // Result is the results of a check.
 type Result struct {
-	Name            string // check name
-	Type            Type   // check type
-	Info            Info   // provided by Info check
-	IPaddrMalicious bool   // provided by Sec check
+	Name      string `json:"name"`      // check name
+	Type      Type   `json:"type"`      // check type
+	Info      Info   `json:"info"`      // provided by TypeInfo check
+	Malicious bool   `json:"malicious"` // provided by TypeSec check
 }
 
 // Info is some generic information provided by an Info check.

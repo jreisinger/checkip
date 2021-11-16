@@ -51,10 +51,10 @@ func CheckUrlscan(ipaddr net.IP) (check.Result, error) {
 	}
 
 	return check.Result{
-		Name:            "urlscan.io",
-		Type:            check.TypeInfoSec,
-		Info:            u,
-		IPaddrMalicious: float64(maliciousVerdicts)/float64(len(u.Results)) > 0.1,
+		Name:      "urlscan.io",
+		Type:      check.TypeInfoSec,
+		Info:      u,
+		Malicious: float64(maliciousVerdicts)/float64(len(u.Results)) > 0.1,
 	}, nil
 }
 

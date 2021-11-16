@@ -63,9 +63,9 @@ func CheckAbuseIPDB(ipaddr net.IP) (check.Result, error) {
 	}
 
 	return check.Result{
-		Name:            "abuseipdb.com",
-		Type:            check.TypeInfoSec,
-		Info:            data.AbuseIPDB,
-		IPaddrMalicious: data.AbuseIPDB.TotalReports > 0 && !data.AbuseIPDB.IsWhitelisted && data.AbuseIPDB.AbuseConfidenceScore > 25,
+		Name:      "abuseipdb.com",
+		Type:      check.TypeInfoSec,
+		Info:      data.AbuseIPDB,
+		Malicious: data.AbuseIPDB.TotalReports > 0 && !data.AbuseIPDB.IsWhitelisted && data.AbuseIPDB.AbuseConfidenceScore > 25,
 	}, nil
 }

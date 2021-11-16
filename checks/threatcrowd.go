@@ -27,9 +27,9 @@ func CheckThreadCrowd(ipaddr net.IP) (check.Result, error) {
 	}
 
 	return check.Result{
-		Name:            "threatcrowd.org",
-		Type:            check.TypeSec,
-		Info:            check.EmptyInfo{},
-		IPaddrMalicious: threadCrowd.Votes < 0,
+		Name:      "threatcrowd.org",
+		Type:      check.TypeSec,
+		Info:      check.EmptyInfo{},
+		Malicious: threadCrowd.Votes < 0,
 	}, nil
 }

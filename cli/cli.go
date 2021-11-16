@@ -81,7 +81,7 @@ func (rs Results) probabilityMalicious() float64 {
 	for _, r := range rs {
 		if r.Type == check.TypeSec || r.Type == check.TypeInfoSec {
 			totalSec++
-			if r.IPaddrMalicious {
+			if r.Malicious {
 				malicious++
 			}
 		}
