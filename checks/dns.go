@@ -34,7 +34,7 @@ func CheckDNS(ipaddr net.IP) (check.Result, error) {
 	}
 
 	return check.Result{
-		Name: "DNS",
+		Name: "dns",
 		Type: check.TypeInfo,
 		Info: dns{Names: names},
 	}, nil
