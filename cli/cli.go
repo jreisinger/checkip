@@ -41,8 +41,13 @@ func (rs Results) PrintJSON() {
 	if len(rs) == 0 {
 		return
 	}
+	out := struct {
+		Check Results `json:"checks"`
+	}{
+		rs,
+	}
 	enc := json.NewEncoder(os.Stdout)
-	if err := enc.Encode(rs); err != nil {
+	if err := enc.Encode(out); err != nil {
 		log.Fatal(err)
 	}
 }
