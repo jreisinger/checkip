@@ -1,7 +1,8 @@
 # checkip
 
-Checkip checks an IP address using various free public services. It provides
-generic and security information in a quick and simple way.
+Checkip provides generic and security information about an IP address in a
+quick and simple way. It uses various free public services to do so. It's easy
+to extend.
 
 <img src="checkip.png" width="800">
 
