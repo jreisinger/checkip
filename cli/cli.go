@@ -73,7 +73,7 @@ func (rs Results) PrintProbabilityMalicious() {
 	switch {
 	case rs.probabilityMalicious() >= 0.50:
 		msg += `🚫`
-	case rs.probabilityMalicious() >= 0.10:
+	case rs.probabilityMalicious() >= 0.15:
 		msg += `🤏`
 	default:
 		msg += `✅`
