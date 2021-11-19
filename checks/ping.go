@@ -15,7 +15,7 @@ func CheckPing(ipaddr net.IP) (check.Result, error) {
 	if err != nil {
 		return check.Result{}, check.NewError(err)
 	}
-	pinger.Count = 3
+	pinger.Count = 5
 	pinger.Timeout = time.Second * 5
 	err = pinger.Run() // Blocks until finished.
 	if err != nil {

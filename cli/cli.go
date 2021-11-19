@@ -69,7 +69,7 @@ func (rs Results) PrintInfo() {
 
 // PrintProbabilityMalicious prints the probability the IP address is malicious.
 func (rs Results) PrintProbabilityMalicious() {
-	msg := fmt.Sprintf("%s\t%.0f%% ", "Malicious", rs.probabilityMalicious()*100)
+	msg := fmt.Sprintf("%-15s %.0f%% ", "Malicious", rs.probabilityMalicious()*100)
 	switch {
 	case rs.probabilityMalicious() >= 0.50:
 		msg += `🚫`
