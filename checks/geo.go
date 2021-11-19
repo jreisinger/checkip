@@ -16,7 +16,7 @@ type geo struct {
 }
 
 func (g geo) Summary() string {
-	return fmt.Sprintf("city: %s, country: %s, ISO code: %s", check.Na(g.City), check.Na(g.Country), check.Na(g.IsoCode))
+	return fmt.Sprintf("city: %s, country: %s (%s)", check.Na(g.City), check.Na(g.Country), check.Na(g.IsoCode))
 }
 
 func (g geo) JsonString() (string, error) {
