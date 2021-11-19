@@ -10,10 +10,14 @@ import (
 )
 
 // DefaultHttpClient is reused by checks that make HTTP requests.
-var DefaultHttpClient = HttpClient{client: &http.Client{Timeout: 5 * time.Second}}
+var DefaultHttpClient = NewHttpClient(&http.Client{Timeout: 5 * time.Second})
 
 type HttpClient struct {
 	client *http.Client
+}
+
+func NewHttpClient(client *http.Client) HttpClient {
+	return HttpClient{client: client}
 }
 
 func (c HttpClient) Get(apiUrl string, headers map[string]string, queryParams map[string]string) ([]byte, error) {

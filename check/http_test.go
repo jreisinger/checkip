@@ -19,7 +19,7 @@ func TestHttpClient_GetJson(t *testing.T) {
 		}))
 		defer server.Close()
 
-		client := HttpClient{client: server.Client()}
+		client := NewHttpClient(server.Client())
 		var response map[string]string
 		err := client.GetJson(server.URL, nil, nil, &response)
 
@@ -34,7 +34,7 @@ func TestHttpClient_GetJson(t *testing.T) {
 		}))
 		defer server.Close()
 
-		client := HttpClient{client: server.Client()}
+		client := NewHttpClient(server.Client())
 		var response map[string]string
 		err := client.GetJson(server.URL, nil, nil, &response)
 
@@ -48,7 +48,7 @@ func TestHttpClient_GetJson(t *testing.T) {
 		}))
 		defer server.Close()
 
-		client := HttpClient{client: server.Client()}
+		client := NewHttpClient(server.Client())
 		var response map[string]string
 		err := client.GetJson(server.URL, nil, nil, &response)
 

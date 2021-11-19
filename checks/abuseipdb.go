@@ -12,6 +12,8 @@ import (
 // Only return reports within the last x amount of days. Default is 30.
 const abuseIPDBMaxAgeInDays = "90"
 
+var abuseIPDBUrl = "https://api.abuseipdb.com/api/v2/check"
+
 type abuseIPDB struct {
 	IsWhitelisted        bool          `json:"isWhitelisted"`
 	AbuseConfidenceScore int           `json:"abuseConfidenceScore"`
@@ -30,8 +32,8 @@ func (a abuseIPDB) Summary() string {
 	return fmt.Sprintf("domain: %s, usage type: %s", check.Na(a.Domain), check.Na(a.UsageType))
 }
 
-func (d abuseIPDB) JsonString() (string, error) {
-	b, err := json.Marshal(d)
+func (a abuseIPDB) JsonString() (string, error) {
+	b, err := json.Marshal(a)
 	return string(b), err
 }
 
@@ -58,7 +60,7 @@ func CheckAbuseIPDB(ipaddr net.IP) (check.Result, error) {
 		AbuseIPDB abuseIPDB `json:"data"`
 	}
 	// docs.abuseipdb.com/#check-endpoint
-	if err := check.DefaultHttpClient.GetJson("https://api.abuseipdb.com/api/v2/check", headers, queryParams, &data); err != nil {
+	if err := check.DefaultHttpClient.GetJson(abuseIPDBUrl, headers, queryParams, &data); err != nil {
 		return check.Result{}, check.NewError(err)
 	}
 
