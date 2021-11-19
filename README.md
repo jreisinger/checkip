@@ -5,7 +5,7 @@ quick and simple way. It uses various free public services to do so. It's easy
 to extend.
 
 ```
-checkip 91.228.166.47
+$ checkip 91.228.166.47
 abuseipdb.com   domain: eset.sk, usage type: Data Center/Web Hosting/Transit
 dns             name: skh1-webredir01-v.eset.com.
 iptoasn.com     AS description: ESET-AS
@@ -15,7 +15,7 @@ shodan.io       OS: n/a, 2 open ports: tcp/80 (nginx), tcp/443 (nginx)
 urlscan.io      0 related URLs
 virustotal.com  network: 91.228.164.0/22, SAN: www.eset.com, eset.com
 Malicious       0% ✅
-checkip 209.141.33.65
+$ checkip 209.141.33.65
 abuseipdb.com   domain: buyvm.net, usage type: Data Center/Web Hosting/Transit
 iptoasn.com     AS description: PONYNET - FranTech Solutions
 maxmind.com     city: Las Vegas, country: United States, ISO code: US
@@ -23,7 +23,7 @@ ping            0% packet loss, sent 3, recv 3, avg round-trip 157 ms
 urlscan.io      0 related URLs
 virustotal.com  network: 209.141.32.0/19, SAN: 2020201.tk
 Malicious       25% 🤏
-checkip 218.92.0.158
+$ checkip 218.92.0.158
 abuseipdb.com   domain: chinatelecom.com.cn, usage type: n/a
 iptoasn.com     AS description: CHINANET-BACKBONE No.31,Jin-rong Street
 maxmind.com     city: Shanghai, country: China, ISO code: CN
