@@ -12,7 +12,7 @@ import (
 
 // GetConfigValue tries to get value for key first from an environment variable
 // then from a configuration file at $HOME/.checkip.yaml.
-func GetConfigValue(key string) (string, error) {
+var GetConfigValue = func(key string) (string, error) {
 	var v string
 
 	// Try to get the key from environment.

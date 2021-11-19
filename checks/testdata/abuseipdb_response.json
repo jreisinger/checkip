@@ -1,0 +1,31 @@
+{
+  "data": {
+    "ipAddress": "118.25.6.39",
+    "isPublic": true,
+    "ipVersion": 4,
+    "isWhitelisted": false,
+    "abuseConfidenceScore": 100,
+    "countryCode": "CN",
+    "countryName": "China",
+    "usageType": "Data Center/Web Hosting/Transit",
+    "isp": "Tencent Cloud Computing (Beijing) Co. Ltd",
+    "domain": "tencent.com",
+    "hostnames": [],
+    "totalReports": 1,
+    "numDistinctUsers": 1,
+    "lastReportedAt": "2018-12-20T20:55:14+00:00",
+    "reports": [
+      {
+        "reportedAt": "2018-12-20T20:55:14+00:00",
+        "comment": "Dec 20 20:55:14 srv206 sshd[13937]: Invalid user oracle from 118.25.6.39",
+        "categories": [
+          18,
+          22
+        ],
+        "reporterId": 1,
+        "reporterCountryCode": "US",
+        "reporterCountryName": "United States"
+      }
+    ]
+  }
+}
