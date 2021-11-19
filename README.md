@@ -10,24 +10,24 @@ abuseipdb.com   domain: eset.sk, usage type: Data Center/Web Hosting/Transit
 dns             name: skh1-webredir01-v.eset.com.
 iptoasn.com     AS description: ESET-AS
 maxmind.com     city: Bratislava, country: Slovakia (SK)
-ping            0% packet loss, sent 5, recv 5, avg round-trip 11 ms
+ping            0% packet loss, sent 5, recv 5, avg round-trip 9 ms
 shodan.io       OS: n/a, 2 open ports: tcp/80 (nginx), tcp/443 (nginx)
 urlscan.io      0 related URLs
 virustotal.com  network: 91.228.164.0/22, SAN: www.eset.com, eset.com
 Malicious       0% ✅
 $ checkip 209.141.33.65
-checkip: lookup 209.141.33.65: nodename nor servname provided, or not known
+checkip: CheckDNS: lookup 209.141.33.65: nodename nor servname provided, or not known
 abuseipdb.com   domain: buyvm.net, usage type: Data Center/Web Hosting/Transit
 iptoasn.com     AS description: PONYNET - FranTech Solutions
 maxmind.com     city: Las Vegas, country: United States (US)
-ping            0% packet loss, sent 5, recv 5, avg round-trip 166 ms
+ping            0% packet loss, sent 5, recv 5, avg round-trip 159 ms
 shodan.io       OS: Debian, 2 open ports: tcp/22 (OpenSSH, 8.4p1 Debian 5), tcp/8443
 urlscan.io      0 related URLs
 virustotal.com  network: 209.141.32.0/19, SAN: 2020201.tk
 Malicious       25% 🤏
 $ checkip 218.92.0.158
-checkip: lookup 218.92.0.158: nodename nor servname provided, or not known
-checkip: GET https://api.shodan.io/shodan/host/218.92.0.158?key=REDACTED: 404 Not Found
+checkip: CheckDNS: lookup 218.92.0.158: nodename nor servname provided, or not known
+checkip: CheckShodan: GET https://api.shodan.io/shodan/host/218.92.0.158?key=REDACTED: 404 Not Found
 abuseipdb.com   domain: chinatelecom.com.cn, usage type: n/a
 iptoasn.com     AS description: CHINANET-BACKBONE No.31,Jin-rong Street
 maxmind.com     city: Shanghai, country: China (CN)

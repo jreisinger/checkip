@@ -1,6 +1,10 @@
 package check
 
-import "regexp"
+import (
+	"regexp"
+	"runtime"
+	"strings"
+)
 
 // Error is an error returned by a check.
 type Error struct {
@@ -9,7 +13,15 @@ type Error struct {
 }
 
 func NewError(err error) *Error {
-	return &Error{err: err, ErrString: redactSecrets(err.Error())}
+	callerName := "unknownCaller"
+	pc, _, _, ok := runtime.Caller(1)
+	details := runtime.FuncForPC(pc)
+	if ok && details != nil {
+		name := details.Name()
+		parts := strings.Split(name, ".")
+		callerName = parts[len(parts)-1]
+	}
+	return &Error{err: err, ErrString: callerName + ": " + redactSecrets(err.Error())}
 }
 
 func (e *Error) Error() string {
