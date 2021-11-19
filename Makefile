@@ -1,5 +1,6 @@
 test:
-	go test ./...
+	go test -v -race -cover ./...
+	go vet
 
 install:
 	go install
