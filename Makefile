@@ -2,7 +2,7 @@ test:
 	go test -v -race -cover ./...
 	go vet
 
-install:
+install: test
 	go install
 
 run: install
