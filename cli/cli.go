@@ -13,6 +13,7 @@ import (
 	"github.com/jreisinger/checkip/check"
 )
 
+// Run runs checks concurrently against the ippaddr.
 func Run(checks []check.Check, ipaddr net.IP) (Results, []error) {
 	var results Results
 	var errors []error
@@ -25,7 +26,6 @@ func Run(checks []check.Check, ipaddr net.IP) (Results, []error) {
 			r, err := c(ipaddr)
 			if err != nil {
 				errors = append(errors, err)
-				// log.Printf("check failed: %v", err)
 				return
 			}
 			results = append(results, r)
@@ -37,6 +37,7 @@ func Run(checks []check.Check, ipaddr net.IP) (Results, []error) {
 
 type Results []check.Result
 
+// PrintJSON prints all results in JSON.
 func (rs Results) PrintJSON() {
 	if len(rs) == 0 {
 		return
@@ -58,7 +59,7 @@ func (rs Results) SortByName() {
 	})
 }
 
-// PrintInfo prints results from Info and InfoSec checkers.
+// PrintInfo prints summary results from Info and InfoSec checkers.
 func (rs Results) PrintInfo() {
 	for _, r := range rs {
 		if r.Type == check.TypeInfo || r.Type == check.TypeInfoSec {
