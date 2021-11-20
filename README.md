@@ -1,8 +1,7 @@
 # checkip
 
 Checkip provides generic and security information about an IP address in a
-quick and simple way. It uses various free public services to do so. It's easy
-to extend.
+quick and simple way. It uses various free public services to do so.
 
 ```
 $ checkip 91.228.166.47
@@ -37,7 +36,7 @@ virustotal.com  network: 218.92.0.0/16, SAN: n/a
 Malicious       50% 🚫
 ```
 
-The CLI tool supports also JSON output:
+The CLI tool also supports JSON output:
 
 ```
 checkip -j 118.25.6.39 | jq -r '.checks[] | select(.type == 1 or .type == 2) | "\(.malicious)\t\(.name)"' | sort
@@ -71,5 +70,6 @@ You can also use environment variables with the same names.
 
 ## Development
 
-If you want to add a new way to check an IP address, just provide a function
-of type [Check](https://pkg.go.dev/github.com/jreisinger/checkip/check#Check).
+Checkip is easy to extend. If you want to add a new way to check an IP address,
+just provide a function of type
+[Check](https://pkg.go.dev/github.com/jreisinger/checkip/check#Check).
