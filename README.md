@@ -36,7 +36,7 @@ virustotal.com  network: 218.92.0.0/16, SAN: n/a
 Malicious       50% 🚫
 ```
 
-The CLI tool also supports JSON output:
+The CLI tool also supports JSON output
 
 ```
 checkip -j 118.25.6.39 | jq -r '.checks[] | select(.type == 1 or .type == 2) | "\(.malicious)\t\(.name)"' | sort
@@ -71,5 +71,5 @@ You can also use environment variables with the same names.
 ## Development
 
 Checkip is easy to extend. If you want to add a new way to check an IP address,
-just provide a function of type
+just write a function of type
 [Check](https://pkg.go.dev/github.com/jreisinger/checkip/check#Check).
