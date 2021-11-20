@@ -27,6 +27,18 @@ func TestCheckOTX(t *testing.T) {
 		assert.Equal(t, true, result.Malicious)
 		assert.Equal(t, check.EmptyInfo{}, result.Info)
 	})
+
+	t.Run("given non 2xx response then error is returned", func(t *testing.T) {
+		handlerFn := http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
+			rw.WriteHeader(http.StatusInternalServerError)
+		})
+
+		testUrl := SetMockHttpClient(t, handlerFn)
+		setOTXUrl(t, testUrl)
+
+		_, err := CheckOTX(net.ParseIP("118.25.6.39"))
+		require.Error(t, err)
+	})
 }
 
 // --- test helpers ---
