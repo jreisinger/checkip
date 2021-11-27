@@ -1,7 +1,7 @@
 # checkip
 
 Checkip provides generic and security information about an IP address in a
-quick and simple way. It uses various free public services to do so.
+quick way. It uses various free public services to do so.
 
 ```
 $ checkip 91.228.166.47
