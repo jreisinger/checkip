@@ -35,8 +35,9 @@ Malicious       50% 🚫
 The CLI tool also supports JSON output
 
 ```
+checkip -j 118.25.6.39 | \
 # select only Sec (1) or InfoSec (2) check types
-checkip -j 118.25.6.39 | jq -r '.checks[] | select(.type == 1 or .type == 2) | "\(.malicious)\t\(.name)"' | sort
+jq -r '.checks[] | select(.type == 1 or .type == 2) | "\(.malicious)\t\(.name)"'
 ```
 
 ## Installation and configuration
