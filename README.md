@@ -32,7 +32,7 @@ virustotal.com  network: 218.92.0.0/16, SAN: n/a
 Malicious       50% 🚫
 ```
 
-The CLI tool also supports JSON output
+The CLI tool also supports JSON output:
 
 ```
 checkip -j 118.25.6.39 | \
