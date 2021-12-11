@@ -7,9 +7,9 @@ import (
 )
 
 const (
-	TypeInfo    Type = iota // provides generic information about the IP address
-	TypeSec                 // says whether the IP address is considered malicious
-	TypeInfoSec             // provides both generic and security information about the IP address
+	TypeInfo    Type = iota // generic information about the IP address
+	TypeSec                 // whether the IP address is considered malicious
+	TypeInfoSec             // both of the above
 )
 
 // Type is the type of a check.
