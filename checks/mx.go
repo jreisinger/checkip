@@ -2,7 +2,6 @@ package checks
 
 import (
 	"encoding/json"
-	"log"
 	"net"
 	"strings"
 
@@ -41,13 +40,19 @@ func CheckMX(ipaddr net.IP) (check.Result, error) {
 
 	// Enrich names with a domain name from AbuseIPDB.
 	// [www.csh.ac.at. csh.ac.at.] = > [www.csh.ac.at. csh.ac.at. aco.net]
-	r, _ := CheckAbuseIPDB(ipaddr) // NOTE: ignoring error
-	j, _ := r.Info.JsonString()
+	r, err := CheckAbuseIPDB(ipaddr)
+	if err != nil {
+		return check.Result{}, check.NewError(err)
+	}
+	j, err := r.Info.JsonString()
+	if err != nil {
+		return check.Result{}, check.NewError(err)
+	}
 	sr := strings.NewReader(j)
 	decoder := json.NewDecoder(sr)
 	var a abuseIPDB
 	if err := decoder.Decode(&a); err != nil {
-		log.Fatal(err)
+		return check.Result{}, check.NewError(err)
 	}
 	names = append(names, a.Domain)
 
