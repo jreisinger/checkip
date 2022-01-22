@@ -63,14 +63,14 @@ func (rs Results) SortByName() {
 func (rs Results) PrintInfo() {
 	for _, r := range rs {
 		if r.Type == check.TypeInfo || r.Type == check.TypeInfoSec {
-			fmt.Printf("%-15s --> %s\n", r.Name, r.Info.Summary())
+			fmt.Printf("%-14s --> %s\n", r.Name, r.Info.Summary())
 		}
 	}
 }
 
 // PrintProbabilityMalicious prints the probability the IP address is malicious.
 func (rs Results) PrintProbabilityMalicious() {
-	msg := fmt.Sprintf("%-15s --> %.0f%% ", "Malicious", rs.probabilityMalicious()*100)
+	msg := fmt.Sprintf("%-14s --> %.0f%% ", "Malicious", rs.probabilityMalicious()*100)
 	switch {
 	case rs.probabilityMalicious() >= 0.50:
 		msg += `🚫`
