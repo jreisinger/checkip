@@ -6,26 +6,30 @@ quick way. It uses various free public services to do so.
 ```
 $ checkip 91.228.166.47
 abuseipdb.com   domain: eset.sk, usage type: Data Center/Web Hosting/Transit
-dns             name: skh1-webredir01-v.eset.com.
+dns mx          eset.sk: a.mx.eset.com, b.mx.eset.com
+dns name        skh1-webredir01-v.eset.com
 iptoasn.com     AS description: ESET-AS
 maxmind.com     city: Bratislava, country: Slovakia (SK)
-ping            0% packet loss, sent 5, recv 5, avg round-trip 11 ms
+ping            0% packet loss, sent 5, recv 5, avg round-trip 9 ms
 shodan.io       OS: n/a, 2 open ports: tcp/80 (nginx), tcp/443 (nginx)
 urlscan.io      0 related URLs
 virustotal.com  network: 91.228.164.0/22, SAN: www.eset.com, eset.com
 Malicious       0% ✅
 $ checkip 209.141.33.65 2> /dev/null
 abuseipdb.com   domain: buyvm.net, usage type: Data Center/Web Hosting/Transit
+dns mx          buyvm.net: mail.frantech.ca
 iptoasn.com     AS description: PONYNET - FranTech Solutions
 maxmind.com     city: Las Vegas, country: United States (US)
-ping            0% packet loss, sent 5, recv 5, avg round-trip 158 ms
+ping            0% packet loss, sent 5, recv 5, avg round-trip 164 ms
+shodan.io       OS: Debian, 1 open port: tcp/22 (OpenSSH, 8.4p1 Debian 5)
 urlscan.io      0 related URLs
 virustotal.com  network: 209.141.32.0/19, SAN: 2020201.tk
 Malicious       25% 🤏
 $ checkip 218.92.0.158 2> /dev/null
 abuseipdb.com   domain: chinatelecom.com.cn, usage type: n/a
+dns mx          chinatelecom.com.cn: testmail.chinatelecom.com.cn
 iptoasn.com     AS description: CHINANET-BACKBONE No.31,Jin-rong Street
-maxmind.com     city: Shanghai, country: China (CN)
+maxmind.com     city: Lianyungang, country: China (CN)
 ping            100% packet loss, sent 5, recv 0, avg round-trip 0 ms
 urlscan.io      0 related URLs
 virustotal.com  network: 218.92.0.0/16, SAN: n/a
@@ -70,10 +74,14 @@ You can also use environment variables with the same names.
 
 Checkip is easy to extend. If you want to add a new way to check an IP address,
 just write a function of type
-[Check](https://pkg.go.dev/github.com/jreisinger/checkip/check#Check). Then:
+[Check](https://pkg.go.dev/github.com/jreisinger/checkip/check#Check). Add the
+function to `checks.Default`
+[variable](https://pkg.go.dev/github.com/jreisinger/checkip/checks#pkg-variables).
+Then:
 
 ```
 make run
+
 git tag -a v0.16.2 -m "improve docs"
 git push -u origin --tags
 ```
