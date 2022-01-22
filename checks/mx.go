@@ -3,6 +3,7 @@ package checks
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"net"
 	"strings"
 
@@ -10,7 +11,7 @@ import (
 )
 
 type MX struct {
-	Servers []string `json:names`
+	Servers map[string][]string `json:"servers"`
 }
 
 func (m MX) Summary() string {
@@ -18,7 +19,11 @@ func (m MX) Summary() string {
 	if len(m.Servers) > 1 {
 		msg += "s"
 	}
-	return fmt.Sprintf("%s: %s", msg, check.Na(strings.Join(m.Servers, ", ")))
+	var s string
+	for domain := range m.Servers {
+		s += domain + " => " + strings.Join(m.Servers[domain], ", ")
+	}
+	return fmt.Sprintf("%s: %s", msg, check.Na(s))
 }
 
 func (m MX) JsonString() (string, error) {
@@ -27,29 +32,43 @@ func (m MX) JsonString() (string, error) {
 }
 
 func CheckMX(ipaddr net.IP) (check.Result, error) {
-	names, err := net.LookupAddr(ipaddr.String())
-	if err != nil {
-		return check.Result{}, check.NewError(err)
-	}
+	names, _ := net.LookupAddr(ipaddr.String()) // NOTE: ignoring error
 
-	// Enrinch names with a name with 'www.' removed.
+	// Enrich names with a name with 'www.' removed.
 	// [www.csh.ac.at.] => [www.csh.ac.at. csh.ac.at.]
 	for _, n := range names {
 		t := strings.TrimPrefix(n, "www.")
 		names = append(names, t)
 	}
 
+	// Enrich names with a domain name from AbuseIPDB.
+	// [www.csh.ac.at. csh.ac.at.] = > [www.csh.ac.at. csh.ac.at. aco.net]
+	r, _ := CheckAbuseIPDB(ipaddr) // NOTE: ignoring error
+	j, _ := r.Info.JsonString()
+	sr := strings.NewReader(j)
+	decoder := json.NewDecoder(sr)
+	var a abuseIPDB
+	if err := decoder.Decode(&a); err != nil {
+		log.Fatal(err)
+	}
+	names = append(names, a.Domain)
+
 	var mx MX
 
 	for _, n := range names {
+		var mxRecords2 []string
 		mxRecords, _ := net.LookupMX(n) // NOTE: ingoring error
 		for _, r := range mxRecords {
-			mx.Servers = append(mx.Servers, r.Host)
+			mxRecords2 = append(mxRecords2, r.Host)
 		}
+		if _, ok := mx.Servers[n]; !ok {
+			mx.Servers = make(map[string][]string)
+		}
+		mx.Servers[n] = mxRecords2
 	}
 
 	return check.Result{
-		Name: "mx",
+		Name: "dns mx",
 		Type: check.TypeInfo,
 		Info: mx,
 	}, nil
