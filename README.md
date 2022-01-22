@@ -70,10 +70,14 @@ You can also use environment variables with the same names.
 
 Checkip is easy to extend. If you want to add a new way to check an IP address,
 just write a function of type
-[Check](https://pkg.go.dev/github.com/jreisinger/checkip/check#Check). Then:
+[Check](https://pkg.go.dev/github.com/jreisinger/checkip/check#Check). Add the
+function to `checks.Default`
+[variable](https://pkg.go.dev/github.com/jreisinger/checkip/checks#pkg-variables).
+Then:
 
 ```
 make run
+
 git tag -a v0.16.2 -m "improve docs"
 git push -u origin --tags
 ```

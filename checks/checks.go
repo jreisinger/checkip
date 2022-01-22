@@ -13,6 +13,7 @@ var Default = []check.Check{
 	CheckDNS,
 	CheckGeo,
 	CheckIPSum,
+	CheckMX,
 	CheckOTX,
 	CheckPing,
 	CheckShodan,
