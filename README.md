@@ -55,7 +55,7 @@ make install
 ```
 
 or download a [release](https://github.com/jreisinger/checkip/releases)
-binary for your system and architecture.
+binary (from under "Assets") for your system and architecture.
 
 For some checks to work you need to register and get an API (LICENSE) key.
 Then create a `$HOME/.checkip.yaml` using your editor of choice
