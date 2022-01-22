@@ -82,6 +82,7 @@ Then:
 ```
 make run
 
+git tag | sort -V
 git tag -a v0.16.2 -m "improve docs"
 git push -u origin --tags
 ```
