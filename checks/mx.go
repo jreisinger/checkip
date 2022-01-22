@@ -2,7 +2,6 @@ package checks
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"net"
 	"strings"
@@ -15,15 +14,14 @@ type MX struct {
 }
 
 func (m MX) Summary() string {
-	msg := "mail server"
-	if len(m.Servers) > 1 {
-		msg += "s"
-	}
 	var s string
-	for domain := range m.Servers {
-		s += domain + " => " + strings.Join(m.Servers[domain], ", ")
+	for domain, mxRecords := range m.Servers {
+		for i := range mxRecords {
+			mxRecords[i] = strings.TrimSuffix(mxRecords[i], ".")
+		}
+		s += domain + " => " + strings.Join(mxRecords, ", ")
 	}
-	return fmt.Sprintf("%s: %s", msg, check.Na(s))
+	return check.Na(s)
 }
 
 func (m MX) JsonString() (string, error) {
