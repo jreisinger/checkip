@@ -19,7 +19,7 @@ func (mx MX) Summary() string {
 		for i := range mxRecords {
 			mxRecords[i] = strings.TrimSuffix(mxRecords[i], ".")
 		}
-		s += domain + " => " + strings.Join(mxRecords, ", ")
+		s += domain + ": " + strings.Join(mxRecords, ", ")
 	}
 	return check.Na(s)
 }
