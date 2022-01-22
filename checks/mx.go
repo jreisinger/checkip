@@ -10,12 +10,12 @@ import (
 )
 
 type MX struct {
-	Servers map[string][]string `json:"servers"`
+	Records map[string][]string `json:"records"` // domain => MX records
 }
 
-func (m MX) Summary() string {
+func (mx MX) Summary() string {
 	var s string
-	for domain, mxRecords := range m.Servers {
+	for domain, mxRecords := range mx.Records {
 		for i := range mxRecords {
 			mxRecords[i] = strings.TrimSuffix(mxRecords[i], ".")
 		}
@@ -24,8 +24,8 @@ func (m MX) Summary() string {
 	return check.Na(s)
 }
 
-func (m MX) JsonString() (string, error) {
-	b, err := json.Marshal(m)
+func (mx MX) JsonString() (string, error) {
+	b, err := json.Marshal(mx)
 	return string(b), err
 }
 
@@ -59,10 +59,10 @@ func CheckMX(ipaddr net.IP) (check.Result, error) {
 		for _, r := range mxRecords {
 			mxRecords2 = append(mxRecords2, r.Host)
 		}
-		if _, ok := mx.Servers[n]; !ok {
-			mx.Servers = make(map[string][]string)
+		if _, ok := mx.Records[n]; !ok {
+			mx.Records = make(map[string][]string)
 		}
-		mx.Servers[n] = mxRecords2
+		mx.Records[n] = mxRecords2
 	}
 
 	return check.Result{
