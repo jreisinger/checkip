@@ -39,9 +39,17 @@ Malicious      --> 50% 🚫
 The CLI tool also supports JSON output:
 
 ```
-checkip -j 118.25.6.39 | \
-# select only Sec (1) or InfoSec (2) check types
+$ checkip -j 218.92.0.158 2> /dev/null | \
+# select only Sec (1) or InfoSec (2) check types and show if considered malicious
 jq -r '.checks[] | select(.type == 1 or .type == 2) | "\(.malicious)\t\(.name)"'
+false	abuseipdb.com
+true	blocklist.de
+false	cinsscore.com
+true	github.com/stamparm/ipsum
+true	otx.alienvault.com
+false	threatcrowd.org
+false	urlscan.io
+true	virustotal.com
 ```
 
 ## Installation and configuration
