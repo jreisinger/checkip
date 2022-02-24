@@ -17,6 +17,7 @@ var Default = []check.Check{
 	CheckOTX,
 	CheckPing,
 	CheckShodan,
+	CheckTcpPorts,
 	CheckThreadCrowd,
 	CheckUrlscan,
 	CheckVirusTotal,
