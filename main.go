@@ -16,6 +16,7 @@ func init() {
 }
 
 var j = flag.Bool("j", false, "output all results in JSON")
+var a = flag.Bool("a", false, "run also active checks that interact with ipaddr")
 
 func main() {
 	flag.Parse()
@@ -29,7 +30,12 @@ func main() {
 		log.Fatalf("wrong IP address: %s\n", flag.Args()[0])
 	}
 
-	results, errors := cli.Run(checks.Default, ipaddr)
+	var chks = checks.Passive
+	if *a {
+		chks = append(chks, checks.Active...)
+	}
+
+	results, errors := cli.Run(chks, ipaddr)
 	for _, e := range errors {
 		log.Print(e)
 	}

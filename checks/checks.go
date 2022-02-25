@@ -4,8 +4,8 @@ package checks
 
 import "github.com/jreisinger/checkip/check"
 
-// Default checks you should use.
-var Default = []check.Check{
+// Passive checks don't interact directly with the target IP address.
+var Passive = []check.Check{
 	CheckAbuseIPDB,
 	CheckAS,
 	CheckBlockList,
@@ -15,10 +15,14 @@ var Default = []check.Check{
 	CheckMX,
 	CheckName,
 	CheckOTX,
-	CheckPing,
 	CheckShodan,
-	CheckTcpPorts,
 	CheckThreadCrowd,
 	CheckUrlscan,
 	CheckVirusTotal,
+}
+
+// Active checks interact with the target IP address.
+var Active = []check.Check{
+	CheckPing,
+	CheckTcpPorts,
 }
