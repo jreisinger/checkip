@@ -1,7 +1,7 @@
 # checkip
 
-Checkip provides generic and security information about an IP address in a
-quick way. It uses various free public services to do so.
+Checkip provides generic and security information about an IP address in a quick
+way. It uses various free public services to do so.
 
 ```
 $ checkip 91.228.166.47
@@ -33,7 +33,13 @@ maxmind.com    --> city: n/a, country: China (CN)
 urlscan.io     --> 0 related URLs
 virustotal.com --> network: 218.92.0.0/16, SAN: n/a
 Malicious      --> 50% 🚫
+```
 
+Optionally it can also interact with the target IP address. NOTE: you should run
+active checks (-a) only against your hosts or hosts you have
+[permission](http://scanme.nmap.org/) to scan.
+
+```
 $ checkip -a 45.33.32.156 # scanme.nmap.org
 Open TCP ports --> 22 (ssh), 80 (http), 9929 (nping-echo), 31337 (Elite)
 Ping           --> 0% packet loss, sent 5, recv 5, avg round-trip 192 ms
@@ -47,9 +53,6 @@ urlscan.io     --> 0 related URLs
 virustotal.com --> network: 45.33.0.0/17, SAN: n/a
 Malicious      --> 0% ✅
 ```
-
-NOTE: you should run active checks (-a) only against your hosts or hosts you
-have [permission](http://scanme.nmap.org/) to scan.
 
 The CLI tool also supports JSON output:
 
