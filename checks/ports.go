@@ -46,7 +46,7 @@ func CheckTcpPorts(ipaddr net.IP) (check.Result, error) {
 	}
 
 	return check.Result{
-		Name: "open tcp ports",
+		Name: "Open TCP ports",
 		Type: check.TypeInfo,
 		Info: OpenTcpPorts(openports),
 	}, nil

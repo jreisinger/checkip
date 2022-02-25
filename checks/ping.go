@@ -25,7 +25,7 @@ func CheckPing(ipaddr net.IP) (check.Result, error) {
 	ps := pinger.Statistics() // get send/receive/duplicate/rtt stats
 
 	return check.Result{
-		Name:      "ping",
+		Name:      "Ping",
 		Type:      check.TypeInfo,
 		Info:      stats(*ps),
 		Malicious: false,
