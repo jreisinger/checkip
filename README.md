@@ -10,31 +10,46 @@ dns mx         --> eset.sk: a.mx.eset.com, b.mx.eset.com
 dns name       --> skh1-webredir01-v.eset.com
 iptoasn.com    --> AS description: ESET-AS
 maxmind.com    --> city: Bratislava, country: Slovakia (SK)
-ping           --> 0% packet loss, sent 5, recv 5, avg round-trip 13 ms
 shodan.io      --> OS: n/a, 2 open ports: tcp/80 (nginx), tcp/443 (nginx)
 urlscan.io     --> 0 related URLs
 virustotal.com --> network: 91.228.164.0/22, SAN: www.eset.com, eset.com
 Malicious      --> 0% ✅
+
 $ checkip 209.141.33.65 2> /dev/null
 abuseipdb.com  --> domain: buyvm.net, usage type: Data Center/Web Hosting/Transit
 dns mx         --> buyvm.net: mail.frantech.ca
 iptoasn.com    --> AS description: PONYNET - FranTech Solutions
 maxmind.com    --> city: Las Vegas, country: United States (US)
-ping           --> 0% packet loss, sent 5, recv 5, avg round-trip 172 ms
 shodan.io      --> OS: Debian, 1 open port: tcp/22 (OpenSSH, 8.4p1 Debian 5)
 urlscan.io     --> 0 related URLs
 virustotal.com --> network: 209.141.32.0/19, SAN: 2020201.tk
 Malicious      --> 25% 🤏
+
 $ checkip 218.92.0.158 2> /dev/null
 abuseipdb.com  --> domain: chinatelecom.com.cn, usage type: n/a
 dns mx         --> chinatelecom.com.cn: testmail.chinatelecom.com.cn
 iptoasn.com    --> AS description: CHINANET-BACKBONE No.31,Jin-rong Street
-maxmind.com    --> city: Lianyungang, country: China (CN)
-ping           --> 100% packet loss, sent 5, recv 0, avg round-trip 0 ms
+maxmind.com    --> city: n/a, country: China (CN)
 urlscan.io     --> 0 related URLs
 virustotal.com --> network: 218.92.0.0/16, SAN: n/a
 Malicious      --> 50% 🚫
+
+$ checkip -a 45.33.32.156 # scanme.nmap.org
+Open TCP ports --> 22 (ssh), 80 (http), 9929 (nping-echo), 31337 (Elite)
+Ping           --> 0% packet loss, sent 5, recv 5, avg round-trip 192 ms
+abuseipdb.com  --> domain: linode.com, usage type: Data Center/Web Hosting/Transit
+dns mx         --> linode.com: inbound-mail1.linode.com, inbound-mail3.linode.com
+dns name       --> scanme.nmap.org
+iptoasn.com    --> AS description: LINODE-AP Linode, LLC
+maxmind.com    --> city: Fremont, country: United States (US)
+shodan.io      --> OS: n/a, 3 open ports: tcp/22 (OpenSSH, 6.6.1p1 Ubuntu-2ubuntu2.13), tcp/80 (Apache httpd, 2.4.7), udp/123
+urlscan.io     --> 0 related URLs
+virustotal.com --> network: 45.33.0.0/17, SAN: n/a
+Malicious      --> 0% ✅
 ```
+
+NOTE: you should run active checks (-a) only against your hosts or hosts you
+have [permission](http://scanme.nmap.org/) to scan.
 
 The CLI tool also supports JSON output:
 
