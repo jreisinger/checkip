@@ -1,7 +1,8 @@
 # checkip
 
-Checkip provides generic and security information about an IP address in a quick
-way. It uses various free public services to do so.
+[Checkip](https://pkg.go.dev/github.com/jreisinger/checkip) is a CLI tool and
+library that provides generic and security information about an IP address in a
+quick way. It uses various free public services to do so.
 
 ```
 $ checkip 91.228.166.47
