@@ -8,6 +8,7 @@ import (
 	"github.com/jreisinger/checkip/check"
 )
 
+// Names are the DNS names of the given IP address.
 type Names []string
 
 func (n Names) Summary() string {

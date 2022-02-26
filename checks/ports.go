@@ -12,11 +12,13 @@ import (
 	"github.com/jreisinger/nmapservices"
 )
 
+// TcpPorts represents a TCP ports.
 type TcpPort struct {
-	Name   string
+	Name   string // service name like ssh
 	Number int16
 }
 
+// OpenTcpPorts are the TCP ports that were found open on the given IP address.
 type OpenTcpPorts []TcpPort
 
 type byPortNumber OpenTcpPorts
@@ -39,6 +41,9 @@ func (t OpenTcpPorts) JsonString() (string, error) {
 	return string(b), err
 }
 
+// CheckTcpPorts tries to connect to the 1000 TCP ports that are most often
+// found open on Internet hosts. Then it reports which of those ports are open
+// on the given IP address.
 func CheckTcpPorts(ipaddr net.IP) (check.Result, error) {
 	openports, err := scan(ipaddr, 1000)
 	if err != nil {

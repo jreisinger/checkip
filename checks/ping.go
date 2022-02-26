@@ -10,6 +10,8 @@ import (
 	"github.com/jreisinger/checkip/check"
 )
 
+// CheckPing sends five pings (ICMP echo request packets) to the ippaddr and
+// returns the statistics.
 func CheckPing(ipaddr net.IP) (check.Result, error) {
 	pinger, err := ping.NewPinger(ipaddr.String())
 	if err != nil {

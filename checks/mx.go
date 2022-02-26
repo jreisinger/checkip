@@ -8,6 +8,7 @@ import (
 	"github.com/jreisinger/checkip/check"
 )
 
+// MX maps MX records to domain names.
 type MX struct {
 	Records map[string][]string `json:"records"` // domain => MX records
 }
@@ -28,6 +29,9 @@ func (mx MX) JsonString() (string, error) {
 	return string(b), err
 }
 
+// CheckMX performs reverse lookup and consults AbuseIPDB to get domain names fo
+// the ipaddr. Then it looks up MX records (mail servers) for the given domain
+// names.
 func CheckMX(ipaddr net.IP) (check.Result, error) {
 	names, _ := net.LookupAddr(ipaddr.String()) // NOTE: ignoring error
 
