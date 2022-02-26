@@ -37,7 +37,7 @@ Malicious      --> 50% 🚫
 ```
 
 Optionally it can also interact with the target IP address. NOTE: you should run
-active checks (-a) only against your hosts or hosts you have
+active checks (`-a`) only against your hosts or hosts you have
 [permission](http://scanme.nmap.org/) to scan.
 
 ```
