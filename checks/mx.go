@@ -16,6 +16,9 @@ type MX struct {
 func (mx MX) Summary() string {
 	var s string
 	for domain, mxRecords := range mx.Records {
+		if domain == "" && len(mxRecords) == 0 {
+			continue
+		}
 		for i := range mxRecords {
 			mxRecords[i] = strings.TrimSuffix(mxRecords[i], ".")
 		}
