@@ -13,7 +13,7 @@ import (
 	"github.com/jreisinger/checkip/check"
 )
 
-type autonomousSystem struct {
+type AS struct {
 	Number      int    `json:"-"`
 	FirstIP     net.IP `json:"-"`
 	LastIP      net.IP `json:"-"`
@@ -21,11 +21,11 @@ type autonomousSystem struct {
 	CountryCode string `json:"-"`
 }
 
-func (a autonomousSystem) Summary() string {
+func (a AS) Summary() string {
 	return fmt.Sprintf("AS description: %s", check.Na(a.Description))
 }
 
-func (a autonomousSystem) JsonString() (string, error) {
+func (a AS) JsonString() (string, error) {
 	b, err := json.Marshal(a)
 	return string(b), err
 }
@@ -53,13 +53,13 @@ func CheckAS(ipaddr net.IP) (check.Result, error) {
 }
 
 // search the ippadrr in tsvFile and if found fills in AS data.
-func asSearch(ipaddr net.IP, tsvFile string) (autonomousSystem, error) {
+func asSearch(ipaddr net.IP, tsvFile string) (AS, error) {
 	tsv, err := os.Open(tsvFile)
 	if err != nil {
-		return autonomousSystem{}, err
+		return AS{}, err
 	}
 
-	as := autonomousSystem{}
+	as := AS{}
 	s := bufio.NewScanner(tsv)
 	for s.Scan() {
 		line := s.Text()
@@ -69,7 +69,7 @@ func asSearch(ipaddr net.IP, tsvFile string) (autonomousSystem, error) {
 		if ipIsBetween(ipaddr, as.FirstIP, as.LastIP) {
 			as.Number, err = strconv.Atoi(fields[2])
 			if err != nil {
-				return autonomousSystem{}, fmt.Errorf("converting string to int: %v", err)
+				return AS{}, fmt.Errorf("converting string to int: %v", err)
 			}
 			as.CountryCode = fields[3]
 			as.Description = fields[4]
@@ -77,7 +77,7 @@ func asSearch(ipaddr net.IP, tsvFile string) (autonomousSystem, error) {
 		}
 	}
 	if s.Err() != nil {
-		return autonomousSystem{}, err
+		return AS{}, err
 	}
 	return as, nil
 }
