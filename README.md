@@ -59,7 +59,8 @@ The CLI tool also supports JSON output:
 
 ```
 $ checkip -j 218.92.0.158 2> /dev/null | \
-# select only Sec (1) or InfoSec (2) check types and show if considered malicious
+# select Sec (1) and InfoSec (2) check types and 
+# show if they consider the IP address malicious
 jq -r '.checks[] | select(.type == 1 or .type == 2) | "\(.malicious)\t\(.name)"'
 false	abuseipdb.com
 true	blocklist.de
