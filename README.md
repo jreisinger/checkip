@@ -76,7 +76,6 @@ true	virustotal.com
 To install the CLI tool
 
 ```
-git clone git@github.com:jreisinger/checkip.git
 cd checkip
 make install
 ```
