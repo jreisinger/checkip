@@ -41,10 +41,10 @@ func (t OpenTcpPorts) JsonString() (string, error) {
 	return string(b), err
 }
 
-// CheckTcpPorts tries to connect to the 1000 TCP ports that are most often
-// found open on Internet hosts. Then it reports which of those ports are open
-// on the given IP address.
-func CheckTcpPorts(ipaddr net.IP) (check.Result, error) {
+// TcpPorts tries to connect to the 1000 TCP ports that are most often found
+// open on Internet hosts. Then it reports which of those ports are open on the
+// given IP address.
+func TcpPorts(ipaddr net.IP) (check.Result, error) {
 	openports, err := scan(ipaddr, 1000)
 	if err != nil {
 		return check.Result{}, check.NewError(err)

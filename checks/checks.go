@@ -6,23 +6,23 @@ import "github.com/jreisinger/checkip/check"
 
 // Passive checks don't interact directly with the target IP address.
 var Passive = []check.Check{
-	CheckAbuseIPDB,
-	CheckAS,
-	CheckBlockList,
-	CheckCins,
-	CheckGeo,
-	CheckIPSum,
-	CheckMX,
-	CheckName,
-	CheckOTX,
-	CheckShodan,
-	CheckThreadCrowd,
-	CheckUrlscan,
-	CheckVirusTotal,
+	AbuseIPDB,
+	BlockList,
+	CinsScore,
+	DnsMX,
+	DnsName,
+	IPSum,
+	IPtoASN,
+	MaxMind,
+	OTX,
+	Shodan,
+	ThreadCrowd,
+	UrlScan,
+	VirusTotal,
 }
 
 // Active checks interact with the target IP address.
 var Active = []check.Check{
-	CheckPing,
-	CheckTcpPorts,
+	Ping,
+	TcpPorts,
 }

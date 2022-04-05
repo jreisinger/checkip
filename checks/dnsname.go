@@ -20,8 +20,8 @@ func (n Names) JsonString() (string, error) {
 	return string(b), err
 }
 
-// CheckName does a reverse lookup for a given IP address to get its names.
-func CheckName(ipaddr net.IP) (check.Result, error) {
+// DnsName does a reverse lookup for a given IP address to get its names.
+func DnsName(ipaddr net.IP) (check.Result, error) {
 	names, err := net.LookupAddr(ipaddr.String())
 	if err != nil {
 		return check.Result{}, check.NewError(err)

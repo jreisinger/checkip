@@ -24,8 +24,8 @@ func (g geo) JsonString() (string, error) {
 	return string(b), err
 }
 
-// CheckGeo gets geolocation data from maxmind.com's GeoLite2-City.mmdb.
-func CheckGeo(ip net.IP) (check.Result, error) {
+// MaxMind gets geolocation data from maxmind.com's GeoLite2-City.mmdb.
+func MaxMind(ip net.IP) (check.Result, error) {
 	licenseKey, err := check.GetConfigValue("MAXMIND_LICENSE_KEY")
 	if err != nil {
 		return check.Result{}, check.NewError(err)

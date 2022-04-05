@@ -10,9 +10,9 @@ type threatCrowd struct {
 	Votes int `json:"votes"`
 }
 
-// CheckThreadCrowd threatcrowd.org to find out whether the ipaddr was voted
+// ThreadCrowd threatcrowd.org to find out whether the ipaddr was voted
 // malicious.
-func CheckThreadCrowd(ipaddr net.IP) (check.Result, error) {
+func ThreadCrowd(ipaddr net.IP) (check.Result, error) {
 	queryParams := map[string]string{
 		"ip": ipaddr.String(),
 	}

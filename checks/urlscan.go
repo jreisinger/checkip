@@ -12,10 +12,10 @@ import (
 
 const days = 30 // limit search to last 30 days
 
-// CheckUrlscan gets data from urlscan.io. When a URL is submitted to
-// urlscan.io, an automated process will browse to the URL like a regular user
-// and record the activity that this page navigation creates.
-func CheckUrlscan(ipaddr net.IP) (check.Result, error) {
+// UrlScan gets data from urlscan.io. When a URL is submitted to urlscan.io, an
+// automated process will browse to the URL like a regular user and record the
+// activity that this page navigation creates.
+func UrlScan(ipaddr net.IP) (check.Result, error) {
 	apiKey, err := check.GetConfigValue("URLSCAN_API_KEY")
 	if err != nil {
 		return check.Result{}, check.NewError(err)

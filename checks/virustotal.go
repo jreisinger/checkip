@@ -40,9 +40,9 @@ func (v virusTotal) JsonString() (string, error) {
 	return string(b), err
 }
 
-// CheckVirusTotal gets generic information and security reputation about the
-// ippaddr from https://www.virustotal.com/api.
-func CheckVirusTotal(ipaddr net.IP) (check.Result, error) {
+// VirusTotal gets generic information and security reputation about the ippaddr
+// from https://www.virustotal.com/api.
+func VirusTotal(ipaddr net.IP) (check.Result, error) {
 	apiKey, err := check.GetConfigValue("VIRUSTOTAL_API_KEY")
 	if err != nil {
 		return check.Result{}, check.NewError(err)

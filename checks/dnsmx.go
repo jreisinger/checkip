@@ -32,10 +32,10 @@ func (mx MX) JsonString() (string, error) {
 	return string(b), err
 }
 
-// CheckMX performs reverse lookup and consults AbuseIPDB to get domain names fo
+// DnsMX performs reverse lookup and consults AbuseIPDB to get domain names fo
 // the ipaddr. Then it looks up MX records (mail servers) for the given domain
 // names.
-func CheckMX(ipaddr net.IP) (check.Result, error) {
+func DnsMX(ipaddr net.IP) (check.Result, error) {
 	names, _ := net.LookupAddr(ipaddr.String()) // NOTE: ignoring error
 
 	// Enrich names with a name with 'www.' removed.
@@ -47,7 +47,7 @@ func CheckMX(ipaddr net.IP) (check.Result, error) {
 
 	// Enrich names with a domain name from AbuseIPDB.
 	// [www.csh.ac.at. csh.ac.at.] = > [www.csh.ac.at. csh.ac.at. aco.net]
-	r, err := CheckAbuseIPDB(ipaddr)
+	r, err := AbuseIPDB(ipaddr)
 	if err != nil {
 		return check.Result{}, check.NewError(err)
 	}

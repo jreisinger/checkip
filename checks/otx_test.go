@@ -10,7 +10,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestCheckOTX(t *testing.T) {
+func TestOTX(t *testing.T) {
 	t.Run("given valid response then result and no error is returned", func(t *testing.T) {
 		handlerFn := http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
 			rw.WriteHeader(http.StatusOK)
@@ -20,7 +20,7 @@ func TestCheckOTX(t *testing.T) {
 		testUrl := SetMockHttpClient(t, handlerFn)
 		setOTXUrl(t, testUrl)
 
-		result, err := CheckOTX(net.ParseIP("118.25.6.39"))
+		result, err := OTX(net.ParseIP("118.25.6.39"))
 		require.NoError(t, err)
 		assert.Equal(t, "otx.alienvault.com", result.Name)
 		assert.Equal(t, check.TypeSec, result.Type)
@@ -36,7 +36,7 @@ func TestCheckOTX(t *testing.T) {
 		testUrl := SetMockHttpClient(t, handlerFn)
 		setOTXUrl(t, testUrl)
 
-		_, err := CheckOTX(net.ParseIP("118.25.6.39"))
+		_, err := OTX(net.ParseIP("118.25.6.39"))
 		require.Error(t, err)
 	})
 }

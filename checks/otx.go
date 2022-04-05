@@ -16,9 +16,9 @@ type otx struct {
 	} `json:"pulse_info"`
 }
 
-// CheckOTX counts pulses on otx.alienvault.com to find out whether the ipaddr
-// is malicious.
-func CheckOTX(ipaddr net.IP) (check.Result, error) {
+// OTX counts pulses on otx.alienvault.com to find out whether the ipaddr is
+// malicious.
+func OTX(ipaddr net.IP) (check.Result, error) {
 	u, err := url.Parse(otxUrl)
 	if err != nil {
 		return check.Result{}, check.NewError(err)

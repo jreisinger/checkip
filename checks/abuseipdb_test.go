@@ -2,15 +2,16 @@ package checks
 
 import (
 	"fmt"
-	"github.com/jreisinger/checkip/check"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	"net"
 	"net/http"
 	"testing"
+
+	"github.com/jreisinger/checkip/check"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
-func TestCheckAbuseIPDB(t *testing.T) {
+func TestAbuseIPDB(t *testing.T) {
 	t.Run("given valid response then result and no error is returned", func(t *testing.T) {
 		handlerFn := http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
 			rw.WriteHeader(http.StatusOK)
@@ -20,7 +21,7 @@ func TestCheckAbuseIPDB(t *testing.T) {
 		testUrl := SetMockHttpClient(t, handlerFn)
 		setAbuseIPDBUrl(t, testUrl)
 
-		result, err := CheckAbuseIPDB(net.ParseIP("118.25.6.39"))
+		result, err := AbuseIPDB(net.ParseIP("118.25.6.39"))
 		require.NoError(t, err)
 		assert.Equal(t, "abuseipdb.com", result.Name)
 		assert.Equal(t, check.TypeInfoSec, result.Type)
@@ -36,7 +37,7 @@ func TestCheckAbuseIPDB(t *testing.T) {
 		testUrl := SetMockHttpClient(t, handlerFn)
 		setAbuseIPDBUrl(t, testUrl)
 
-		_, err := CheckAbuseIPDB(net.ParseIP("118.25.6.39"))
+		_, err := AbuseIPDB(net.ParseIP("118.25.6.39"))
 		require.Error(t, err)
 	})
 }

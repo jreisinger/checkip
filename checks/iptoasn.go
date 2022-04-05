@@ -13,7 +13,7 @@ import (
 	"github.com/jreisinger/checkip/check"
 )
 
-type AS struct {
+type AutonomousSystem struct {
 	Number      int    `json:"-"`
 	FirstIP     net.IP `json:"-"`
 	LastIP      net.IP `json:"-"`
@@ -21,18 +21,18 @@ type AS struct {
 	CountryCode string `json:"-"`
 }
 
-func (a AS) Summary() string {
+func (a AutonomousSystem) Summary() string {
 	return fmt.Sprintf("AS description: %s", check.Na(a.Description))
 }
 
-func (a AS) JsonString() (string, error) {
+func (a AutonomousSystem) JsonString() (string, error) {
 	b, err := json.Marshal(a)
 	return string(b), err
 }
 
-// CheckAS gets info about autonomous system (AS) of the ipaddr. The data is
-// taken from a TSV file ip2asn-combined downloaded from iptoasn.com.
-func CheckAS(ipaddr net.IP) (check.Result, error) {
+// IPtoASN gets info about autonomous system (IPtoASN) of the ipaddr. The data
+// is taken from a TSV file ip2asn-combined downloaded from iptoasn.com.
+func IPtoASN(ipaddr net.IP) (check.Result, error) {
 	file := "/var/tmp/ip2asn-combined.tsv"
 	url := "https://iptoasn.com/data/ip2asn-combined.tsv.gz"
 
@@ -53,13 +53,13 @@ func CheckAS(ipaddr net.IP) (check.Result, error) {
 }
 
 // search the ippadrr in tsvFile and if found fills in AS data.
-func asSearch(ipaddr net.IP, tsvFile string) (AS, error) {
+func asSearch(ipaddr net.IP, tsvFile string) (AutonomousSystem, error) {
 	tsv, err := os.Open(tsvFile)
 	if err != nil {
-		return AS{}, err
+		return AutonomousSystem{}, err
 	}
 
-	as := AS{}
+	as := AutonomousSystem{}
 	s := bufio.NewScanner(tsv)
 	for s.Scan() {
 		line := s.Text()
@@ -69,7 +69,7 @@ func asSearch(ipaddr net.IP, tsvFile string) (AS, error) {
 		if ipIsBetween(ipaddr, as.FirstIP, as.LastIP) {
 			as.Number, err = strconv.Atoi(fields[2])
 			if err != nil {
-				return AS{}, fmt.Errorf("converting string to int: %v", err)
+				return AutonomousSystem{}, fmt.Errorf("converting string to int: %v", err)
 			}
 			as.CountryCode = fields[3]
 			as.Description = fields[4]
@@ -77,7 +77,7 @@ func asSearch(ipaddr net.IP, tsvFile string) (AS, error) {
 		}
 	}
 	if s.Err() != nil {
-		return AS{}, err
+		return AutonomousSystem{}, err
 	}
 	return as, nil
 }

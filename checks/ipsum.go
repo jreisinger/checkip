@@ -11,8 +11,8 @@ import (
 	"github.com/jreisinger/checkip/check"
 )
 
-// CheckIPSum checks how many blacklists the ipaddr is found on.
-func CheckIPSum(ipaddr net.IP) (check.Result, error) {
+// IPSum checks how many blacklists the ipaddr is found on.
+func IPSum(ipaddr net.IP) (check.Result, error) {
 	file := "/var/tmp/ipsum.txt"
 	url := "https://raw.githubusercontent.com/stamparm/ipsum/master/ipsum.txt"
 
