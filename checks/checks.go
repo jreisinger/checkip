@@ -9,6 +9,7 @@ var Passive = []check.Check{
 	AbuseIPDB,
 	BlockList,
 	CinsScore,
+	DBip,
 	DnsMX,
 	DnsName,
 	IPSum,
