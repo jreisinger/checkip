@@ -68,13 +68,16 @@ func (rs Results) PrintInfo() {
 	}
 }
 
-// PrintProbabilityMalicious prints the probability the IP address is malicious.
-func (rs Results) PrintProbabilityMalicious() {
-	msg := fmt.Sprintf("%-14s --> %.0f%% ", "Malicious", rs.probabilityMalicious()*100)
+// PrintMalicious prints how many of the InfoSec and Sec checkers consider the
+// IP address to be malicious.
+func (rs Results) PrintMalicious() {
+	total, malicious, prob := rs.maliciousStats()
+	msg := fmt.Sprintf("%-14s --> %.0f%% (%d/%d) ",
+		"Malicious", prob*100, malicious, total)
 	switch {
-	case rs.probabilityMalicious() >= 0.50:
+	case prob >= 0.50:
 		msg += `🚫`
-	case rs.probabilityMalicious() >= 0.15:
+	case prob >= 0.15:
 		msg += `🤏`
 	default:
 		msg += `✅`
@@ -82,15 +85,15 @@ func (rs Results) PrintProbabilityMalicious() {
 	fmt.Println(msg)
 }
 
-func (rs Results) probabilityMalicious() float64 {
-	var malicious, totalSec float64
+func (rs Results) maliciousStats() (total, malicious int, prob float64) {
 	for _, r := range rs {
 		if r.Type == check.TypeSec || r.Type == check.TypeInfoSec {
-			totalSec++
+			total++
 			if r.Malicious {
 				malicious++
 			}
 		}
 	}
-	return malicious / totalSec
+	prob = float64(malicious) / float64(total)
+	return total, malicious, prob
 }

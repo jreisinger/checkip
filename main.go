@@ -44,6 +44,6 @@ func main() {
 		results.PrintJSON()
 	} else {
 		results.PrintInfo()
-		results.PrintProbabilityMalicious()
+		results.PrintMalicious()
 	}
 }
