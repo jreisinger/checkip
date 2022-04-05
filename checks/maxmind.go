@@ -9,18 +9,20 @@ import (
 	"github.com/oschwald/geoip2-golang"
 )
 
-type geo struct {
+type maxmind struct {
 	City    string `json:"city"`
 	Country string `json:"country"`
 	IsoCode string `json:"iso_code"`
+	IsInEU  bool   `json:"is_in_eu"`
 }
 
-func (g geo) Summary() string {
-	return fmt.Sprintf("country: %s (%s), city: %s", check.Na(g.Country), check.Na(g.IsoCode), check.Na(g.City))
+func (m maxmind) Summary() string {
+	return fmt.Sprintf("country: %s (%s), city: %s, EU member: %t",
+		check.Na(m.Country), check.Na(m.IsoCode), check.Na(m.City), m.IsInEU)
 }
 
-func (g geo) JsonString() (string, error) {
-	b, err := json.Marshal(g)
+func (m maxmind) JsonString() (string, error) {
+	b, err := json.Marshal(m)
 	return string(b), err
 }
 
@@ -44,20 +46,21 @@ func MaxMind(ip net.IP) (check.Result, error) {
 	}
 	defer db.Close()
 
-	record, err := db.City(ip)
+	geo, err := db.City(ip)
 	if err != nil {
 		return check.Result{}, check.NewError(err)
 	}
 
-	geo := geo{
-		City:    record.City.Names["en"],
-		Country: record.Country.Names["en"],
-		IsoCode: record.Country.IsoCode,
+	m := maxmind{
+		City:    geo.City.Names["en"],
+		Country: geo.Country.Names["en"],
+		IsoCode: geo.Country.IsoCode,
+		IsInEU:  geo.Country.IsInEuropeanUnion,
 	}
 
 	return check.Result{
 		Name: "maxmind.com",
 		Type: check.TypeInfo,
-		Info: geo,
+		Info: m,
 	}, nil
 }

@@ -11,15 +11,15 @@ import (
 )
 
 type dbip struct {
-	Country   string `json:"country"`
-	IsoCode   string `json:"iso_code"`
-	Continent string `json:"continent"`
-	IsInEU    bool   `json:"is_in_eu"`
+	City    string `json:"city"`
+	Country string `json:"country"`
+	IsoCode string `json:"iso_code"`
+	IsInEU  bool   `json:"is_in_eu"`
 }
 
 func (d dbip) Summary() string {
-	return fmt.Sprintf("country: %s (%s), continent: %s, EU member: %t",
-		check.Na(d.Country), check.Na(d.IsoCode), d.Continent, d.IsInEU)
+	return fmt.Sprintf("country: %s (%s), city: %s, EU member: %t",
+		check.Na(d.Country), check.Na(d.IsoCode), check.Na(d.City), d.IsInEU)
 }
 
 func (d dbip) JsonString() (string, error) {
@@ -27,10 +27,11 @@ func (d dbip) JsonString() (string, error) {
 	return string(b), err
 }
 
+// DBip gets geolocation data from https://db-ip.com/db/download/ip-to-city-lite
 func DBip(ip net.IP) (check.Result, error) {
-	file := "/var/tmp/dbip-country-lite.mmdb"
+	file := "/var/tmp/dbip-city-lite.mmdb"
 	url := fmt.Sprintf(
-		"https://download.db-ip.com/free/dbip-country-lite-%s.mmdb.gz",
+		"https://download.db-ip.com/free/dbip-city-lite-%s.mmdb.gz",
 		time.Now().Format("2006-01"),
 	)
 
@@ -44,16 +45,16 @@ func DBip(ip net.IP) (check.Result, error) {
 	}
 	defer db.Close()
 
-	record, err := db.Country(ip)
+	geo, err := db.City(ip)
 	if err != nil {
 		return check.Result{}, check.NewError(err)
 	}
 
 	d := dbip{
-		Country:   record.Country.Names["en"],
-		IsoCode:   record.Country.IsoCode,
-		Continent: record.Continent.Names["en"],
-		IsInEU:    record.Country.IsInEuropeanUnion,
+		City:    geo.City.Names["en"],
+		Country: geo.Country.Names["en"],
+		IsoCode: geo.Country.IsoCode,
+		IsInEU:  geo.Country.IsInEuropeanUnion,
 	}
 
 	return check.Result{
