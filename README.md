@@ -4,35 +4,25 @@ Checkip is a CLI tool and library that provides generic and security information
 about an IP address in quick way. It uses various free public services to do so.
 
 ```
-$ checkip 91.228.166.47
-abuseipdb.com  --> domain: eset.sk, usage type: Data Center/Web Hosting/Transit
-dns mx         --> eset.sk: a.mx.eset.com, b.mx.eset.com
-dns name       --> skh1-webredir01-v.eset.com
-iptoasn.com    --> AS description: ESET-AS
-maxmind.com    --> city: Bratislava, country: Slovakia (SK)
-shodan.io      --> OS: n/a, 2 open ports: tcp/80 (nginx), tcp/443 (nginx)
-urlscan.io     --> 0 related URLs
-virustotal.com --> network: 91.228.164.0/22, SAN: www.eset.com, eset.com
-Malicious      --> 0% ✅
-
 $ checkip 218.92.0.158 2> /dev/null
-abuseipdb.com  --> domain: chinatelecom.com.cn, usage type: n/a
+abuseipdb.com  --> domain: chinatelecom.com.cn, usage type: Data Center/Web Hosting/Transit
 dns mx         --> chinatelecom.com.cn: testmail.chinatelecom.com.cn
 iptoasn.com    --> AS description: CHINANET-BACKBONE No.31,Jin-rong Street
-maxmind.com    --> city: n/a, country: China (CN)
+maxmind.com    --> city: Caolin, country: China (CN)
+shodan.io      --> OS: n/a, 2 open ports: tcp/22 (OpenSSH, 7.4), tcp/53
 urlscan.io     --> 0 related URLs
 virustotal.com --> network: 218.92.0.0/16, SAN: n/a
-Malicious      --> 50% 🚫
+Malicious      --> 62% (5/8) 🚫
 ```
 
 The CLI tool also supports JSON output.
 
 ```
 $ checkip -j 218.92.0.158 2> /dev/null | \
-# select Sec (1) and InfoSec (2) check types and 
+# select Sec (1) and InfoSec (2) check types and
 # show if they consider the IP address malicious
 jq -r '.checks[] | select(.type == 1 or .type == 2) | "\(.malicious)\t\(.name)"'
-false	abuseipdb.com
+true	abuseipdb.com
 true	blocklist.de
 false	cinsscore.com
 true	github.com/stamparm/ipsum
@@ -49,16 +39,16 @@ you have permission to scan.
 ```
 $ checkip -a 45.33.32.156 # scanme.nmap.org
 Open TCP ports --> 22 (ssh), 80 (http), 9929 (nping-echo), 31337 (Elite)
-Ping           --> 0% packet loss, sent 5, recv 5, avg round-trip 192 ms
+Ping           --> 0% packet loss, sent 5, recv 5, avg round-trip 170 ms
 abuseipdb.com  --> domain: linode.com, usage type: Data Center/Web Hosting/Transit
-dns mx         --> linode.com: inbound-mail1.linode.com, inbound-mail3.linode.com
+dns mx         --> linode.com: inbound-mail3.linode.com, inbound-mail1.linode.com
 dns name       --> scanme.nmap.org
 iptoasn.com    --> AS description: LINODE-AP Linode, LLC
 maxmind.com    --> city: Fremont, country: United States (US)
 shodan.io      --> OS: n/a, 3 open ports: tcp/22 (OpenSSH, 6.6.1p1 Ubuntu-2ubuntu2.13), tcp/80 (Apache httpd, 2.4.7), udp/123
 urlscan.io     --> 0 related URLs
 virustotal.com --> network: 45.33.0.0/17, SAN: n/a
-Malicious      --> 0% ✅
+Malicious      --> 0% (0/8) ✅
 ```
 
 ## Installation
