@@ -13,7 +13,7 @@ maxmind.com    --> country: China (CN), city: Caolin
 shodan.io      --> OS: n/a, 2 open ports: tcp/22 (OpenSSH, 7.4), tcp/53
 urlscan.io     --> 0 related URLs
 virustotal.com --> network: 218.92.0.0/16, SAN: n/a
-Malicious      --> 62% (5/8) 🚫
+Malicious      --> 63% (5/8) 🚫
 ```
 
 The CLI tool also supports JSON output.

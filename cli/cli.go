@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"math"
 	"net"
 	"os"
 	"sort"
@@ -73,7 +74,7 @@ func (rs Results) PrintInfo() {
 func (rs Results) PrintMalicious() {
 	total, malicious, prob := rs.maliciousStats()
 	msg := fmt.Sprintf("%-14s --> %.0f%% (%d/%d) ",
-		"Malicious", prob*100, malicious, total)
+		"Malicious", math.Round(prob*100), malicious, total)
 	switch {
 	case prob >= 0.50:
 		msg += `🚫`
