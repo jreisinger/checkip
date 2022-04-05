@@ -103,7 +103,8 @@ git commit -m "improve tag docs" main.go
 
 git tag | sort -V
 git tag -a v0.16.2 -m "improve docs"
-git push -u origin --tags
+
+git push --follow-tags
 ```
 
 [1]: https://pkg.go.dev/github.com/jreisinger/checkip/checks
