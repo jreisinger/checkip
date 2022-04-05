@@ -97,7 +97,9 @@ just write a function of type [Check][2]. Add the function to `checks.Passive`
 or `checks.Active` [variable][3].
 
 ```
-make run
+make run # test, install and run
+
+git commit -m "improve tag docs" main.go
 
 git tag | sort -V
 git tag -a v0.16.2 -m "improve docs"
