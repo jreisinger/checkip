@@ -56,7 +56,9 @@ Malicious      --> 0% (0/8) ✅
 To install the CLI tool
 
 ```
-docker run --rm -it golang /bin/bash # optional; to install inside a container
+# optional; to install inside a container
+docker run --rm -it golang /bin/bash
+
 go install github.com/jreisinger/checkip@latest
 ```
 
