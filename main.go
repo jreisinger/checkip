@@ -16,7 +16,7 @@ func init() {
 }
 
 var j = flag.Bool("j", false, "output all results in JSON")
-var a = flag.Bool("a", false, "run also active checks that interact with ipaddr")
+var a = flag.Bool("a", false, "run also active checks (interact with IP address)")
 
 func main() {
 	flag.Parse()
