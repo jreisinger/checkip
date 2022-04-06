@@ -34,7 +34,7 @@ false	urlscan.io
 true	virustotal.com
 ```
 
-Active checks (`-a`) interact with the target IP address. You should only run
+Active checks (`-a`) interact with the IP address. You should only run
 them against your hosts or hosts you have permission to scan.
 
 ```
