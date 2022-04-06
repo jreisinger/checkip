@@ -34,9 +34,8 @@ false	urlscan.io
 true	virustotal.com
 ```
 
-NOTE: Some of the [checks][1] are active, i.e. they interact with the target IP
-address. You should run active checks (`-a`) only against your hosts or hosts
-you have permission to scan.
+Active checks (`-a`) interact with the target IP address. You should only run
+them against your hosts or hosts you have permission to scan.
 
 ```
 $ checkip -a 45.33.32.156 # scanme.nmap.org
