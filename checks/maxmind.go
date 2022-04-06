@@ -32,6 +32,9 @@ func MaxMind(ip net.IP) (check.Result, error) {
 	if err != nil {
 		return check.Result{}, check.NewError(err)
 	}
+	if licenseKey == "" {
+		return check.Result{}, nil
+	}
 
 	file := "/var/tmp/GeoLite2-City.mmdb"
 	url := "https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-City&license_key=" + licenseKey + "&suffix=tar.gz"

@@ -30,6 +30,9 @@ func Shodan(ipaddr net.IP) (check.Result, error) {
 	if err != nil {
 		return check.Result{}, check.NewError(err)
 	}
+	if apiKey == "" {
+		return check.Result{}, nil
+	}
 
 	var shodan shodan
 	apiURL := fmt.Sprintf("https://api.shodan.io/shodan/host/%s?key=%s", ipaddr, apiKey)

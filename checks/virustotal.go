@@ -47,6 +47,9 @@ func VirusTotal(ipaddr net.IP) (check.Result, error) {
 	if err != nil {
 		return check.Result{}, check.NewError(err)
 	}
+	if apiKey == "" {
+		return check.Result{}, nil
+	}
 
 	// curl --header "x-apikey:$VIRUSTOTAL_API_KEY" https://www.virustotal.com/api/v3/ip_addresses/1.1.1.1
 	headers := map[string]string{"x-apikey": apiKey}

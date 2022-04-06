@@ -1,8 +1,6 @@
 package check
 
 import (
-	"fmt"
-	"io/ioutil"
 	"os"
 	"os/user"
 	"path/filepath"
@@ -11,13 +9,12 @@ import (
 )
 
 // GetConfigValue tries to get value for key first from an environment variable
-// then from a configuration file at $HOME/.checkip.yaml.
+// then from a configuration file at $HOME/.checkip.yaml. If value is not found
+// an empty string and nil is returned (i.e. it's not considered an error).
 var GetConfigValue = func(key string) (string, error) {
-	var v string
-
 	// Try to get the key from environment.
-	if v = os.Getenv(key); v != "" {
-		return v, nil
+	if value := os.Getenv(key); value != "" {
+		return value, nil
 	}
 
 	// Try to get the key from the config file.
@@ -26,9 +23,9 @@ var GetConfigValue = func(key string) (string, error) {
 		return "", err
 	}
 	confFile := filepath.Join(usr.HomeDir, ".checkip.yaml")
-	buf, err := ioutil.ReadFile(confFile)
+	buf, err := os.ReadFile(confFile)
 	if err != nil {
-		return "", err
+		return "", nil // non existent file is not considered an error
 	}
 
 	var data map[string]string
@@ -37,8 +34,9 @@ var GetConfigValue = func(key string) (string, error) {
 		return "", err
 	}
 
-	if v, ok := data[key]; ok {
-		return v, nil
+	if value, ok := data[key]; ok {
+		return value, nil
 	}
-	return "", fmt.Errorf("%s not found in %s", key, confFile)
+
+	return "", nil // value not found
 }

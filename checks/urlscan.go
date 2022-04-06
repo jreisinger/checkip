@@ -20,6 +20,9 @@ func UrlScan(ipaddr net.IP) (check.Result, error) {
 	if err != nil {
 		return check.Result{}, check.NewError(err)
 	}
+	if apiKey == "" {
+		return check.Result{}, nil
+	}
 
 	url := "https://urlscan.io/api/v1/search"
 	headers := map[string]string{

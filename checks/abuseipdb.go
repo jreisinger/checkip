@@ -44,6 +44,9 @@ func AbuseIPDB(ipaddr net.IP) (check.Result, error) {
 	if err != nil {
 		return check.Result{}, check.NewError(err)
 	}
+	if apiKey == "" {
+		return check.Result{}, nil
+	}
 
 	headers := map[string]string{
 		"Key":          apiKey,

@@ -51,6 +51,9 @@ func DnsMX(ipaddr net.IP) (check.Result, error) {
 	if err != nil {
 		return check.Result{}, check.NewError(err)
 	}
+	if r == (check.Result{}) { // empty struct
+		return check.Result{}, nil
+	}
 	j, err := r.Info.JsonString()
 	if err != nil {
 		return check.Result{}, check.NewError(err)
