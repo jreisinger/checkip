@@ -87,8 +87,8 @@ You can also use environment variables with the same names.
 ## Development
 
 Checkip is easy to extend. If you want to add a new way to check an IP address,
-just write a function of type [Check][2]. Add the function to `checks.Passive`
-or `checks.Active` [variable][3].
+just write a function of type [Check][1]. Add the function to `checks.Passive`
+or `checks.Active` [variable][2].
 
 ```
 make run # test, install and run
@@ -101,6 +101,5 @@ git tag -a v0.16.2 -m "improve docs"
 git push --follow-tags
 ```
 
-[1]: https://pkg.go.dev/github.com/jreisinger/checkip/checks
-[2]: https://pkg.go.dev/github.com/jreisinger/checkip/check#Check
-[3]: https://pkg.go.dev/github.com/jreisinger/checkip/checks#pkg-variables
+[1]: https://pkg.go.dev/github.com/jreisinger/checkip/check#Check
+[2]: https://pkg.go.dev/github.com/jreisinger/checkip/checks#pkg-variables
