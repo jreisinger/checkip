@@ -4,10 +4,11 @@ Checkip is a CLI tool and library that provides generic and security information
 about an IP address in quick way. It uses various free public services to do so.
 
 ```
-$ checkip 218.92.0.158 2> /dev/null
+$ checkip 218.92.0.158
 abuseipdb.com  --> domain: chinatelecom.com.cn, usage type: Data Center/Web Hosting/Transit
 db-ip.com      --> country: China (CN), city: Nanjing (Jiangning Qu), EU member: false
 dns mx         --> chinatelecom.com.cn: testmail.chinatelecom.com.cn
+dns name       --> n/a
 iptoasn.com    --> AS description: CHINANET-BACKBONE No.31,Jin-rong Street
 maxmind.com    --> country: China (CN), city: Caolin, EU member: false
 shodan.io      --> OS: n/a, 2 open ports: tcp/22 (OpenSSH, 7.4), tcp/53
@@ -19,7 +20,7 @@ Malicious      --> 63% (5/8) 🚫
 The CLI tool also supports JSON output.
 
 ```
-$ checkip -j 218.92.0.158 2> /dev/null | \
+$ checkip -j 218.92.0.158 | \
 # select Sec (1) and InfoSec (2) check types and
 # show if they consider the IP address malicious
 jq -r '.checks[] | select(.type == 1 or .type == 2) | "\(.malicious)\t\(.name)"'
@@ -40,10 +41,10 @@ you have permission to scan.
 ```
 $ checkip -a 45.33.32.156 # scanme.nmap.org
 Open TCP ports --> 22 (ssh), 80 (http), 9929 (nping-echo), 31337 (Elite)
-Ping           --> 0% packet loss, sent 5, recv 5, avg round-trip 170 ms
+Ping           --> 0% packet loss, sent 5, recv 5, avg round-trip 168 ms
 abuseipdb.com  --> domain: linode.com, usage type: Data Center/Web Hosting/Transit
 db-ip.com      --> country: United States (US), city: Fremont, EU member: false
-dns mx         --> linode.com: inbound-mail3.linode.com, inbound-mail1.linode.com
+dns mx         --> linode.com: inbound-mail1.linode.com, inbound-mail3.linode.com
 dns name       --> scanme.nmap.org
 iptoasn.com    --> AS description: LINODE-AP Linode, LLC
 maxmind.com    --> country: United States (US), city: Fremont, EU member: false
