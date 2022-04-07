@@ -17,12 +17,13 @@ virustotal.com --> network: 218.92.0.0/16, SAN: n/a
 Malicious      --> 63% (5/8) 🚫
 ```
 
-The CLI tool also supports JSON output.
+The CLI tool also supports JSON output. Here we select Sec (1) and InfoSec (2)
+check [type](https://pkg.go.dev/github.com/jreisinger/checkip/check#Type) that
+returned some info (i.e. they worked). Then we show if they consider the IP
+address malicious.
 
 ```
 $ checkip -j 218.92.0.158 | \
-# Select Sec (1) and InfoSec (2) check types that returned some info
-# (i.e. they worked) and show if they consider the IP address malicious.
 jq -r '.checks[] | select((.type == 1 or .type == 2) and .info != null) | "\(.malicious)\t\(.name)"'
 true	abuseipdb.com
 true	blocklist.de
