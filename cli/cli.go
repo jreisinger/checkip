@@ -63,7 +63,7 @@ func (rs Results) SortByName() {
 // PrintInfo prints summary results from Info and InfoSec checkers.
 func (rs Results) PrintInfo() {
 	for _, r := range rs {
-		if r.Info == nil { // check didn't work
+		if r.Info == nil {
 			continue
 		}
 		if r.Type == check.TypeInfo || r.Type == check.TypeInfoSec {
@@ -91,7 +91,7 @@ func (rs Results) PrintMalicious() {
 
 func (rs Results) maliciousStats() (total, malicious int, prob float64) {
 	for _, r := range rs {
-		if r.Info == nil { // check didn't work
+		if r.Info == nil {
 			continue
 		}
 		if r.Type == check.TypeSec || r.Type == check.TypeInfoSec {
