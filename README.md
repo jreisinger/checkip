@@ -19,8 +19,8 @@ Malicious      --> 63% (5/8) 🚫
 
 The CLI tool also supports JSON output. Here we select Sec (1) and InfoSec (2)
 check [type](https://pkg.go.dev/github.com/jreisinger/checkip/check#Type) that
-returned some info (i.e. they worked). Then we show if they consider the IP
-address malicious.
+returned some info (i.e. it worked). Then we show if the check considers the IP
+address to be malicious.
 
 ```
 $ checkip -j 218.92.0.158 | \
