@@ -1,7 +1,6 @@
 # checkip
 
-Checkip is a CLI tool and library that provides generic and security information
-about an IP address in quick way. It uses various free public services to do so.
+Checkip is a CLI tool and library that provides generic and security information about an IP address in a quick way. It uses various [checks](https://pkg.go.dev/github.com/jreisinger/checkip/checks) to do so.
 
 ```
 $ checkip 218.92.0.158
@@ -23,8 +22,8 @@ returned some info (i.e. it worked). Then we show if the check considers the IP
 address to be malicious.
 
 ```
-$ checkip -j 218.92.0.158 | \
-jq -r '.checks[] | select((.type == 1 or .type == 2) and .info != null) | "\(.malicious)\t\(.name)"'
+$ checkip -j 218.92.0.158 | jq -r \
+'.checks[] | select((.type == 1 or .type == 2) and .info != null) | "\(.malicious)\t\(.name)"'
 true	abuseipdb.com
 true	blocklist.de
 false	cinsscore.com
