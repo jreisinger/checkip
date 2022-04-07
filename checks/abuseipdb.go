@@ -40,12 +40,14 @@ func (a abuseIPDB) JsonString() (string, error) {
 // AbuseIPDB uses api.abuseipdb.com to get generic information about ipaddr and
 // see if the ipaddr has been reported as malicious.
 func AbuseIPDB(ipaddr net.IP) (check.Result, error) {
+	result := check.Result{Name: "abuseipdb.com", Type: check.TypeInfoSec}
+
 	apiKey, err := check.GetConfigValue("ABUSEIPDB_API_KEY")
 	if err != nil {
-		return check.Result{}, check.NewError(err)
+		return result, check.NewError(err)
 	}
 	if apiKey == "" {
-		return check.Result{}, nil
+		return result, nil
 	}
 
 	headers := map[string]string{
@@ -64,13 +66,14 @@ func AbuseIPDB(ipaddr net.IP) (check.Result, error) {
 	}
 	// docs.abuseipdb.com/#check-endpoint
 	if err := check.DefaultHttpClient.GetJson(abuseIPDBUrl, headers, queryParams, &data); err != nil {
-		return check.Result{}, check.NewError(err)
+		return result, check.NewError(err)
 	}
 
-	return check.Result{
-		Name:      "abuseipdb.com",
-		Type:      check.TypeInfoSec,
-		Info:      data.AbuseIPDB,
-		Malicious: data.AbuseIPDB.TotalReports > 0 && !data.AbuseIPDB.IsWhitelisted && data.AbuseIPDB.AbuseConfidenceScore > 25,
-	}, nil
+	result.Info = data.AbuseIPDB
+	result.Malicious = data.AbuseIPDB.TotalReports > 0 &&
+		!data.AbuseIPDB.IsWhitelisted &&
+		data.AbuseIPDB.AbuseConfidenceScore > 25
+
+	return result, nil
+
 }

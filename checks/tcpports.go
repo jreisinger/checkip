@@ -45,16 +45,18 @@ func (t OpenTcpPorts) JsonString() (string, error) {
 // open on Internet hosts. Then it reports which of those ports are open on the
 // given IP address.
 func TcpPorts(ipaddr net.IP) (check.Result, error) {
-	openports, err := scan(ipaddr, 1000)
-	if err != nil {
-		return check.Result{}, check.NewError(err)
-	}
-
-	return check.Result{
+	result := check.Result{
 		Name: "Open TCP ports",
 		Type: check.TypeInfo,
-		Info: OpenTcpPorts(openports),
-	}, nil
+	}
+
+	openports, err := scan(ipaddr, 1000)
+	if err != nil {
+		return result, check.NewError(err)
+	}
+	result.Info = OpenTcpPorts(openports)
+
+	return result, nil
 }
 
 func scan(ip net.IP, top int) (OpenTcpPorts, error) {

@@ -33,23 +33,25 @@ func (a AutonomousSystem) JsonString() (string, error) {
 // IPtoASN gets info about autonomous system (IPtoASN) of the ipaddr. The data
 // is taken from a TSV file ip2asn-combined downloaded from iptoasn.com.
 func IPtoASN(ipaddr net.IP) (check.Result, error) {
+	result := check.Result{
+		Name: "iptoasn.com",
+		Type: check.TypeInfo,
+	}
+
 	file := "/var/tmp/ip2asn-combined.tsv"
 	url := "https://iptoasn.com/data/ip2asn-combined.tsv.gz"
 
 	if err := check.UpdateFile(file, url, "gz"); err != nil {
-		return check.Result{}, check.NewError(err)
+		return result, check.NewError(err)
 	}
 
 	as, err := asSearch(ipaddr, file)
 	if err != nil {
-		return check.Result{}, check.NewError(fmt.Errorf("searching %s in %s: %v", ipaddr, file, err))
+		return result, check.NewError(fmt.Errorf("searching %s in %s: %v", ipaddr, file, err))
 	}
+	result.Info = as
 
-	return check.Result{
-		Name: "iptoasn.com",
-		Type: check.TypeInfo,
-		Info: as,
-	}, nil
+	return result, nil
 }
 
 // search the ippadrr in tsvFile and if found fills in AS data.

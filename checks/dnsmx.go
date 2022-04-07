@@ -36,6 +36,11 @@ func (mx MX) JsonString() (string, error) {
 // the ipaddr. Then it looks up MX records (mail servers) for the given domain
 // names.
 func DnsMX(ipaddr net.IP) (check.Result, error) {
+	result := check.Result{
+		Name: "dns mx",
+		Type: check.TypeInfo,
+	}
+
 	names, _ := net.LookupAddr(ipaddr.String()) // NOTE: ignoring error
 
 	// Enrich names with a name with 'www.' removed.
@@ -49,25 +54,24 @@ func DnsMX(ipaddr net.IP) (check.Result, error) {
 	// [www.csh.ac.at. csh.ac.at.] = > [www.csh.ac.at. csh.ac.at. aco.net]
 	r, err := AbuseIPDB(ipaddr)
 	if err != nil {
-		return check.Result{}, check.NewError(err)
+		return result, check.NewError(err)
 	}
-	if r == (check.Result{}) { // empty struct
-		return check.Result{}, nil
+	if r.Info == nil {
+		return result, nil
 	}
 	j, err := r.Info.JsonString()
 	if err != nil {
-		return check.Result{}, check.NewError(err)
+		return result, check.NewError(err)
 	}
 	sr := strings.NewReader(j)
 	decoder := json.NewDecoder(sr)
 	var a abuseIPDB
 	if err := decoder.Decode(&a); err != nil {
-		return check.Result{}, check.NewError(err)
+		return result, check.NewError(err)
 	}
 	names = append(names, a.Domain)
 
 	var mx MX
-
 	for _, n := range names {
 		var mxRecords2 []string
 		mxRecords, _ := net.LookupMX(n) // NOTE: ingoring error
@@ -79,10 +83,7 @@ func DnsMX(ipaddr net.IP) (check.Result, error) {
 		}
 		mx.Records[n] = mxRecords2
 	}
+	result.Info = mx
 
-	return check.Result{
-		Name: "dns mx",
-		Type: check.TypeInfo,
-		Info: mx,
-	}, nil
+	return result, nil
 }

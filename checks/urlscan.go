@@ -16,12 +16,17 @@ const days = 30 // limit search to last 30 days
 // automated process will browse to the URL like a regular user and record the
 // activity that this page navigation creates.
 func UrlScan(ipaddr net.IP) (check.Result, error) {
+	result := check.Result{
+		Name: "urlscan.io",
+		Type: check.TypeInfoSec,
+	}
+
 	apiKey, err := check.GetConfigValue("URLSCAN_API_KEY")
 	if err != nil {
-		return check.Result{}, check.NewError(err)
+		return result, check.NewError(err)
 	}
 	if apiKey == "" {
-		return check.Result{}, nil
+		return result, nil
 	}
 
 	url := "https://urlscan.io/api/v1/search"
@@ -36,7 +41,7 @@ func UrlScan(ipaddr net.IP) (check.Result, error) {
 	var u urlscan
 
 	if err := check.DefaultHttpClient.GetJson(url, headers, queryParams, &u); err != nil {
-		return check.Result{}, check.NewError(err)
+		return result, check.NewError(err)
 	}
 
 	var maliciousVerdicts int
@@ -45,7 +50,7 @@ func UrlScan(ipaddr net.IP) (check.Result, error) {
 		var ur urlscanResult
 		err := check.DefaultHttpClient.GetJson(r.Result, headers, map[string]string{}, &ur)
 		if err != nil {
-			return check.Result{}, check.NewError(err)
+			return result, check.NewError(err)
 		}
 		if ur.Verdicts.Overall.Malicious {
 			maliciousVerdicts++
@@ -53,12 +58,10 @@ func UrlScan(ipaddr net.IP) (check.Result, error) {
 		// time.Sleep(time.Millisecond * 100)
 	}
 
-	return check.Result{
-		Name:      "urlscan.io",
-		Type:      check.TypeInfoSec,
-		Info:      u,
-		Malicious: float64(maliciousVerdicts)/float64(len(u.Results)) > 0.1,
-	}, nil
+	result.Info = u
+	result.Malicious = float64(maliciousVerdicts)/float64(len(u.Results)) > 0.1
+
+	return result, nil
 }
 
 type urlscan struct {

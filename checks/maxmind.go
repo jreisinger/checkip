@@ -28,42 +28,43 @@ func (m maxmind) JsonString() (string, error) {
 
 // MaxMind gets geolocation data from maxmind.com's GeoLite2-City.mmdb.
 func MaxMind(ip net.IP) (check.Result, error) {
+	result := check.Result{
+		Name: "maxmind.com",
+		Type: check.TypeInfo,
+	}
+
 	licenseKey, err := check.GetConfigValue("MAXMIND_LICENSE_KEY")
 	if err != nil {
-		return check.Result{}, check.NewError(err)
+		return result, check.NewError(err)
 	}
 	if licenseKey == "" {
-		return check.Result{}, nil
+		return result, nil
 	}
 
 	file := "/var/tmp/GeoLite2-City.mmdb"
 	url := "https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-City&license_key=" + licenseKey + "&suffix=tar.gz"
 
 	if err := check.UpdateFile(file, url, "tgz"); err != nil {
-		return check.Result{}, check.NewError(err)
+		return result, check.NewError(err)
 	}
 
 	db, err := geoip2.Open(file)
 	if err != nil {
-		return check.Result{}, check.NewError(fmt.Errorf("can't load DB file: %v", err))
+		return result, check.NewError(fmt.Errorf("can't load DB file: %v", err))
 	}
 	defer db.Close()
 
 	geo, err := db.City(ip)
 	if err != nil {
-		return check.Result{}, check.NewError(err)
+		return result, check.NewError(err)
 	}
 
-	m := maxmind{
+	result.Info = maxmind{
 		City:    geo.City.Names["en"],
 		Country: geo.Country.Names["en"],
 		IsoCode: geo.Country.IsoCode,
 		IsInEU:  geo.Country.IsInEuropeanUnion,
 	}
 
-	return check.Result{
-		Name: "maxmind.com",
-		Type: check.TypeInfo,
-		Info: m,
-	}, nil
+	return result, nil
 }

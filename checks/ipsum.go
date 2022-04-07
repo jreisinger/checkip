@@ -13,24 +13,26 @@ import (
 
 // IPSum checks how many blacklists the ipaddr is found on.
 func IPSum(ipaddr net.IP) (check.Result, error) {
+	result := check.Result{
+		Name: "github.com/stamparm/ipsum",
+		Type: check.TypeSec,
+		Info: check.EmptyInfo{},
+	}
+
 	file := "/var/tmp/ipsum.txt"
 	url := "https://raw.githubusercontent.com/stamparm/ipsum/master/ipsum.txt"
 
 	if err := check.UpdateFile(file, url, ""); err != nil {
-		return check.Result{}, check.NewError(err)
+		return result, check.NewError(err)
 	}
 
 	blackLists, err := searchIPSumBlacklists(ipaddr, file)
 	if err != nil {
-		return check.Result{}, check.NewError(fmt.Errorf("searching %s in %s: %v", ipaddr, file, err))
+		return result, check.NewError(fmt.Errorf("searching %s in %s: %v", ipaddr, file, err))
 	}
+	result.Malicious = blackLists > 0
 
-	return check.Result{
-		Name:      "github.com/stamparm/ipsum",
-		Type:      check.TypeSec,
-		Info:      check.EmptyInfo{},
-		Malicious: blackLists > 0,
-	}, nil
+	return result, nil
 }
 
 // searchIPSumBlacklists searches the ippadrr in tsvFile for number of blacklists

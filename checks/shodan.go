@@ -26,25 +26,27 @@ type shodanData []struct {
 
 // Shodan gets generic information from https://api.shodan.io.
 func Shodan(ipaddr net.IP) (check.Result, error) {
+	result := check.Result{
+		Name: "shodan.io",
+		Type: check.TypeInfo,
+	}
+
 	apiKey, err := check.GetConfigValue("SHODAN_API_KEY")
 	if err != nil {
-		return check.Result{}, check.NewError(err)
+		return result, check.NewError(err)
 	}
 	if apiKey == "" {
-		return check.Result{}, nil
+		return result, nil
 	}
 
 	var shodan shodan
 	apiURL := fmt.Sprintf("https://api.shodan.io/shodan/host/%s?key=%s", ipaddr, apiKey)
 	if err := check.DefaultHttpClient.GetJson(apiURL, map[string]string{}, map[string]string{}, &shodan); err != nil {
-		return check.Result{}, check.NewError(err)
+		return result, check.NewError(err)
 	}
+	result.Info = shodan
 
-	return check.Result{
-		Name: "shodan.io",
-		Type: check.TypeInfo,
-		Info: shodan,
-	}, nil
+	return result, nil
 }
 
 type byPort shodanData

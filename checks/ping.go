@@ -13,25 +13,26 @@ import (
 // Ping sends five pings (ICMP echo request packets) to the ippaddr and returns
 // the statistics.
 func Ping(ipaddr net.IP) (check.Result, error) {
+	result := check.Result{
+		Name: "Ping",
+		Type: check.TypeInfo,
+	}
+
 	pinger, err := ping.NewPinger(ipaddr.String())
 	if err != nil {
-		return check.Result{}, check.NewError(err)
+		return result, check.NewError(err)
 	}
 	pinger.Count = 5
 	pinger.Timeout = time.Second * 5
 	err = pinger.Run() // Blocks until finished.
 	if err != nil {
-		return check.Result{}, check.NewError(err)
+		return result, check.NewError(err)
 	}
 
 	ps := pinger.Statistics() // get send/receive/duplicate/rtt stats
+	result.Info = stats(*ps)
 
-	return check.Result{
-		Name:      "Ping",
-		Type:      check.TypeInfo,
-		Info:      stats(*ps),
-		Malicious: false,
-	}, nil
+	return result, nil
 }
 
 type stats ping.Statistics

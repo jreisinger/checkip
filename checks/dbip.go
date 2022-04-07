@@ -29,6 +29,11 @@ func (d dbip) JsonString() (string, error) {
 
 // DBip gets geolocation data from https://db-ip.com/db/download/ip-to-city-lite
 func DBip(ip net.IP) (check.Result, error) {
+	result := check.Result{
+		Name: "db-ip.com",
+		Type: check.TypeInfo,
+	}
+
 	file := "/var/tmp/dbip-city-lite.mmdb"
 	url := fmt.Sprintf(
 		"https://download.db-ip.com/free/dbip-city-lite-%s.mmdb.gz",
@@ -36,30 +41,26 @@ func DBip(ip net.IP) (check.Result, error) {
 	)
 
 	if err := check.UpdateFile(file, url, "gz"); err != nil {
-		return check.Result{}, check.NewError(err)
+		return result, check.NewError(err)
 	}
 
 	db, err := geoip2.Open(file)
 	if err != nil {
-		return check.Result{}, check.NewError(fmt.Errorf("can't load DB file: %v", err))
+		return result, check.NewError(fmt.Errorf("can't load DB file: %v", err))
 	}
 	defer db.Close()
 
 	geo, err := db.City(ip)
 	if err != nil {
-		return check.Result{}, check.NewError(err)
+		return result, check.NewError(err)
 	}
 
-	d := dbip{
+	result.Info = dbip{
 		City:    geo.City.Names["en"],
 		Country: geo.Country.Names["en"],
 		IsoCode: geo.Country.IsoCode,
 		IsInEU:  geo.Country.IsInEuropeanUnion,
 	}
 
-	return check.Result{
-		Name: "db-ip.com",
-		Type: check.TypeInfo,
-		Info: d,
-	}, nil
+	return result, nil
 }

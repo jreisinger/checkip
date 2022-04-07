@@ -22,15 +22,16 @@ func (n Names) JsonString() (string, error) {
 
 // DnsName does a reverse lookup for a given IP address to get its names.
 func DnsName(ipaddr net.IP) (check.Result, error) {
-	names, _ := net.LookupAddr(ipaddr.String())
+	result := check.Result{
+		Name: "dns name",
+		Type: check.TypeInfo,
+	}
 
+	names, _ := net.LookupAddr(ipaddr.String())
 	for i := range names {
 		names[i] = strings.TrimSuffix(names[i], ".")
 	}
+	result.Info = Names(names)
 
-	return check.Result{
-		Name: "dns name",
-		Type: check.TypeInfo,
-		Info: Names(names),
-	}, nil
+	return result, nil
 }

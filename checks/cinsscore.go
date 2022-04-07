@@ -16,24 +16,27 @@ type cins struct {
 
 // CinsScore searches ipaddr in https://cinsscore.com/list/ci-badguys.txt.
 func CinsScore(ipaddr net.IP) (check.Result, error) {
+	result := check.Result{
+		Name: "cinsscore.com",
+		Type: check.TypeSec,
+		Info: check.EmptyInfo{},
+	}
+
 	file := "/var/tmp/cins.txt"
 	url := "http://cinsscore.com/list/ci-badguys.txt"
 
 	if err := check.UpdateFile(file, url, ""); err != nil {
-		return check.Result{}, check.NewError(err)
+		return result, check.NewError(err)
 	}
 
 	cins, err := cinsSearch(ipaddr, file)
 	if err != nil {
-		return check.Result{}, check.NewError(fmt.Errorf("searching %s in %s: %v", ipaddr, file, err))
+		return result, check.NewError(fmt.Errorf("searching %s in %s: %v", ipaddr, file, err))
 	}
 
-	return check.Result{
-		Name:      "cinsscore.com",
-		Type:      check.TypeSec,
-		Info:      check.EmptyInfo{},
-		Malicious: cins.BadGuyIP,
-	}, nil
+	result.Malicious = cins.BadGuyIP
+
+	return result, nil
 }
 
 // search searches the ippadrr in filename fills in ET data.
