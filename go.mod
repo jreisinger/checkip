@@ -1,6 +1,6 @@
 module github.com/jreisinger/checkip
 
-go 1.17
+go 1.18
 
 require (
 	github.com/go-ping/ping v0.0.0-20211014180314-6e2b003bffdd
