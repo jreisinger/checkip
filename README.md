@@ -17,8 +17,8 @@ virustotal.com --> network: 218.92.0.0/16, SAN: n/a
 Malicious      --> 63% (5/8) 🚫
 ```
 
-The CLI tool also supports JSON output. Here we select Sec (1) and InfoSec (2)
-check [type](https://pkg.go.dev/github.com/jreisinger/checkip/check#Type) that
+You can get output in JSON (`-j`). Here we select Sec (1) and InfoSec (2) check
+[type](https://pkg.go.dev/github.com/jreisinger/checkip/check#Type) that
 returned some info (i.e. it worked). Then we show if the check considers the IP
 address to be malicious.
 
@@ -35,7 +35,7 @@ false	urlscan.io
 true	virustotal.com
 ```
 
-Active checks (`-a`) interact with the IP address. You should only run
+NOTE: Active checks (`-a`) interact with the IP address. You should only run
 them against your hosts or hosts you have permission to scan.
 
 ```
