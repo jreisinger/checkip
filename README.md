@@ -16,10 +16,7 @@ virustotal.com --> network: 218.92.0.0/16, SAN: n/a
 Malicious      --> 63% (5/8) 🚫
 ```
 
-You can get output in JSON (`-j`). Here we select Sec (1) and InfoSec (2) check
-[type](https://pkg.go.dev/github.com/jreisinger/checkip/check#Type) that
-returned some info (i.e. it worked). Then we show if the check considers the IP
-address to be malicious.
+You can get output in JSON (`-j`). Here we select Sec (1) and InfoSec (2) check [type](https://pkg.go.dev/github.com/jreisinger/checkip/check#Type) that returned some info (i.e. it worked). Then we show if the check considers the IP address to be malicious.
 
 ```
 $ checkip -j 218.92.0.158 | jq -r \
@@ -34,8 +31,7 @@ false	urlscan.io
 true	virustotal.com
 ```
 
-NOTE: Active checks (`-a`) interact with the IP address. You should only run
-them against your hosts or hosts you have permission to scan.
+NOTE: Active checks (`-a`) interact with the IP address. You should only run them against your hosts or hosts you have permission to scan.
 
 ```
 $ checkip -a 45.33.32.156 # scanme.nmap.org
@@ -64,13 +60,11 @@ docker run --rm -it golang /bin/bash
 go install github.com/jreisinger/checkip@latest
 ```
 
-or download a [release](https://github.com/jreisinger/checkip/releases)
-binary (from under "Assets") for your system and architecture.
+or download a [release](https://github.com/jreisinger/checkip/releases) binary (from under "Assets") for your system and architecture.
 
 ## Configuration
 
-For some checks to work you need to register and get an API (LICENSE) key. See
-the service web site for how to do that.
+For some checks to work you need to register and get an API (LICENSE) key. See the service web site for how to do that.
 
 Store the keys in `$HOME/.checkip.yaml` file.
 
@@ -86,9 +80,7 @@ You can also use environment variables with the same names.
 
 ## Development
 
-Checkip is easy to extend. If you want to add a new way to check an IP address,
-just write a function of type [Check][1]. Add the function to `checks.Passive`
-or `checks.Active` [variable][2].
+Checkip is easy to extend. If you want to add a new way to check an IP address, just write a function of type [Check](https://pkg.go.dev/github.com/jreisinger/checkip/check#Check). Add the function to `checks.Passive` or `checks.Active` [variable](https://pkg.go.dev/github.com/jreisinger/checkip/checks#pkg-variables).
 
 ```
 make run # test, install and run
@@ -100,6 +92,3 @@ git tag -a v0.16.2 -m "improve docs"
 
 git push --follow-tags
 ```
-
-[1]: https://pkg.go.dev/github.com/jreisinger/checkip/check#Check
-[2]: https://pkg.go.dev/github.com/jreisinger/checkip/checks#pkg-variables
