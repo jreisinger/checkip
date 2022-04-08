@@ -1,4 +1,4 @@
-package checkip
+package check
 
 import (
 	"encoding/json"
@@ -9,18 +9,18 @@ import (
 	"time"
 )
 
-// DefaultHttpClient is reused by checks that make HTTP requests.
-var DefaultHttpClient = NewHttpClient(&http.Client{Timeout: 5 * time.Second})
+// defaultHttpClient is reused by checks that make HTTP requests.
+var defaultHttpClient = newHttpClient(&http.Client{Timeout: 5 * time.Second})
 
-type HttpClient struct {
+type httpClient struct {
 	client *http.Client
 }
 
-func NewHttpClient(client *http.Client) HttpClient {
-	return HttpClient{client: client}
+func newHttpClient(client *http.Client) httpClient {
+	return httpClient{client: client}
 }
 
-func (c HttpClient) Get(apiUrl string, headers map[string]string, queryParams map[string]string) ([]byte, error) {
+func (c httpClient) Get(apiUrl string, headers map[string]string, queryParams map[string]string) ([]byte, error) {
 	apiURL, err := url.Parse(apiUrl)
 	if err != nil {
 		return nil, err
@@ -62,7 +62,7 @@ func (c HttpClient) Get(apiUrl string, headers map[string]string, queryParams ma
 	return body, nil
 }
 
-func (c HttpClient) GetJson(apiUrl string, headers map[string]string, queryParams map[string]string, response interface{}) error {
+func (c httpClient) GetJson(apiUrl string, headers map[string]string, queryParams map[string]string, response interface{}) error {
 	b, err := c.Get(apiUrl, headers, queryParams)
 	if err != nil {
 		return err

@@ -19,7 +19,7 @@ type dbip struct {
 
 func (d dbip) Summary() string {
 	return fmt.Sprintf("country: %s (%s), city: %s, EU member: %t",
-		checkip.Na(d.Country), checkip.Na(d.IsoCode), checkip.Na(d.City), d.IsInEU)
+		na(d.Country), na(d.IsoCode), na(d.City), d.IsInEU)
 }
 
 func (d dbip) JsonString() (string, error) {
@@ -40,19 +40,19 @@ func DBip(ip net.IP) (checkip.Result, error) {
 		time.Now().Format("2006-01"),
 	)
 
-	if err := checkip.UpdateFile(file, url, "gz"); err != nil {
-		return result, checkip.NewError(err)
+	if err := updateFile(file, url, "gz"); err != nil {
+		return result, newCheckError(err)
 	}
 
 	db, err := geoip2.Open(file)
 	if err != nil {
-		return result, checkip.NewError(fmt.Errorf("can't load DB file: %v", err))
+		return result, newCheckError(fmt.Errorf("can't load DB file: %v", err))
 	}
 	defer db.Close()
 
 	geo, err := db.City(ip)
 	if err != nil {
-		return result, checkip.NewError(err)
+		return result, newCheckError(err)
 	}
 
 	result.Info = dbip{

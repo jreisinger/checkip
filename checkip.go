@@ -1,21 +1,23 @@
-// Package checkip is useful for writing functions that check an IP address.
-// These functions are called checks.
+// Package checkip is useful for writing functions that check an IP address and
+// return some information. These functions are called Checks. See checkip/check
+// package for such functions.
 package checkip
 
 import (
 	"net"
 )
 
+// Existing Check types.
 const (
 	TypeInfo    Type = iota // generic information about the IP address
 	TypeSec                 // whether the IP address is considered malicious
 	TypeInfoSec             // both of the above
 )
 
-// Type is the type of a check.
-type Type int
+// Type is the type of a Check.
+type Type int32
 
-// String returns the name of the check type: Info, Sec or InfoSec.
+// String returns the name of the Check type: Info, Sec or InfoSec.
 func (t Type) String() string {
 	switch t {
 	case TypeInfo:
@@ -32,7 +34,7 @@ func (t Type) String() string {
 // Check checks an IP address providing generic and/or security information.
 type Check func(ipaddr net.IP) (Result, error)
 
-// Result is the results of a check.
+// Result is the information returned by a Check.
 type Result struct {
 	Name      string `json:"name"`      // check name
 	Type      Type   `json:"type"`      // check type
@@ -40,40 +42,21 @@ type Result struct {
 	Malicious bool   `json:"malicious"` // provided by TypeSec check
 }
 
-// Info is some generic information provided by an Info check.
+// Info is some generic information provided by an Info or InfoSec Check.
 type Info interface {
-	Summary() string
-	JsonString() (string, error) // all data in JSON format
+	Summary() string             // summary info
+	JsonString() (string, error) // all info in JSON format
 }
 
-// EmptyInfo is returned by checks that don't provide generic information about
-// an IP address.
+// EmptyInfo is returned by TypeSec Checks that don't provide generic
+// information about an IP address.
 type EmptyInfo struct {
 }
 
 func (EmptyInfo) Summary() string {
-	return Na("")
+	return ""
 }
 
 func (EmptyInfo) JsonString() (string, error) {
 	return "{}", nil
-}
-
-// Na returns "n/a" if s is empty.
-func Na(s string) string {
-	if s == "" {
-		return "n/a"
-	}
-	return s
-}
-
-// NonEmpty returns strings that are not empty.
-func NonEmpty(strings ...string) []string {
-	var ss []string
-	for _, s := range strings {
-		if s != "" {
-			ss = append(ss, s)
-		}
-	}
-	return ss
 }

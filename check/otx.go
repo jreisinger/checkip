@@ -27,13 +27,13 @@ func OTX(ipaddr net.IP) (checkip.Result, error) {
 
 	u, err := url.Parse(otxUrl)
 	if err != nil {
-		return result, checkip.NewError(err)
+		return result, newCheckError(err)
 	}
 	u.Path = path.Join(u.Path, ipaddr.String())
 
 	var otx otx
-	if err := checkip.DefaultHttpClient.GetJson(u.String(), map[string]string{}, map[string]string{}, &otx); err != nil {
-		return result, checkip.NewError(err)
+	if err := defaultHttpClient.GetJson(u.String(), map[string]string{}, map[string]string{}, &otx); err != nil {
+		return result, newCheckError(err)
 	}
 	result.Malicious = otx.PulseInfo.Count > 10
 

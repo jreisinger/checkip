@@ -22,7 +22,7 @@ type AutonomousSystem struct {
 }
 
 func (a AutonomousSystem) Summary() string {
-	return fmt.Sprintf("AS description: %s", checkip.Na(a.Description))
+	return fmt.Sprintf("AS description: %s", na(a.Description))
 }
 
 func (a AutonomousSystem) JsonString() (string, error) {
@@ -41,13 +41,13 @@ func IPtoASN(ipaddr net.IP) (checkip.Result, error) {
 	file := "/var/tmp/ip2asn-combined.tsv"
 	url := "https://iptoasn.com/data/ip2asn-combined.tsv.gz"
 
-	if err := checkip.UpdateFile(file, url, "gz"); err != nil {
-		return result, checkip.NewError(err)
+	if err := updateFile(file, url, "gz"); err != nil {
+		return result, newCheckError(err)
 	}
 
 	as, err := asSearch(ipaddr, file)
 	if err != nil {
-		return result, checkip.NewError(fmt.Errorf("searching %s in %s: %v", ipaddr, file, err))
+		return result, newCheckError(fmt.Errorf("searching %s in %s: %v", ipaddr, file, err))
 	}
 	result.Info = as
 

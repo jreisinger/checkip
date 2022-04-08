@@ -20,13 +20,13 @@ func Ping(ipaddr net.IP) (checkip.Result, error) {
 
 	pinger, err := ping.NewPinger(ipaddr.String())
 	if err != nil {
-		return result, checkip.NewError(err)
+		return result, newCheckError(err)
 	}
 	pinger.Count = 5
 	pinger.Timeout = time.Second * 5
 	err = pinger.Run() // Blocks until finished.
 	if err != nil {
-		return result, checkip.NewError(err)
+		return result, newCheckError(err)
 	}
 
 	ps := pinger.Statistics() // get send/receive/duplicate/rtt stats

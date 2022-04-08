@@ -14,7 +14,7 @@ import (
 	"github.com/jreisinger/checkip"
 )
 
-// Run runs checks concurrently against the ippaddr.
+// Run runs Checks concurrently against the ippaddr.
 func Run(checks []checkip.Check, ipaddr net.IP) (Results, []error) {
 	var results Results
 	var errors []error
@@ -36,9 +36,10 @@ func Run(checks []checkip.Check, ipaddr net.IP) (Results, []error) {
 	return results, errors
 }
 
+// Results are generic or security information provided by of a Check.
 type Results []checkip.Result
 
-// PrintJSON prints all results in JSON.
+// PrintJSON prints all Results in JSON.
 func (rs Results) PrintJSON() {
 	if len(rs) == 0 {
 		return

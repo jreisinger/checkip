@@ -1,4 +1,4 @@
-package checkip
+package check
 
 import (
 	"os"
@@ -8,10 +8,10 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-// GetConfigValue tries to get value for key first from an environment variable
+// getConfigValue tries to get value for key first from an environment variable
 // then from a configuration file at $HOME/.checkip.yaml. If value is not found
 // an empty string and nil is returned (i.e. it's not considered an error).
-var GetConfigValue = func(key string) (string, error) {
+var getConfigValue = func(key string) (string, error) {
 	// Try to get the key from environment.
 	if value := os.Getenv(key); value != "" {
 		return value, nil

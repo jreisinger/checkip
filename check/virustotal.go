@@ -32,7 +32,7 @@ type virusTotal struct {
 }
 
 func (v virusTotal) Summary() string {
-	return fmt.Sprintf("network: %s, SAN: %s", checkip.Na(v.Data.Attributes.Network), checkip.Na(strings.Join(v.Data.Attributes.LastHTTPScert.Extensions.SAN, ", ")))
+	return fmt.Sprintf("network: %s, SAN: %s", na(v.Data.Attributes.Network), na(strings.Join(v.Data.Attributes.LastHTTPScert.Extensions.SAN, ", ")))
 }
 
 func (v virusTotal) JsonString() (string, error) {
@@ -48,9 +48,9 @@ func VirusTotal(ipaddr net.IP) (checkip.Result, error) {
 		Type: checkip.TypeInfoSec,
 	}
 
-	apiKey, err := checkip.GetConfigValue("VIRUSTOTAL_API_KEY")
+	apiKey, err := getConfigValue("VIRUSTOTAL_API_KEY")
 	if err != nil {
-		return result, checkip.NewError(err)
+		return result, newCheckError(err)
 	}
 	if apiKey == "" {
 		return result, nil
@@ -60,8 +60,8 @@ func VirusTotal(ipaddr net.IP) (checkip.Result, error) {
 	headers := map[string]string{"x-apikey": apiKey}
 	apiUrl := "https://www.virustotal.com/api/v3/ip_addresses/" + ipaddr.String()
 	var virusTotal virusTotal
-	if err := checkip.DefaultHttpClient.GetJson(apiUrl, headers, map[string]string{}, &virusTotal); err != nil {
-		return result, checkip.NewError(err)
+	if err := defaultHttpClient.GetJson(apiUrl, headers, map[string]string{}, &virusTotal); err != nil {
+		return result, newCheckError(err)
 	}
 
 	result.Info = virusTotal

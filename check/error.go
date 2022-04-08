@@ -1,4 +1,4 @@
-package checkip
+package check
 
 import (
 	"regexp"
@@ -6,13 +6,13 @@ import (
 	"strings"
 )
 
-// Error is an error returned by a check.
-type Error struct {
+// checkError is an error returned by a check.
+type checkError struct {
 	err       error  // might contain secrets, like API keys
 	ErrString string `json:"error"` // secrets redacted
 }
 
-func NewError(err error) *Error {
+func newCheckError(err error) *checkError {
 	callerName := "unknownCaller"
 	pc, _, _, ok := runtime.Caller(1)
 	details := runtime.FuncForPC(pc)
@@ -21,10 +21,10 @@ func NewError(err error) *Error {
 		parts := strings.Split(name, ".")
 		callerName = parts[len(parts)-1]
 	}
-	return &Error{err: err, ErrString: callerName + ": " + redactSecrets(err.Error())}
+	return &checkError{err: err, ErrString: callerName + ": " + redactSecrets(err.Error())}
 }
 
-func (e *Error) Error() string {
+func (e *checkError) Error() string {
 	return e.ErrString
 }
 

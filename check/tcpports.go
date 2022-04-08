@@ -52,7 +52,7 @@ func TcpPorts(ipaddr net.IP) (checkip.Result, error) {
 
 	openports, err := scan(ipaddr, 1000)
 	if err != nil {
-		return result, checkip.NewError(err)
+		return result, newCheckError(err)
 	}
 	result.Info = OpenTcpPorts(openports)
 

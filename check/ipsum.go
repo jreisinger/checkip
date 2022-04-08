@@ -22,13 +22,13 @@ func IPSum(ipaddr net.IP) (checkip.Result, error) {
 	file := "/var/tmp/ipsum.txt"
 	url := "https://raw.githubusercontent.com/stamparm/ipsum/master/ipsum.txt"
 
-	if err := checkip.UpdateFile(file, url, ""); err != nil {
-		return result, checkip.NewError(err)
+	if err := updateFile(file, url, ""); err != nil {
+		return result, newCheckError(err)
 	}
 
 	blackLists, err := searchIPSumBlacklists(ipaddr, file)
 	if err != nil {
-		return result, checkip.NewError(fmt.Errorf("searching %s in %s: %v", ipaddr, file, err))
+		return result, newCheckError(fmt.Errorf("searching %s in %s: %v", ipaddr, file, err))
 	}
 	result.Malicious = blackLists > 0
 

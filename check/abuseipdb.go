@@ -29,7 +29,7 @@ type abuseIPDB struct {
 }
 
 func (a abuseIPDB) Summary() string {
-	return fmt.Sprintf("domain: %s, usage type: %s", checkip.Na(a.Domain), checkip.Na(a.UsageType))
+	return fmt.Sprintf("domain: %s, usage type: %s", na(a.Domain), na(a.UsageType))
 }
 
 func (a abuseIPDB) JsonString() (string, error) {
@@ -42,9 +42,9 @@ func (a abuseIPDB) JsonString() (string, error) {
 func AbuseIPDB(ipaddr net.IP) (checkip.Result, error) {
 	result := checkip.Result{Name: "abuseipdb.com", Type: checkip.TypeInfoSec}
 
-	apiKey, err := checkip.GetConfigValue("ABUSEIPDB_API_KEY")
+	apiKey, err := getConfigValue("ABUSEIPDB_API_KEY")
 	if err != nil {
-		return result, checkip.NewError(err)
+		return result, newCheckError(err)
 	}
 	if apiKey == "" {
 		return result, nil
@@ -65,8 +65,8 @@ func AbuseIPDB(ipaddr net.IP) (checkip.Result, error) {
 		AbuseIPDB abuseIPDB `json:"data"`
 	}
 	// docs.abuseipdb.com/#check-endpoint
-	if err := checkip.DefaultHttpClient.GetJson(abuseIPDBUrl, headers, queryParams, &data); err != nil {
-		return result, checkip.NewError(err)
+	if err := defaultHttpClient.GetJson(abuseIPDBUrl, headers, queryParams, &data); err != nil {
+		return result, newCheckError(err)
 	}
 
 	result.Info = data.AbuseIPDB

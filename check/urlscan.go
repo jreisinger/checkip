@@ -21,9 +21,9 @@ func UrlScan(ipaddr net.IP) (checkip.Result, error) {
 		Type: checkip.TypeInfoSec,
 	}
 
-	apiKey, err := checkip.GetConfigValue("URLSCAN_API_KEY")
+	apiKey, err := getConfigValue("URLSCAN_API_KEY")
 	if err != nil {
-		return result, checkip.NewError(err)
+		return result, newCheckError(err)
 	}
 	if apiKey == "" {
 		return result, nil
@@ -40,17 +40,17 @@ func UrlScan(ipaddr net.IP) (checkip.Result, error) {
 
 	var u urlscan
 
-	if err := checkip.DefaultHttpClient.GetJson(url, headers, queryParams, &u); err != nil {
-		return result, checkip.NewError(err)
+	if err := defaultHttpClient.GetJson(url, headers, queryParams, &u); err != nil {
+		return result, newCheckError(err)
 	}
 
 	var maliciousVerdicts int
 
 	for _, r := range u.Results {
 		var ur urlscanResult
-		err := checkip.DefaultHttpClient.GetJson(r.Result, headers, map[string]string{}, &ur)
+		err := defaultHttpClient.GetJson(r.Result, headers, map[string]string{}, &ur)
 		if err != nil {
-			return result, checkip.NewError(err)
+			return result, newCheckError(err)
 		}
 		if ur.Verdicts.Overall.Malicious {
 			maliciousVerdicts++

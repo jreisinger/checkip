@@ -1,4 +1,4 @@
-package checkip
+package check
 
 import (
 	"io/ioutil"
@@ -20,7 +20,7 @@ func TestHttpClient_GetJson(t *testing.T) {
 		}))
 		defer server.Close()
 
-		client := NewHttpClient(server.Client())
+		client := newHttpClient(server.Client())
 		var response map[string]string
 		err := client.GetJson(server.URL, nil, nil, &response)
 
@@ -35,7 +35,7 @@ func TestHttpClient_GetJson(t *testing.T) {
 		}))
 		defer server.Close()
 
-		client := NewHttpClient(server.Client())
+		client := newHttpClient(server.Client())
 		var response map[string]string
 		err := client.GetJson(server.URL, nil, nil, &response)
 
@@ -49,7 +49,7 @@ func TestHttpClient_GetJson(t *testing.T) {
 		}))
 		defer server.Close()
 
-		client := NewHttpClient(server.Client())
+		client := newHttpClient(server.Client())
 		var response map[string]string
 		err := client.GetJson(server.URL, nil, nil, &response)
 

@@ -28,8 +28,8 @@ func ThreadCrowd(ipaddr net.IP) (checkip.Result, error) {
 	// 0 	voted malicious/harmless by equal number of users
 	// 1:  	voted harmless by most users
 	var threadCrowd threatCrowd
-	if err := checkip.DefaultHttpClient.GetJson("https://www.threatcrowd.org/searchApi/v2/ip/report", map[string]string{}, queryParams, &threadCrowd); err != nil {
-		return result, checkip.NewError(err)
+	if err := defaultHttpClient.GetJson("https://www.threatcrowd.org/searchApi/v2/ip/report", map[string]string{}, queryParams, &threadCrowd); err != nil {
+		return result, newCheckError(err)
 	}
 	result.Malicious = threadCrowd.Votes < 0
 

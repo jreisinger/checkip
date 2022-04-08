@@ -31,9 +31,9 @@ func Shodan(ipaddr net.IP) (checkip.Result, error) {
 		Type: checkip.TypeInfo,
 	}
 
-	apiKey, err := checkip.GetConfigValue("SHODAN_API_KEY")
+	apiKey, err := getConfigValue("SHODAN_API_KEY")
 	if err != nil {
-		return result, checkip.NewError(err)
+		return result, newCheckError(err)
 	}
 	if apiKey == "" {
 		return result, nil
@@ -41,8 +41,8 @@ func Shodan(ipaddr net.IP) (checkip.Result, error) {
 
 	var shodan shodan
 	apiURL := fmt.Sprintf("https://api.shodan.io/shodan/host/%s?key=%s", ipaddr, apiKey)
-	if err := checkip.DefaultHttpClient.GetJson(apiURL, map[string]string{}, map[string]string{}, &shodan); err != nil {
-		return result, checkip.NewError(err)
+	if err := defaultHttpClient.GetJson(apiURL, map[string]string{}, map[string]string{}, &shodan); err != nil {
+		return result, newCheckError(err)
 	}
 	result.Info = shodan
 
@@ -73,7 +73,7 @@ func (s shodan) Summary() string {
 		if product == "" && version == "" {
 			portInfo = append(portInfo, fmt.Sprintf("%s/%d", d.Transport, d.Port))
 		} else {
-			ss := checkip.NonEmpty(product, version)
+			ss := nonEmpty(product, version)
 			portInfo = append(portInfo, fmt.Sprintf("%s/%d (%s)", d.Transport, d.Port, strings.Join(ss, ", ")))
 		}
 	}
@@ -85,7 +85,7 @@ func (s shodan) Summary() string {
 	if len(portInfo) > 0 {
 		portStr += ":"
 	}
-	return fmt.Sprintf("OS: %s, %d open %s %s", checkip.Na(s.OS), len(portInfo), portStr, strings.Join(portInfo, ", "))
+	return fmt.Sprintf("OS: %s, %d open %s %s", na(s.OS), len(portInfo), portStr, strings.Join(portInfo, ", "))
 }
 
 func (s shodan) JsonString() (string, error) {

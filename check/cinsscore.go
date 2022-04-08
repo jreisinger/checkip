@@ -25,13 +25,13 @@ func CinsScore(ipaddr net.IP) (checkip.Result, error) {
 	file := "/var/tmp/cins.txt"
 	url := "http://cinsscore.com/list/ci-badguys.txt"
 
-	if err := checkip.UpdateFile(file, url, ""); err != nil {
-		return result, checkip.NewError(err)
+	if err := updateFile(file, url, ""); err != nil {
+		return result, newCheckError(err)
 	}
 
 	cins, err := cinsSearch(ipaddr, file)
 	if err != nil {
-		return result, checkip.NewError(fmt.Errorf("searching %s in %s: %v", ipaddr, file, err))
+		return result, newCheckError(fmt.Errorf("searching %s in %s: %v", ipaddr, file, err))
 	}
 
 	result.Malicious = cins.BadGuyIP

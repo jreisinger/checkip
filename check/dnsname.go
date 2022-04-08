@@ -12,7 +12,7 @@ import (
 type Names []string
 
 func (n Names) Summary() string {
-	return checkip.Na(strings.Join(n, ", "))
+	return na(strings.Join(n, ", "))
 }
 
 func (n Names) JsonString() (string, error) {

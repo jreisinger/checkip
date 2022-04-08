@@ -7,27 +7,26 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/jreisinger/checkip"
 	"github.com/stretchr/testify/require"
 )
 
 // SetMockConfig helper to replace GetConfigValue function
 func SetMockConfig(t *testing.T, fn func(key string) (string, error)) {
-	defaultConfig := checkip.GetConfigValue
-	checkip.GetConfigValue = fn
+	defaultConfig := getConfigValue
+	getConfigValue = fn
 	t.Cleanup(func() {
-		checkip.GetConfigValue = defaultConfig
+		getConfigValue = defaultConfig
 	})
 }
 
-// SetSetMockHttpClient sets checkip.DefaultHttpClient to httptest handler and returns test url
+// SetSetMockHttpClient sets DefaultHttpClient to httptest handler and returns test url
 func SetMockHttpClient(t *testing.T, handlerFn http.HandlerFunc) string {
 	server := httptest.NewServer(handlerFn)
-	defaultHttpClient := checkip.DefaultHttpClient
-	checkip.DefaultHttpClient = checkip.NewHttpClient(server.Client())
+	dHC := defaultHttpClient
+	defaultHttpClient = newHttpClient(server.Client())
 	t.Cleanup(func() {
 		server.Close()
-		checkip.DefaultHttpClient = defaultHttpClient
+		defaultHttpClient = dHC
 	})
 	return server.URL
 }

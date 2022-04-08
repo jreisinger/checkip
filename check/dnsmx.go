@@ -24,7 +24,7 @@ func (mx MX) Summary() string {
 		}
 		s += domain + ": " + strings.Join(mxRecords, ", ")
 	}
-	return checkip.Na(s)
+	return na(s)
 }
 
 func (mx MX) JsonString() (string, error) {
@@ -54,20 +54,20 @@ func DnsMX(ipaddr net.IP) (checkip.Result, error) {
 	// [www.csh.ac.at. csh.ac.at.] = > [www.csh.ac.at. csh.ac.at. aco.net]
 	r, err := AbuseIPDB(ipaddr)
 	if err != nil {
-		return result, checkip.NewError(err)
+		return result, newCheckError(err)
 	}
 	if r.Info == nil {
 		return result, nil
 	}
 	j, err := r.Info.JsonString()
 	if err != nil {
-		return result, checkip.NewError(err)
+		return result, newCheckError(err)
 	}
 	sr := strings.NewReader(j)
 	decoder := json.NewDecoder(sr)
 	var a abuseIPDB
 	if err := decoder.Decode(&a); err != nil {
-		return result, checkip.NewError(err)
+		return result, newCheckError(err)
 	}
 	names = append(names, a.Domain)
 
