@@ -1,4 +1,4 @@
-// Package check contains Checks, i.e. functions that check an IP address.
+// Package check contains functions that implement checkip.Check.
 package check
 
 import (

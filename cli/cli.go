@@ -1,4 +1,4 @@
-// Package cli contains functions for checking IP addresses from CLI.
+// Package cli contains functions for checking IP addresses from command-line.
 package cli
 
 import (

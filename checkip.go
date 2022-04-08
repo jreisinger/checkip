@@ -1,5 +1,5 @@
-// Package checkip provides generic and security information about an IP
-// address. See checkip/check package for the actual functions doing the checks.
+// Package checkip defines Check type, which provides information about an IP
+// address.
 package checkip
 
 import (
