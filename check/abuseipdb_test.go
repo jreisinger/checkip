@@ -15,10 +15,10 @@ func TestAbuseIPDB(t *testing.T) {
 	t.Run("given valid response then result and no error is returned", func(t *testing.T) {
 		handlerFn := http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
 			rw.WriteHeader(http.StatusOK)
-			rw.Write(LoadResponse(t, "abuseipdb_response.json"))
+			rw.Write(loadResponse(t, "abuseipdb_response.json"))
 		})
 		setAbuseIPDBConfig(t)
-		testUrl := SetMockHttpClient(t, handlerFn)
+		testUrl := setMockHttpClient(t, handlerFn)
 		setAbuseIPDBUrl(t, testUrl)
 
 		result, err := AbuseIPDB(net.ParseIP("118.25.6.39"))
@@ -34,7 +34,7 @@ func TestAbuseIPDB(t *testing.T) {
 			rw.WriteHeader(http.StatusInternalServerError)
 		})
 		setAbuseIPDBConfig(t)
-		testUrl := SetMockHttpClient(t, handlerFn)
+		testUrl := setMockHttpClient(t, handlerFn)
 		setAbuseIPDBUrl(t, testUrl)
 
 		_, err := AbuseIPDB(net.ParseIP("118.25.6.39"))
@@ -53,7 +53,7 @@ func setAbuseIPDBUrl(t *testing.T, testUrl string) {
 }
 
 func setAbuseIPDBConfig(t *testing.T) {
-	SetMockConfig(t, func(key string) (string, error) {
+	setMockConfig(t, func(key string) (string, error) {
 		if key == "ABUSEIPDB_API_KEY" {
 			return "123-secret-789", nil
 		}

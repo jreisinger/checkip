@@ -1,10 +1,8 @@
 package check
 
 import (
-	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
-	"path/filepath"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -55,12 +53,4 @@ func TestHttpClient_GetJson(t *testing.T) {
 
 		require.Error(t, err)
 	})
-}
-
-// --- helper functions ---
-
-func loadResponse(t *testing.T, name string) []byte {
-	b, err := ioutil.ReadFile(filepath.Join("testdata", name))
-	require.NoError(t, err)
-	return b
 }

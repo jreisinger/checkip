@@ -14,10 +14,10 @@ func TestOTX(t *testing.T) {
 	t.Run("given valid response then result and no error is returned", func(t *testing.T) {
 		handlerFn := http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
 			rw.WriteHeader(http.StatusOK)
-			rw.Write(LoadResponse(t, "otx_response.json"))
+			rw.Write(loadResponse(t, "otx_response.json"))
 		})
 
-		testUrl := SetMockHttpClient(t, handlerFn)
+		testUrl := setMockHttpClient(t, handlerFn)
 		setOTXUrl(t, testUrl)
 
 		result, err := OTX(net.ParseIP("118.25.6.39"))
@@ -33,7 +33,7 @@ func TestOTX(t *testing.T) {
 			rw.WriteHeader(http.StatusInternalServerError)
 		})
 
-		testUrl := SetMockHttpClient(t, handlerFn)
+		testUrl := setMockHttpClient(t, handlerFn)
 		setOTXUrl(t, testUrl)
 
 		_, err := OTX(net.ParseIP("118.25.6.39"))

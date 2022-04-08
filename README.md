@@ -1,6 +1,6 @@
 # checkip
 
-Checkip is a CLI tool and library that provides generic and security information about an IP address in a quick way. It uses various [checks](https://pkg.go.dev/github.com/jreisinger/checkip/check) to do so.
+Checkip is a CLI tool and [library](https://pkg.go.dev/github.com/jreisinger/checkip/check) that provides generic and security information about an IP address in a quick way.
 
 ```
 $ checkip 218.92.0.158
