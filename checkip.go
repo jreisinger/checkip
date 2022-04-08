@@ -1,6 +1,5 @@
-// Package checkip is useful for writing functions that check an IP address and
-// return some information. These functions are called Checks. See checkip/check
-// package for such functions.
+// Package checkip provides generic and security information about an IP
+// address. See checkip/check package for the actual functions doing the checks.
 package checkip
 
 import (
