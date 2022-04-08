@@ -1,18 +1,18 @@
-package checks
+package check
 
 import (
 	"encoding/json"
 	"net"
 	"strings"
 
-	"github.com/jreisinger/checkip/check"
+	"github.com/jreisinger/checkip"
 )
 
 // Names are the DNS names of the given IP address.
 type Names []string
 
 func (n Names) Summary() string {
-	return check.Na(strings.Join(n, ", "))
+	return checkip.Na(strings.Join(n, ", "))
 }
 
 func (n Names) JsonString() (string, error) {
@@ -21,10 +21,10 @@ func (n Names) JsonString() (string, error) {
 }
 
 // DnsName does a reverse lookup for a given IP address to get its names.
-func DnsName(ipaddr net.IP) (check.Result, error) {
-	result := check.Result{
+func DnsName(ipaddr net.IP) (checkip.Result, error) {
+	result := checkip.Result{
 		Name: "dns name",
-		Type: check.TypeInfo,
+		Type: checkip.TypeInfo,
 	}
 
 	names, _ := net.LookupAddr(ipaddr.String())

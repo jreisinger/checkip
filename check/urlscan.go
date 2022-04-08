@@ -1,4 +1,4 @@
-package checks
+package check
 
 import (
 	"encoding/json"
@@ -7,7 +7,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/jreisinger/checkip/check"
+	"github.com/jreisinger/checkip"
 )
 
 const days = 30 // limit search to last 30 days
@@ -15,15 +15,15 @@ const days = 30 // limit search to last 30 days
 // UrlScan gets data from urlscan.io. When a URL is submitted to urlscan.io, an
 // automated process will browse to the URL like a regular user and record the
 // activity that this page navigation creates.
-func UrlScan(ipaddr net.IP) (check.Result, error) {
-	result := check.Result{
+func UrlScan(ipaddr net.IP) (checkip.Result, error) {
+	result := checkip.Result{
 		Name: "urlscan.io",
-		Type: check.TypeInfoSec,
+		Type: checkip.TypeInfoSec,
 	}
 
-	apiKey, err := check.GetConfigValue("URLSCAN_API_KEY")
+	apiKey, err := checkip.GetConfigValue("URLSCAN_API_KEY")
 	if err != nil {
-		return result, check.NewError(err)
+		return result, checkip.NewError(err)
 	}
 	if apiKey == "" {
 		return result, nil
@@ -40,17 +40,17 @@ func UrlScan(ipaddr net.IP) (check.Result, error) {
 
 	var u urlscan
 
-	if err := check.DefaultHttpClient.GetJson(url, headers, queryParams, &u); err != nil {
-		return result, check.NewError(err)
+	if err := checkip.DefaultHttpClient.GetJson(url, headers, queryParams, &u); err != nil {
+		return result, checkip.NewError(err)
 	}
 
 	var maliciousVerdicts int
 
 	for _, r := range u.Results {
 		var ur urlscanResult
-		err := check.DefaultHttpClient.GetJson(r.Result, headers, map[string]string{}, &ur)
+		err := checkip.DefaultHttpClient.GetJson(r.Result, headers, map[string]string{}, &ur)
 		if err != nil {
-			return result, check.NewError(err)
+			return result, checkip.NewError(err)
 		}
 		if ur.Verdicts.Overall.Malicious {
 			maliciousVerdicts++

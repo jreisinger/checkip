@@ -1,4 +1,4 @@
-package checks
+package check
 
 import (
 	"bufio"
@@ -10,7 +10,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/jreisinger/checkip/check"
+	"github.com/jreisinger/checkip"
 )
 
 type AutonomousSystem struct {
@@ -22,7 +22,7 @@ type AutonomousSystem struct {
 }
 
 func (a AutonomousSystem) Summary() string {
-	return fmt.Sprintf("AS description: %s", check.Na(a.Description))
+	return fmt.Sprintf("AS description: %s", checkip.Na(a.Description))
 }
 
 func (a AutonomousSystem) JsonString() (string, error) {
@@ -32,22 +32,22 @@ func (a AutonomousSystem) JsonString() (string, error) {
 
 // IPtoASN gets info about autonomous system (IPtoASN) of the ipaddr. The data
 // is taken from a TSV file ip2asn-combined downloaded from iptoasn.com.
-func IPtoASN(ipaddr net.IP) (check.Result, error) {
-	result := check.Result{
+func IPtoASN(ipaddr net.IP) (checkip.Result, error) {
+	result := checkip.Result{
 		Name: "iptoasn.com",
-		Type: check.TypeInfo,
+		Type: checkip.TypeInfo,
 	}
 
 	file := "/var/tmp/ip2asn-combined.tsv"
 	url := "https://iptoasn.com/data/ip2asn-combined.tsv.gz"
 
-	if err := check.UpdateFile(file, url, "gz"); err != nil {
-		return result, check.NewError(err)
+	if err := checkip.UpdateFile(file, url, "gz"); err != nil {
+		return result, checkip.NewError(err)
 	}
 
 	as, err := asSearch(ipaddr, file)
 	if err != nil {
-		return result, check.NewError(fmt.Errorf("searching %s in %s: %v", ipaddr, file, err))
+		return result, checkip.NewError(fmt.Errorf("searching %s in %s: %v", ipaddr, file, err))
 	}
 	result.Info = as
 

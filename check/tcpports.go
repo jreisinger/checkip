@@ -1,4 +1,4 @@
-package checks
+package check
 
 import (
 	"encoding/json"
@@ -8,7 +8,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/jreisinger/checkip/check"
+	"github.com/jreisinger/checkip"
 	"github.com/jreisinger/nmapservices"
 )
 
@@ -44,15 +44,15 @@ func (t OpenTcpPorts) JsonString() (string, error) {
 // TcpPorts tries to connect to the 1000 TCP ports that are most often found
 // open on Internet hosts. Then it reports which of those ports are open on the
 // given IP address.
-func TcpPorts(ipaddr net.IP) (check.Result, error) {
-	result := check.Result{
+func TcpPorts(ipaddr net.IP) (checkip.Result, error) {
+	result := checkip.Result{
 		Name: "Open TCP ports",
-		Type: check.TypeInfo,
+		Type: checkip.TypeInfo,
 	}
 
 	openports, err := scan(ipaddr, 1000)
 	if err != nil {
-		return result, check.NewError(err)
+		return result, checkip.NewError(err)
 	}
 	result.Info = OpenTcpPorts(openports)
 

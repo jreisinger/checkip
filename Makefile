@@ -2,7 +2,7 @@ test:
 	go test ./...
 
 install: test
-	go install
+	go install cmd/checkip/checkip.go
 
 run: install
 	checkip 218.92.0.158

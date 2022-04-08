@@ -1,4 +1,4 @@
-package checks
+package check
 
 import (
 	"bufio"
@@ -6,7 +6,7 @@ import (
 	"net"
 	"os"
 
-	"github.com/jreisinger/checkip/check"
+	"github.com/jreisinger/checkip"
 )
 
 type cins struct {
@@ -15,23 +15,23 @@ type cins struct {
 }
 
 // CinsScore searches ipaddr in https://cinsscore.com/list/ci-badguys.txt.
-func CinsScore(ipaddr net.IP) (check.Result, error) {
-	result := check.Result{
+func CinsScore(ipaddr net.IP) (checkip.Result, error) {
+	result := checkip.Result{
 		Name: "cinsscore.com",
-		Type: check.TypeSec,
-		Info: check.EmptyInfo{},
+		Type: checkip.TypeSec,
+		Info: checkip.EmptyInfo{},
 	}
 
 	file := "/var/tmp/cins.txt"
 	url := "http://cinsscore.com/list/ci-badguys.txt"
 
-	if err := check.UpdateFile(file, url, ""); err != nil {
-		return result, check.NewError(err)
+	if err := checkip.UpdateFile(file, url, ""); err != nil {
+		return result, checkip.NewError(err)
 	}
 
 	cins, err := cinsSearch(ipaddr, file)
 	if err != nil {
-		return result, check.NewError(fmt.Errorf("searching %s in %s: %v", ipaddr, file, err))
+		return result, checkip.NewError(fmt.Errorf("searching %s in %s: %v", ipaddr, file, err))
 	}
 
 	result.Malicious = cins.BadGuyIP

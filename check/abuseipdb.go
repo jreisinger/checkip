@@ -1,4 +1,4 @@
-package checks
+package check
 
 import (
 	"encoding/json"
@@ -6,7 +6,7 @@ import (
 	"net"
 	"time"
 
-	"github.com/jreisinger/checkip/check"
+	"github.com/jreisinger/checkip"
 )
 
 // Only return reports within the last x amount of days. Default is 30.
@@ -29,7 +29,7 @@ type abuseIPDB struct {
 }
 
 func (a abuseIPDB) Summary() string {
-	return fmt.Sprintf("domain: %s, usage type: %s", check.Na(a.Domain), check.Na(a.UsageType))
+	return fmt.Sprintf("domain: %s, usage type: %s", checkip.Na(a.Domain), checkip.Na(a.UsageType))
 }
 
 func (a abuseIPDB) JsonString() (string, error) {
@@ -39,12 +39,12 @@ func (a abuseIPDB) JsonString() (string, error) {
 
 // AbuseIPDB uses api.abuseipdb.com to get generic information about ipaddr and
 // see if the ipaddr has been reported as malicious.
-func AbuseIPDB(ipaddr net.IP) (check.Result, error) {
-	result := check.Result{Name: "abuseipdb.com", Type: check.TypeInfoSec}
+func AbuseIPDB(ipaddr net.IP) (checkip.Result, error) {
+	result := checkip.Result{Name: "abuseipdb.com", Type: checkip.TypeInfoSec}
 
-	apiKey, err := check.GetConfigValue("ABUSEIPDB_API_KEY")
+	apiKey, err := checkip.GetConfigValue("ABUSEIPDB_API_KEY")
 	if err != nil {
-		return result, check.NewError(err)
+		return result, checkip.NewError(err)
 	}
 	if apiKey == "" {
 		return result, nil
@@ -65,8 +65,8 @@ func AbuseIPDB(ipaddr net.IP) (check.Result, error) {
 		AbuseIPDB abuseIPDB `json:"data"`
 	}
 	// docs.abuseipdb.com/#check-endpoint
-	if err := check.DefaultHttpClient.GetJson(abuseIPDBUrl, headers, queryParams, &data); err != nil {
-		return result, check.NewError(err)
+	if err := checkip.DefaultHttpClient.GetJson(abuseIPDBUrl, headers, queryParams, &data); err != nil {
+		return result, checkip.NewError(err)
 	}
 
 	result.Info = data.AbuseIPDB

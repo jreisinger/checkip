@@ -1,9 +1,9 @@
-package checks
+package check
 
 import (
 	"net"
 
-	"github.com/jreisinger/checkip/check"
+	"github.com/jreisinger/checkip"
 )
 
 type threatCrowd struct {
@@ -12,11 +12,11 @@ type threatCrowd struct {
 
 // ThreadCrowd threatcrowd.org to find out whether the ipaddr was voted
 // malicious.
-func ThreadCrowd(ipaddr net.IP) (check.Result, error) {
-	result := check.Result{
+func ThreadCrowd(ipaddr net.IP) (checkip.Result, error) {
+	result := checkip.Result{
 		Name: "threatcrowd.org",
-		Type: check.TypeSec,
-		Info: check.EmptyInfo{},
+		Type: checkip.TypeSec,
+		Info: checkip.EmptyInfo{},
 	}
 
 	queryParams := map[string]string{
@@ -28,8 +28,8 @@ func ThreadCrowd(ipaddr net.IP) (check.Result, error) {
 	// 0 	voted malicious/harmless by equal number of users
 	// 1:  	voted harmless by most users
 	var threadCrowd threatCrowd
-	if err := check.DefaultHttpClient.GetJson("https://www.threatcrowd.org/searchApi/v2/ip/report", map[string]string{}, queryParams, &threadCrowd); err != nil {
-		return result, check.NewError(err)
+	if err := checkip.DefaultHttpClient.GetJson("https://www.threatcrowd.org/searchApi/v2/ip/report", map[string]string{}, queryParams, &threadCrowd); err != nil {
+		return result, checkip.NewError(err)
 	}
 	result.Malicious = threadCrowd.Votes < 0
 

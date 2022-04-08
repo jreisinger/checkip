@@ -1,4 +1,4 @@
-package checks
+package check
 
 import (
 	"encoding/json"
@@ -6,7 +6,7 @@ import (
 	"net"
 	"strings"
 
-	"github.com/jreisinger/checkip/check"
+	"github.com/jreisinger/checkip"
 )
 
 type virusTotal struct {
@@ -32,7 +32,7 @@ type virusTotal struct {
 }
 
 func (v virusTotal) Summary() string {
-	return fmt.Sprintf("network: %s, SAN: %s", check.Na(v.Data.Attributes.Network), check.Na(strings.Join(v.Data.Attributes.LastHTTPScert.Extensions.SAN, ", ")))
+	return fmt.Sprintf("network: %s, SAN: %s", checkip.Na(v.Data.Attributes.Network), checkip.Na(strings.Join(v.Data.Attributes.LastHTTPScert.Extensions.SAN, ", ")))
 }
 
 func (v virusTotal) JsonString() (string, error) {
@@ -42,15 +42,15 @@ func (v virusTotal) JsonString() (string, error) {
 
 // VirusTotal gets generic information and security reputation about the ippaddr
 // from https://www.virustotal.com/api.
-func VirusTotal(ipaddr net.IP) (check.Result, error) {
-	result := check.Result{
+func VirusTotal(ipaddr net.IP) (checkip.Result, error) {
+	result := checkip.Result{
 		Name: "virustotal.com",
-		Type: check.TypeInfoSec,
+		Type: checkip.TypeInfoSec,
 	}
 
-	apiKey, err := check.GetConfigValue("VIRUSTOTAL_API_KEY")
+	apiKey, err := checkip.GetConfigValue("VIRUSTOTAL_API_KEY")
 	if err != nil {
-		return result, check.NewError(err)
+		return result, checkip.NewError(err)
 	}
 	if apiKey == "" {
 		return result, nil
@@ -60,8 +60,8 @@ func VirusTotal(ipaddr net.IP) (check.Result, error) {
 	headers := map[string]string{"x-apikey": apiKey}
 	apiUrl := "https://www.virustotal.com/api/v3/ip_addresses/" + ipaddr.String()
 	var virusTotal virusTotal
-	if err := check.DefaultHttpClient.GetJson(apiUrl, headers, map[string]string{}, &virusTotal); err != nil {
-		return result, check.NewError(err)
+	if err := checkip.DefaultHttpClient.GetJson(apiUrl, headers, map[string]string{}, &virusTotal); err != nil {
+		return result, checkip.NewError(err)
 	}
 
 	result.Info = virusTotal

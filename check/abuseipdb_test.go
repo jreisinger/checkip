@@ -1,4 +1,4 @@
-package checks
+package check
 
 import (
 	"fmt"
@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/jreisinger/checkip/check"
+	"github.com/jreisinger/checkip"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -24,7 +24,7 @@ func TestAbuseIPDB(t *testing.T) {
 		result, err := AbuseIPDB(net.ParseIP("118.25.6.39"))
 		require.NoError(t, err)
 		assert.Equal(t, "abuseipdb.com", result.Name)
-		assert.Equal(t, check.TypeInfoSec, result.Type)
+		assert.Equal(t, checkip.TypeInfoSec, result.Type)
 		assert.Equal(t, true, result.Malicious)
 		assert.Equal(t, "domain: tencent.com, usage type: Data Center/Web Hosting/Transit", result.Info.Summary())
 	})

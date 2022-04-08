@@ -1,6 +1,6 @@
 # checkip
 
-Checkip is a CLI tool and library that provides generic and security information about an IP address in a quick way. It uses various [checks](https://pkg.go.dev/github.com/jreisinger/checkip/checks) to do so.
+Checkip is a CLI tool and library that provides generic and security information about an IP address in a quick way. It uses various [checks](https://pkg.go.dev/github.com/jreisinger/checkip/check) to do so.
 
 ```
 $ checkip 218.92.0.158
@@ -16,7 +16,7 @@ virustotal.com --> network: 218.92.0.0/16, SAN: n/a
 Malicious      --> 63% (5/8) 🚫
 ```
 
-You can get output in JSON (`-j`). Here we select Sec (1) and InfoSec (2) check [type](https://pkg.go.dev/github.com/jreisinger/checkip/check#Type) that returned some info. Then we show if the check considers the IP address to be malicious.
+You can get output in JSON (`-j`). Here we select Sec (1) and InfoSec (2) check [type](https://pkg.go.dev/github.com/jreisinger/checkip#Type) that returned some info. Then we show if the check considers the IP address to be malicious.
 
 ```
 $ checkip -j 218.92.0.158 | jq -r \
@@ -80,7 +80,7 @@ You can also use environment variables with the same names.
 
 ## Development
 
-Checkip is easy to extend. If you want to add a new way to check an IP address, just write a function of type [Check](https://pkg.go.dev/github.com/jreisinger/checkip/check#Check). Add the function to `checks.Passive` or `checks.Active` [variable](https://pkg.go.dev/github.com/jreisinger/checkip/checks#pkg-variables).
+Checkip is easy to extend. If you want to add a new way to check an IP address, just write a function of type [Check](https://pkg.go.dev/github.com/jreisinger/checkip#Check). Add the function to `check.Passive` or `check.Active` [variable](https://pkg.go.dev/github.com/jreisinger/checkip/check#pkg-variables).
 
 ```
 make run # test, install and run

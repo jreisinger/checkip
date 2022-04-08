@@ -1,11 +1,11 @@
-package checks
+package check
 
 import (
 	"net"
 	"net/http"
 	"testing"
 
-	"github.com/jreisinger/checkip/check"
+	"github.com/jreisinger/checkip"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -23,9 +23,9 @@ func TestOTX(t *testing.T) {
 		result, err := OTX(net.ParseIP("118.25.6.39"))
 		require.NoError(t, err)
 		assert.Equal(t, "otx.alienvault.com", result.Name)
-		assert.Equal(t, check.TypeSec, result.Type)
+		assert.Equal(t, checkip.TypeSec, result.Type)
 		assert.Equal(t, true, result.Malicious)
-		assert.Equal(t, check.EmptyInfo{}, result.Info)
+		assert.Equal(t, checkip.EmptyInfo{}, result.Info)
 	})
 
 	t.Run("given non 2xx response then error is returned", func(t *testing.T) {

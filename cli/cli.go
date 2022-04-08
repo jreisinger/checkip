@@ -11,18 +11,18 @@ import (
 	"sort"
 	"sync"
 
-	"github.com/jreisinger/checkip/check"
+	"github.com/jreisinger/checkip"
 )
 
 // Run runs checks concurrently against the ippaddr.
-func Run(checks []check.Check, ipaddr net.IP) (Results, []error) {
+func Run(checks []checkip.Check, ipaddr net.IP) (Results, []error) {
 	var results Results
 	var errors []error
 
 	var wg sync.WaitGroup
 	for _, chk := range checks {
 		wg.Add(1)
-		go func(c check.Check) {
+		go func(c checkip.Check) {
 			defer wg.Done()
 			r, err := c(ipaddr)
 			if err != nil {
@@ -36,7 +36,7 @@ func Run(checks []check.Check, ipaddr net.IP) (Results, []error) {
 	return results, errors
 }
 
-type Results []check.Result
+type Results []checkip.Result
 
 // PrintJSON prints all results in JSON.
 func (rs Results) PrintJSON() {
@@ -66,7 +66,7 @@ func (rs Results) PrintInfo() {
 		if r.Info == nil {
 			continue
 		}
-		if r.Type == check.TypeInfo || r.Type == check.TypeInfoSec {
+		if r.Type == checkip.TypeInfo || r.Type == checkip.TypeInfoSec {
 			fmt.Printf("%-14s --> %s\n", r.Name, r.Info.Summary())
 		}
 	}
@@ -94,7 +94,7 @@ func (rs Results) maliciousStats() (total, malicious int, prob float64) {
 		if r.Info == nil {
 			continue
 		}
-		if r.Type == check.TypeSec || r.Type == check.TypeInfoSec {
+		if r.Type == checkip.TypeSec || r.Type == checkip.TypeInfoSec {
 			total++
 			if r.Malicious {
 				malicious++

@@ -1,4 +1,4 @@
-package checks
+package check
 
 import (
 	"bufio"
@@ -8,27 +8,27 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/jreisinger/checkip/check"
+	"github.com/jreisinger/checkip"
 )
 
 // IPSum checks how many blacklists the ipaddr is found on.
-func IPSum(ipaddr net.IP) (check.Result, error) {
-	result := check.Result{
+func IPSum(ipaddr net.IP) (checkip.Result, error) {
+	result := checkip.Result{
 		Name: "github.com/stamparm/ipsum",
-		Type: check.TypeSec,
-		Info: check.EmptyInfo{},
+		Type: checkip.TypeSec,
+		Info: checkip.EmptyInfo{},
 	}
 
 	file := "/var/tmp/ipsum.txt"
 	url := "https://raw.githubusercontent.com/stamparm/ipsum/master/ipsum.txt"
 
-	if err := check.UpdateFile(file, url, ""); err != nil {
-		return result, check.NewError(err)
+	if err := checkip.UpdateFile(file, url, ""); err != nil {
+		return result, checkip.NewError(err)
 	}
 
 	blackLists, err := searchIPSumBlacklists(ipaddr, file)
 	if err != nil {
-		return result, check.NewError(fmt.Errorf("searching %s in %s: %v", ipaddr, file, err))
+		return result, checkip.NewError(fmt.Errorf("searching %s in %s: %v", ipaddr, file, err))
 	}
 	result.Malicious = blackLists > 0
 

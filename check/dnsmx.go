@@ -1,11 +1,11 @@
-package checks
+package check
 
 import (
 	"encoding/json"
 	"net"
 	"strings"
 
-	"github.com/jreisinger/checkip/check"
+	"github.com/jreisinger/checkip"
 )
 
 // MX maps MX records to domain names.
@@ -24,7 +24,7 @@ func (mx MX) Summary() string {
 		}
 		s += domain + ": " + strings.Join(mxRecords, ", ")
 	}
-	return check.Na(s)
+	return checkip.Na(s)
 }
 
 func (mx MX) JsonString() (string, error) {
@@ -35,10 +35,10 @@ func (mx MX) JsonString() (string, error) {
 // DnsMX performs reverse lookup and consults AbuseIPDB to get domain names fo
 // the ipaddr. Then it looks up MX records (mail servers) for the given domain
 // names.
-func DnsMX(ipaddr net.IP) (check.Result, error) {
-	result := check.Result{
+func DnsMX(ipaddr net.IP) (checkip.Result, error) {
+	result := checkip.Result{
 		Name: "dns mx",
-		Type: check.TypeInfo,
+		Type: checkip.TypeInfo,
 	}
 
 	names, _ := net.LookupAddr(ipaddr.String()) // NOTE: ignoring error
@@ -54,20 +54,20 @@ func DnsMX(ipaddr net.IP) (check.Result, error) {
 	// [www.csh.ac.at. csh.ac.at.] = > [www.csh.ac.at. csh.ac.at. aco.net]
 	r, err := AbuseIPDB(ipaddr)
 	if err != nil {
-		return result, check.NewError(err)
+		return result, checkip.NewError(err)
 	}
 	if r.Info == nil {
 		return result, nil
 	}
 	j, err := r.Info.JsonString()
 	if err != nil {
-		return result, check.NewError(err)
+		return result, checkip.NewError(err)
 	}
 	sr := strings.NewReader(j)
 	decoder := json.NewDecoder(sr)
 	var a abuseIPDB
 	if err := decoder.Decode(&a); err != nil {
-		return result, check.NewError(err)
+		return result, checkip.NewError(err)
 	}
 	names = append(names, a.Domain)
 

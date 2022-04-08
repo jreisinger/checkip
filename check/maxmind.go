@@ -1,11 +1,11 @@
-package checks
+package check
 
 import (
 	"encoding/json"
 	"fmt"
 	"net"
 
-	"github.com/jreisinger/checkip/check"
+	"github.com/jreisinger/checkip"
 	"github.com/oschwald/geoip2-golang"
 )
 
@@ -18,7 +18,7 @@ type maxmind struct {
 
 func (m maxmind) Summary() string {
 	return fmt.Sprintf("country: %s (%s), city: %s, EU member: %t",
-		check.Na(m.Country), check.Na(m.IsoCode), check.Na(m.City), m.IsInEU)
+		checkip.Na(m.Country), checkip.Na(m.IsoCode), checkip.Na(m.City), m.IsInEU)
 }
 
 func (m maxmind) JsonString() (string, error) {
@@ -27,15 +27,15 @@ func (m maxmind) JsonString() (string, error) {
 }
 
 // MaxMind gets geolocation data from maxmind.com's GeoLite2-City.mmdb.
-func MaxMind(ip net.IP) (check.Result, error) {
-	result := check.Result{
+func MaxMind(ip net.IP) (checkip.Result, error) {
+	result := checkip.Result{
 		Name: "maxmind.com",
-		Type: check.TypeInfo,
+		Type: checkip.TypeInfo,
 	}
 
-	licenseKey, err := check.GetConfigValue("MAXMIND_LICENSE_KEY")
+	licenseKey, err := checkip.GetConfigValue("MAXMIND_LICENSE_KEY")
 	if err != nil {
-		return result, check.NewError(err)
+		return result, checkip.NewError(err)
 	}
 	if licenseKey == "" {
 		return result, nil
@@ -44,19 +44,19 @@ func MaxMind(ip net.IP) (check.Result, error) {
 	file := "/var/tmp/GeoLite2-City.mmdb"
 	url := "https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-City&license_key=" + licenseKey + "&suffix=tar.gz"
 
-	if err := check.UpdateFile(file, url, "tgz"); err != nil {
-		return result, check.NewError(err)
+	if err := checkip.UpdateFile(file, url, "tgz"); err != nil {
+		return result, checkip.NewError(err)
 	}
 
 	db, err := geoip2.Open(file)
 	if err != nil {
-		return result, check.NewError(fmt.Errorf("can't load DB file: %v", err))
+		return result, checkip.NewError(fmt.Errorf("can't load DB file: %v", err))
 	}
 	defer db.Close()
 
 	geo, err := db.City(ip)
 	if err != nil {
-		return result, check.NewError(err)
+		return result, checkip.NewError(err)
 	}
 
 	result.Info = maxmind{

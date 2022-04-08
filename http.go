@@ -1,4 +1,4 @@
-package check
+package checkip
 
 import (
 	"encoding/json"

@@ -1,4 +1,4 @@
-package checks
+package check
 
 import (
 	"encoding/json"
@@ -6,7 +6,7 @@ import (
 	"net"
 	"time"
 
-	"github.com/jreisinger/checkip/check"
+	"github.com/jreisinger/checkip"
 	"github.com/oschwald/geoip2-golang"
 )
 
@@ -19,7 +19,7 @@ type dbip struct {
 
 func (d dbip) Summary() string {
 	return fmt.Sprintf("country: %s (%s), city: %s, EU member: %t",
-		check.Na(d.Country), check.Na(d.IsoCode), check.Na(d.City), d.IsInEU)
+		checkip.Na(d.Country), checkip.Na(d.IsoCode), checkip.Na(d.City), d.IsInEU)
 }
 
 func (d dbip) JsonString() (string, error) {
@@ -28,10 +28,10 @@ func (d dbip) JsonString() (string, error) {
 }
 
 // DBip gets geolocation data from https://db-ip.com/db/download/ip-to-city-lite
-func DBip(ip net.IP) (check.Result, error) {
-	result := check.Result{
+func DBip(ip net.IP) (checkip.Result, error) {
+	result := checkip.Result{
 		Name: "db-ip.com",
-		Type: check.TypeInfo,
+		Type: checkip.TypeInfo,
 	}
 
 	file := "/var/tmp/dbip-city-lite.mmdb"
@@ -40,19 +40,19 @@ func DBip(ip net.IP) (check.Result, error) {
 		time.Now().Format("2006-01"),
 	)
 
-	if err := check.UpdateFile(file, url, "gz"); err != nil {
-		return result, check.NewError(err)
+	if err := checkip.UpdateFile(file, url, "gz"); err != nil {
+		return result, checkip.NewError(err)
 	}
 
 	db, err := geoip2.Open(file)
 	if err != nil {
-		return result, check.NewError(fmt.Errorf("can't load DB file: %v", err))
+		return result, checkip.NewError(fmt.Errorf("can't load DB file: %v", err))
 	}
 	defer db.Close()
 
 	geo, err := db.City(ip)
 	if err != nil {
-		return result, check.NewError(err)
+		return result, checkip.NewError(err)
 	}
 
 	result.Info = dbip{

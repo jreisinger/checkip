@@ -1,4 +1,4 @@
-package checks
+package check
 
 import (
 	"encoding/json"
@@ -7,7 +7,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/jreisinger/checkip/check"
+	"github.com/jreisinger/checkip"
 )
 
 type shodan struct {
@@ -25,15 +25,15 @@ type shodanData []struct {
 }
 
 // Shodan gets generic information from https://api.shodan.io.
-func Shodan(ipaddr net.IP) (check.Result, error) {
-	result := check.Result{
+func Shodan(ipaddr net.IP) (checkip.Result, error) {
+	result := checkip.Result{
 		Name: "shodan.io",
-		Type: check.TypeInfo,
+		Type: checkip.TypeInfo,
 	}
 
-	apiKey, err := check.GetConfigValue("SHODAN_API_KEY")
+	apiKey, err := checkip.GetConfigValue("SHODAN_API_KEY")
 	if err != nil {
-		return result, check.NewError(err)
+		return result, checkip.NewError(err)
 	}
 	if apiKey == "" {
 		return result, nil
@@ -41,8 +41,8 @@ func Shodan(ipaddr net.IP) (check.Result, error) {
 
 	var shodan shodan
 	apiURL := fmt.Sprintf("https://api.shodan.io/shodan/host/%s?key=%s", ipaddr, apiKey)
-	if err := check.DefaultHttpClient.GetJson(apiURL, map[string]string{}, map[string]string{}, &shodan); err != nil {
-		return result, check.NewError(err)
+	if err := checkip.DefaultHttpClient.GetJson(apiURL, map[string]string{}, map[string]string{}, &shodan); err != nil {
+		return result, checkip.NewError(err)
 	}
 	result.Info = shodan
 
@@ -73,7 +73,7 @@ func (s shodan) Summary() string {
 		if product == "" && version == "" {
 			portInfo = append(portInfo, fmt.Sprintf("%s/%d", d.Transport, d.Port))
 		} else {
-			ss := check.NonEmpty(product, version)
+			ss := checkip.NonEmpty(product, version)
 			portInfo = append(portInfo, fmt.Sprintf("%s/%d (%s)", d.Transport, d.Port, strings.Join(ss, ", ")))
 		}
 	}
@@ -85,7 +85,7 @@ func (s shodan) Summary() string {
 	if len(portInfo) > 0 {
 		portStr += ":"
 	}
-	return fmt.Sprintf("OS: %s, %d open %s %s", check.Na(s.OS), len(portInfo), portStr, strings.Join(portInfo, ", "))
+	return fmt.Sprintf("OS: %s, %d open %s %s", checkip.Na(s.OS), len(portInfo), portStr, strings.Join(portInfo, ", "))
 }
 
 func (s shodan) JsonString() (string, error) {

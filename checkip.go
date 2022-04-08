@@ -1,6 +1,6 @@
-// Package check defines how to check an IP address. It provides types and
-// functions that are useful for writing checks.
-package check
+// Package checkip is useful for writing functions that check an IP address.
+// These functions are called checks.
+package checkip
 
 import (
 	"net"

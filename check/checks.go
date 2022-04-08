@@ -1,11 +1,12 @@
-// Package checks contains functions that check an IP address. Checks provide
-// generic and/or security information about the IP address.
-package checks
+// Package check contains functions that check an IP address.
+package check
 
-import "github.com/jreisinger/checkip/check"
+import (
+	"github.com/jreisinger/checkip"
+)
 
 // Passive checks don't interact directly with the target IP address.
-var Passive = []check.Check{
+var Passive = []checkip.Check{
 	AbuseIPDB,
 	BlockList,
 	CinsScore,
@@ -23,7 +24,7 @@ var Passive = []check.Check{
 }
 
 // Active checks interact with the target IP address.
-var Active = []check.Check{
+var Active = []checkip.Check{
 	Ping,
 	TcpPorts,
 }
