@@ -46,7 +46,7 @@ func DBip(ip net.IP) (checkip.Result, error) {
 
 	db, err := geoip2.Open(file)
 	if err != nil {
-		return result, newCheckError(fmt.Errorf("can't load DB file: %v", err))
+		return result, newCheckError(fmt.Errorf("can't load DB file %s: %v", file, err))
 	}
 	defer db.Close()
 
