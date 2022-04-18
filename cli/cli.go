@@ -1,4 +1,4 @@
-// Package cli contains functions for running checkip.Checks from command-line.
+// Package cli contains functions for running Checks from command-line.
 package cli
 
 import (
@@ -36,7 +36,7 @@ func Run(checks []checkip.Check, ipaddr net.IP) (Results, []error) {
 	return results, errors
 }
 
-// Results are generic or security information provided by of a Check.
+// Results are generic or security information provided by a Check.
 type Results []checkip.Result
 
 // PrintJSON prints all Results in JSON.
@@ -55,6 +55,7 @@ func (rs Results) PrintJSON() {
 	}
 }
 
+// SortByName sorts Results by name.
 func (rs Results) SortByName() {
 	sort.Slice(rs, func(i, j int) bool {
 		return rs[i].Name < rs[j].Name

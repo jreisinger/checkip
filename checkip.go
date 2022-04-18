@@ -52,10 +52,12 @@ type Info interface {
 type EmptyInfo struct {
 }
 
+// Summary returns empty string.
 func (EmptyInfo) Summary() string {
 	return ""
 }
 
+// JsonString returns empty JSON string.
 func (EmptyInfo) JsonString() (string, error) {
 	return "{}", nil
 }

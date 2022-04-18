@@ -1,6 +1,6 @@
 # checkip
 
-Checkip is a CLI tool and [library](https://pkg.go.dev/github.com/jreisinger/checkip/check) that provides generic and security information about an IP address in a quick way.
+Checkip is a CLI tool and [library](https://pkg.go.dev/github.com/jreisinger/checkip) that provides generic and security information about an IP address in a quick way.
 
 ```
 $ checkip 218.92.0.158
@@ -16,7 +16,7 @@ virustotal.com --> network: 218.92.0.0/16, SAN: n/a
 Malicious      --> 63% (5/8) 🚫
 ```
 
-You can get output in JSON (`-j`). Here we select Sec (1) and InfoSec (2) check [type](https://pkg.go.dev/github.com/jreisinger/checkip#Type) that returned some info. Then we show if the check considers the IP address to be malicious.
+You can get output also in JSON (`-j`). Here we select Sec (1) and InfoSec (2) check [type](https://pkg.go.dev/github.com/jreisinger/checkip#Type) that returned some info. Then we show if the check considers the IP address to be malicious.
 
 ```
 $ checkip -j 218.92.0.158 | jq -r \

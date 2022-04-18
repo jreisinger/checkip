@@ -37,8 +37,8 @@ func (a abuseIPDB) JsonString() (string, error) {
 	return string(b), err
 }
 
-// AbuseIPDB uses api.abuseipdb.com to get generic information about ipaddr and
-// see if the ipaddr has been reported as malicious.
+// AbuseIPDB uses https://api.abuseipdb.com/ to get generic information about
+// ipaddr and see if the ipaddr has been reported as malicious.
 func AbuseIPDB(ipaddr net.IP) (checkip.Result, error) {
 	result := checkip.Result{Name: "abuseipdb.com", Type: checkip.TypeInfoSec}
 
