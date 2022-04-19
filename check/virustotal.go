@@ -35,9 +35,8 @@ func (v virusTotal) Summary() string {
 	return fmt.Sprintf("network: %s, SAN: %s", na(v.Data.Attributes.Network), na(strings.Join(v.Data.Attributes.LastHTTPScert.Extensions.SAN, ", ")))
 }
 
-func (v virusTotal) JsonString() (string, error) {
-	b, err := json.Marshal(v)
-	return string(b), err
+func (v virusTotal) Json() ([]byte, error) {
+	return json.Marshal(v)
 }
 
 // VirusTotal gets generic information and security reputation about the ippaddr

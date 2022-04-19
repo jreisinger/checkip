@@ -88,7 +88,6 @@ func (s shodan) Summary() string {
 	return fmt.Sprintf("OS: %s, %d open %s %s", na(s.OS), len(portInfo), portStr, strings.Join(portInfo, ", "))
 }
 
-func (s shodan) JsonString() (string, error) {
-	b, err := json.Marshal(s)
-	return string(b), err
+func (s shodan) Json() ([]byte, error) {
+	return json.Marshal(s)
 }

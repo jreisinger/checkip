@@ -22,9 +22,8 @@ func (d dbip) Summary() string {
 		na(d.Country), na(d.IsoCode), na(d.City), d.IsInEU)
 }
 
-func (d dbip) JsonString() (string, error) {
-	b, err := json.Marshal(d)
-	return string(b), err
+func (d dbip) Json() ([]byte, error) {
+	return json.Marshal(d)
 }
 
 // DBip gets geolocation data from https://db-ip.com/db/download/ip-to-city-lite

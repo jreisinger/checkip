@@ -15,9 +15,8 @@ func (n Names) Summary() string {
 	return na(strings.Join(n, ", "))
 }
 
-func (n Names) JsonString() (string, error) {
-	b, err := json.Marshal(n)
-	return string(b), err
+func (n Names) Json() ([]byte, error) {
+	return json.Marshal(n)
 }
 
 // DnsName does a reverse lookup for a given IP address to get its names.

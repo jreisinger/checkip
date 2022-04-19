@@ -43,8 +43,8 @@ type Result struct {
 
 // Info is some generic information provided by an Info or InfoSec Check.
 type Info interface {
-	Summary() string             // summary info
-	JsonString() (string, error) // all info in JSON format
+	Summary() string       // summary info
+	Json() ([]byte, error) // all info in JSON format
 }
 
 // EmptyInfo is returned by TypeSec Checks that don't provide generic
@@ -57,7 +57,7 @@ func (EmptyInfo) Summary() string {
 	return ""
 }
 
-// JsonString returns empty JSON string.
-func (EmptyInfo) JsonString() (string, error) {
-	return "{}", nil
+// JsonString returns empty JSON.
+func (EmptyInfo) Json() ([]byte, error) {
+	return nil, nil
 }

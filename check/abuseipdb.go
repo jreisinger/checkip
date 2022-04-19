@@ -32,9 +32,8 @@ func (a abuseIPDB) Summary() string {
 	return fmt.Sprintf("domain: %s, usage type: %s", na(a.Domain), na(a.UsageType))
 }
 
-func (a abuseIPDB) JsonString() (string, error) {
-	b, err := json.Marshal(a)
-	return string(b), err
+func (a abuseIPDB) Json() ([]byte, error) {
+	return json.Marshal(a)
 }
 
 // AbuseIPDB uses https://api.abuseipdb.com/ to get generic information about

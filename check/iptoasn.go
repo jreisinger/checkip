@@ -25,9 +25,8 @@ func (a AutonomousSystem) Summary() string {
 	return fmt.Sprintf("AS description: %s", na(a.Description))
 }
 
-func (a AutonomousSystem) JsonString() (string, error) {
-	b, err := json.Marshal(a)
-	return string(b), err
+func (a AutonomousSystem) Json() ([]byte, error) {
+	return json.Marshal(a)
 }
 
 // IPtoASN gets info about autonomous system (IPtoASN) of the ipaddr. The data

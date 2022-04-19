@@ -41,7 +41,6 @@ func (s stats) Summary() string {
 	return fmt.Sprintf("%.0f%% packet loss, sent %d, recv %d, avg round-trip %d ms", s.PacketLoss, s.PacketsSent, s.PacketsRecv, s.AvgRtt.Milliseconds())
 }
 
-func (s stats) JsonString() (string, error) {
-	b, err := json.Marshal(s)
-	return string(b), err
+func (s stats) Json() ([]byte, error) {
+	return json.Marshal(s)
 }

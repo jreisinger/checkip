@@ -1,6 +1,7 @@
 package check
 
 import (
+	"bytes"
 	"encoding/json"
 	"net"
 	"strings"
@@ -27,9 +28,8 @@ func (mx MX) Summary() string {
 	return na(s)
 }
 
-func (mx MX) JsonString() (string, error) {
-	b, err := json.Marshal(mx)
-	return string(b), err
+func (mx MX) Json() ([]byte, error) {
+	return json.Marshal(mx)
 }
 
 // DnsMX performs reverse lookup and consults AbuseIPDB to get domain names fo
@@ -59,12 +59,12 @@ func DnsMX(ipaddr net.IP) (checkip.Result, error) {
 	if r.Info == nil {
 		return result, nil
 	}
-	j, err := r.Info.JsonString()
+	j, err := r.Info.Json()
 	if err != nil {
 		return result, newCheckError(err)
 	}
-	sr := strings.NewReader(j)
-	decoder := json.NewDecoder(sr)
+	b := bytes.NewReader(j)
+	decoder := json.NewDecoder(b)
 	var a abuseIPDB
 	if err := decoder.Decode(&a); err != nil {
 		return result, newCheckError(err)

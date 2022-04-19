@@ -108,7 +108,6 @@ func (u urlscan) Summary() string {
 	}
 }
 
-func (u urlscan) JsonString() (string, error) {
-	b, err := json.Marshal(u)
-	return string(b), err
+func (u urlscan) Json() ([]byte, error) {
+	return json.Marshal(u)
 }

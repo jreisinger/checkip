@@ -21,9 +21,8 @@ func (m maxmind) Summary() string {
 		na(m.Country), na(m.IsoCode), na(m.City), m.IsInEU)
 }
 
-func (m maxmind) JsonString() (string, error) {
-	b, err := json.Marshal(m)
-	return string(b), err
+func (m maxmind) Json() ([]byte, error) {
+	return json.Marshal(m)
 }
 
 // MaxMind gets geolocation data from maxmind.com's GeoLite2-City.mmdb.

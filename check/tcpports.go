@@ -36,9 +36,8 @@ func (t OpenTcpPorts) Summary() string {
 	return strings.Join(out, ", ")
 }
 
-func (t OpenTcpPorts) JsonString() (string, error) {
-	b, err := json.Marshal(t)
-	return string(b), err
+func (t OpenTcpPorts) Json() ([]byte, error) {
+	return json.Marshal(t)
 }
 
 // TcpPorts tries to connect to the 1000 TCP ports that are most often found
