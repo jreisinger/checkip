@@ -26,7 +26,15 @@ func DnsName(ipaddr net.IP) (checkip.Result, error) {
 		Type: checkip.TypeInfo,
 	}
 
-	names, _ := net.LookupAddr(ipaddr.String())
+	names, err := net.LookupAddr(ipaddr.String())
+	if err != nil {
+		if len(names) == 0 {
+			// IP address does not resolve to any names,
+			// ignore this error.
+		} else {
+			return result, err
+		}
+	}
 	for i := range names {
 		names[i] = strings.TrimSuffix(names[i], ".")
 	}
