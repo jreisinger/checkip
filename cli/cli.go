@@ -70,6 +70,7 @@ func (rs Results) PrintSummary() {
 		if r.Info == nil {
 			continue
 		}
+
 		if r.Type == checkip.TypeInfo || r.Type == checkip.TypeInfoSec {
 			fmt.Printf("%-15s --> %s\n", r.Name, r.Info.Summary())
 		}
