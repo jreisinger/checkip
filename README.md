@@ -10,7 +10,6 @@ dns mx          --> chinatelecom.com.cn: testmail.chinatelecom.com.cn
 iptoasn.com     --> AS description: CHINANET-BACKBONE No.31,Jin-rong Street
 maxmind.com     --> country: China (CN), city: Caolin, EU member: false
 shodan.io       --> OS: n/a, 2 open ports: tcp/22 (OpenSSH, 7.4), tcp/53
-urlscan.io      --> 0 related URLs
 virustotal.com  --> network: 218.92.0.0/16, SAN: n/a
 Malicious       --> 50% (5/10) 🚫
 ```
@@ -46,7 +45,6 @@ dns name        --> scanme.nmap.org
 iptoasn.com     --> AS description: LINODE-AP Linode, LLC
 maxmind.com     --> country: United States (US), city: Fremont, EU member: false
 shodan.io       --> OS: n/a, 3 open ports: tcp/22 (OpenSSH, 6.6.1p1 Ubuntu-2ubuntu2.13), tcp/80 (Apache httpd, 2.4.7), udp/123
-urlscan.io      --> 0 related URLs
 virustotal.com  --> network: 45.33.0.0/17, SAN: n/a
 Malicious       --> 0% (0/10) ✅
 ```

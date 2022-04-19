@@ -86,7 +86,7 @@ type urlscanResult struct {
 	} `json:"verdicts"`
 }
 
-// Strings tells how many scanned URLs are associated with the IP address.
+// Summary shows URLs associated with the IP address.
 func (u urlscan) Summary() string {
 	urlCnt := make(map[string]int)
 	for _, r := range u.Results {
@@ -100,7 +100,7 @@ func (u urlscan) Summary() string {
 
 	switch len(urls) {
 	case 0:
-		return "0 related URLs"
+		return ""
 	case 1:
 		return fmt.Sprintf("1 related URL: %s", urls[0])
 	default:
