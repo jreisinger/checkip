@@ -65,9 +65,11 @@ func (rs Results) SortByName() {
 // PrintSummary prints summary results from Info and InfoSec checks.
 func (rs Results) PrintSummary() {
 	for _, r := range rs {
-		// if r.Info == nil {
-		// 	continue
-		// }
+		// To avoid "invalid memory address or nil pointer dereference"
+		// runtime error.
+		if r.Info == nil {
+			continue
+		}
 		if r.Type == checkip.TypeInfo || r.Type == checkip.TypeInfoSec {
 			fmt.Printf("%-15s --> %s\n", r.Name, r.Info.Summary())
 		}
