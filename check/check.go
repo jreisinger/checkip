@@ -13,6 +13,7 @@ var Passive = []checkip.Check{
 	DBip,
 	DnsMX,
 	DnsName,
+	Firehol,
 	IPSum,
 	IPtoASN,
 	MaxMind,
