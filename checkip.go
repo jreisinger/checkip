@@ -40,7 +40,7 @@ type Result struct {
 	Malicious bool   `json:"malicious"` // provided by TypeSec check
 }
 
-// Info is generic information provided by an TypeInfo or TypeInfoSec Check.
+// Info is generic information provided by a TypeInfo or TypeInfoSec Check.
 type Info interface {
 	Summary() string       // summary info
 	Json() ([]byte, error) // all info in JSON format

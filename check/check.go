@@ -1,4 +1,4 @@
-// Package check contains functions that can Check an IP address.
+// Package check contains functions that can check an IP address.
 package check
 
 import (

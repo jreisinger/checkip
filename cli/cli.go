@@ -1,4 +1,4 @@
-// Package cli contains functions for running Checks from command-line.
+// Package cli contains functions for running checks from command-line.
 package cli
 
 import (
