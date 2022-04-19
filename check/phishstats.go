@@ -11,12 +11,12 @@ import (
 )
 
 type phishstats struct {
-	score float64 // 0-2 likely, 2-4 suspicious, 4-6 phishing, 6-10 omg phishing!
-	url   string
+	Score float64 // 0-2 likely, 2-4 suspicious, 4-6 phishing, 6-10 omg phishing!
+	Url   string
 }
 
 func (ps phishstats) Summary() string {
-	return ps.url
+	return ps.Url
 }
 
 func (ps phishstats) Json() ([]byte, error) {
@@ -45,7 +45,7 @@ func PhishStats(ipaddr net.IP) (checkip.Result, error) {
 		return result, err
 	}
 	result.Info = ps
-	if ps.score > 2 {
+	if ps.Score > 2 {
 		result.Malicious = true
 	}
 
@@ -73,8 +73,8 @@ func getPhishStats(csvFile string, ipaddr net.IP) (phishstats, error) {
 			if err != nil {
 				return ps, err
 			}
-			ps.score = score
-			ps.url = fields[2]
+			ps.Score = score
+			ps.Url = fields[2]
 			break
 		}
 	}
