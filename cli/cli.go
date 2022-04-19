@@ -14,7 +14,7 @@ import (
 	"github.com/jreisinger/checkip"
 )
 
-// Run runs Checks concurrently against the ippaddr.
+// Run runs checks concurrently against the ippaddr.
 func Run(checks []checkip.Check, ipaddr net.IP) (Results, []error) {
 	var results Results
 	var errors []error
@@ -39,7 +39,7 @@ func Run(checks []checkip.Check, ipaddr net.IP) (Results, []error) {
 // Results are generic or security information provided by a Check.
 type Results []checkip.Result
 
-// PrintJSON prints all Results in JSON.
+// PrintJSON prints all results in JSON.
 func (rs Results) PrintJSON() {
 	// if len(rs) == 0 {
 	// 	return
@@ -62,8 +62,8 @@ func (rs Results) SortByName() {
 	})
 }
 
-// PrintInfo prints summary results from Info and InfoSec checkers.
-func (rs Results) PrintInfo() {
+// PrintSummary prints summary results from Info and InfoSec checks.
+func (rs Results) PrintSummary() {
 	for _, r := range rs {
 		// if r.Info == nil {
 		// 	continue
@@ -74,8 +74,8 @@ func (rs Results) PrintInfo() {
 	}
 }
 
-// PrintMalicious prints how many of the InfoSec and Sec checkers consider the
-// IP address to be malicious.
+// PrintMalicious prints how many of the InfoSec and Sec checks consider the IP
+// address to be malicious.
 func (rs Results) PrintMalicious() {
 	total, malicious, prob := rs.maliciousStats()
 	msg := fmt.Sprintf("%-14s --> %.0f%% (%d/%d) ",

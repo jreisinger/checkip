@@ -44,7 +44,7 @@ func main() {
 	if *j {
 		results.PrintJSON()
 	} else {
-		results.PrintInfo()
+		results.PrintSummary()
 		results.PrintMalicious()
 	}
 }
