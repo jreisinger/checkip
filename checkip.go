@@ -46,18 +46,3 @@ type Info interface {
 	Summary() string       // summary info
 	Json() ([]byte, error) // all info in JSON format
 }
-
-// EmptyInfo is returned by TypeSec Checks that don't provide generic
-// information about an IP address.
-type EmptyInfo struct {
-}
-
-// Summary returns empty string.
-func (EmptyInfo) Summary() string {
-	return ""
-}
-
-// JsonString returns empty JSON.
-func (EmptyInfo) Json() ([]byte, error) {
-	return nil, nil
-}

@@ -14,7 +14,6 @@ func BlockList(ipddr net.IP) (checkip.Result, error) {
 	result := checkip.Result{
 		Name: "blocklist.de",
 		Type: checkip.TypeSec,
-		Info: checkip.EmptyInfo{},
 	}
 
 	url := fmt.Sprintf("http://api.blocklist.de/api.php?ip=%s&start=1", ipddr)

@@ -41,9 +41,9 @@ type Results []checkip.Result
 
 // PrintJSON prints all Results in JSON.
 func (rs Results) PrintJSON() {
-	if len(rs) == 0 {
-		return
-	}
+	// if len(rs) == 0 {
+	// 	return
+	// }
 	out := struct {
 		Check Results `json:"checks"`
 	}{
@@ -65,9 +65,9 @@ func (rs Results) SortByName() {
 // PrintInfo prints summary results from Info and InfoSec checkers.
 func (rs Results) PrintInfo() {
 	for _, r := range rs {
-		if r.Info == nil {
-			continue
-		}
+		// if r.Info == nil {
+		// 	continue
+		// }
 		if r.Type == checkip.TypeInfo || r.Type == checkip.TypeInfoSec {
 			fmt.Printf("%-14s --> %s\n", r.Name, r.Info.Summary())
 		}
@@ -93,9 +93,9 @@ func (rs Results) PrintMalicious() {
 
 func (rs Results) maliciousStats() (total, malicious int, prob float64) {
 	for _, r := range rs {
-		if r.Info == nil {
-			continue
-		}
+		// if r.Info == nil {
+		// 	continue
+		// }
 		if r.Type == checkip.TypeSec || r.Type == checkip.TypeInfoSec {
 			total++
 			if r.Malicious {

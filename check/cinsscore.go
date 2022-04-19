@@ -19,7 +19,6 @@ func CinsScore(ipaddr net.IP) (checkip.Result, error) {
 	result := checkip.Result{
 		Name: "cinsscore.com",
 		Type: checkip.TypeSec,
-		Info: checkip.EmptyInfo{},
 	}
 
 	// file := "/var/tmp/cins.txt"

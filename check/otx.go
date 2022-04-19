@@ -22,7 +22,6 @@ func OTX(ipaddr net.IP) (checkip.Result, error) {
 	result := checkip.Result{
 		Name: "otx.alienvault.com",
 		Type: checkip.TypeSec,
-		Info: checkip.EmptyInfo{},
 	}
 
 	u, err := url.Parse(otxUrl)

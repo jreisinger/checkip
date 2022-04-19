@@ -16,7 +16,6 @@ func ThreadCrowd(ipaddr net.IP) (checkip.Result, error) {
 	result := checkip.Result{
 		Name: "threatcrowd.org",
 		Type: checkip.TypeSec,
-		Info: checkip.EmptyInfo{},
 	}
 
 	queryParams := map[string]string{

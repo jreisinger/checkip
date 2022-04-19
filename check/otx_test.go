@@ -25,7 +25,6 @@ func TestOTX(t *testing.T) {
 		assert.Equal(t, "otx.alienvault.com", result.Name)
 		assert.Equal(t, checkip.TypeSec, result.Type)
 		assert.Equal(t, true, result.Malicious)
-		assert.Equal(t, checkip.EmptyInfo{}, result.Info)
 	})
 
 	t.Run("given non 2xx response then error is returned", func(t *testing.T) {

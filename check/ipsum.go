@@ -16,7 +16,6 @@ func IPSum(ipaddr net.IP) (checkip.Result, error) {
 	result := checkip.Result{
 		Name: "github.com/stamparm/ipsum",
 		Type: checkip.TypeSec,
-		Info: checkip.EmptyInfo{},
 	}
 
 	// file := "/var/tmp/ipsum.txt"
