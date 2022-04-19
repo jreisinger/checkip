@@ -29,6 +29,7 @@ var Passive = []checkip.Check{
 var Active = []checkip.Check{
 	Ping,
 	TcpPorts,
+	Tls,
 }
 
 // na returns "n/a" if s is empty.
