@@ -17,7 +17,8 @@ func init() {
 }
 
 var j = flag.Bool("j", false, "output all results in JSON")
-var a = flag.Bool("a", false, "run also active checks (interact with IP address)")
+var a = flag.Bool("a", false, "run also active checks (interact with the IP address)")
+var s = flag.Bool("s", false, "run also scan checks (scan the IP address!)")
 
 func main() {
 	flag.Parse()
@@ -34,6 +35,9 @@ func main() {
 	var checks = check.Passive
 	if *a {
 		checks = append(checks, check.Active...)
+	}
+	if *s {
+		checks = append(checks, check.Scan...)
 	}
 
 	results, errors := cli.Run(checks, ipaddr)

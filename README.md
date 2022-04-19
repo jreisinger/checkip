@@ -34,15 +34,16 @@ false	urlscan.io
 true	virustotal.com
 ```
 
-NOTE: active checks (`-a`) interact with the IP address. You should only run them against your hosts or hosts you have permission to scan.
+Active checks (`-a`) directly interact with the IP address. And scan checks (`-s`) scan the IP address! You should run them only against your hosts or hosts you have permission to scan.
 
 ```
-$ checkip -a 45.33.32.156 # scanme.nmap.org
+$ checkip -a -s 45.33.32.156 # scanme.nmap.org
+checkip: Tls: dial tcp 45.33.32.156:443: connect: connection refused
 Open TCP ports  --> 22 (ssh), 80 (http), 9929 (nping-echo), 31337 (Elite)
-Ping            --> 0% packet loss, sent 5, recv 5, avg round-trip 168 ms
+Ping            --> 0% packet loss, sent 5, recv 5, avg round-trip 169 ms
 abuseipdb.com   --> domain: linode.com, usage type: Data Center/Web Hosting/Transit
 db-ip.com       --> country: United States (US), city: Fremont, EU member: false
-dns mx          --> linode.com: inbound-mail3.linode.com, inbound-mail1.linode.com
+dns mx          --> linode.com: inbound-mail1.linode.com, inbound-mail3.linode.com
 dns name        --> scanme.nmap.org
 iptoasn.com     --> AS description: LINODE-AP Linode, LLC
 maxmind.com     --> country: United States (US), city: Fremont, EU member: false
@@ -84,7 +85,7 @@ You can also use environment variables with the same names.
 
 ## Development
 
-Checkip is easy to extend. If you want to add a new way to check an IP address, just write a function of type [Check](https://pkg.go.dev/github.com/jreisinger/checkip#Check). Add the function to `check.Passive` or `check.Active` [variable](https://pkg.go.dev/github.com/jreisinger/checkip/check#pkg-variables).
+Checkip is easy to extend. If you want to add a new way to check an IP address, just write a function of type [Check](https://pkg.go.dev/github.com/jreisinger/checkip#Check). Add the function to `check.Passive`, `check.Active` or `check.Scan` [variable](https://pkg.go.dev/github.com/jreisinger/checkip/check#pkg-variables).
 
 ```
 make run # test, install and run

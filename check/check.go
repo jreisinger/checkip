@@ -28,8 +28,13 @@ var Passive = []checkip.Check{
 // Active checks interact with the target IP address.
 var Active = []checkip.Check{
 	Ping,
-	TcpPorts,
 	Tls,
+}
+
+// Scan checks scan the IP address. You should run them only against your hosts
+// or hosts you have permission to scan.
+var Scan = []checkip.Check{
+	TcpPorts,
 }
 
 // na returns "n/a" if s is empty.
