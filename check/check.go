@@ -18,6 +18,7 @@ var Passive = []checkip.Check{
 	IPtoASN,
 	MaxMind,
 	OTX,
+	PhishStats,
 	Shodan,
 	ThreadCrowd,
 	UrlScan,
