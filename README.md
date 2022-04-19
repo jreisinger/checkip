@@ -1,6 +1,6 @@
 # checkip
 
-Checkip is a CLI tool and [library](https://pkg.go.dev/github.com/jreisinger/checkip) that provides generic and security information about an IP address in a quick way.
+Checkip is a CLI tool and library that provides generic and security information about an IP address in an easy way. It uses various [checks](https://pkg.go.dev/github.com/jreisinger/checkip/check) to do so.
 
 ```
 $ checkip 218.92.0.158
@@ -91,7 +91,7 @@ make run # test, install and run
 
 git commit -m "improve tag docs" main.go
 
-git tag | sort -V
+git tag | sort -V # or git ll
 git tag -a v0.16.2 -m "improve docs"
 
 git push --follow-tags
