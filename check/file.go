@@ -7,9 +7,31 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"os/user"
 	"path/filepath"
 	"time"
 )
+
+// getDbFilesPath returns absolute path to a filename. On Unix it will be
+// $HOME/.checkip/<filename>
+func getDbFilesPath(filename string) (string, error) {
+	usr, err := user.Current()
+	if err != nil {
+		return "", err
+	}
+
+	dir := filepath.Join(usr.HomeDir, ".checkip")
+
+	// Make sure dir exists.
+	if _, err := os.Stat(dir); os.IsNotExist(err) {
+		err := os.Mkdir(dir, 0750)
+		if err != nil {
+			return "", err
+		}
+	}
+
+	return filepath.Join(dir, filename), nil
+}
 
 // updateFile updates file from url if the file is older than a week. If file
 // does not exist it downloads and creates it. compressFmt is the compression

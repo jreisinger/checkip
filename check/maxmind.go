@@ -41,7 +41,12 @@ func MaxMind(ip net.IP) (checkip.Result, error) {
 		return result, nil
 	}
 
-	file := "/var/tmp/GeoLite2-City.mmdb"
+	// file := "/var/tmp/GeoLite2-City.mmdb"
+	file, err := getDbFilesPath("GeoLite2-City.mmdb")
+	if err != nil {
+		return result, err
+	}
+
 	url := "https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-City&license_key=" + licenseKey + "&suffix=tar.gz"
 
 	if err := updateFile(file, url, "tgz"); err != nil {

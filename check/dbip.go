@@ -34,7 +34,12 @@ func DBip(ip net.IP) (checkip.Result, error) {
 		Type: checkip.TypeInfo,
 	}
 
-	file := "/var/tmp/dbip-city-lite.mmdb"
+	// file := "/var/tmp/dbip-city-lite.mmdb"
+	file, err := getDbFilesPath("dbip-city-lite.mmdb")
+	if err != nil {
+		return result, err
+	}
+
 	url := fmt.Sprintf(
 		"https://download.db-ip.com/free/dbip-city-lite-%s.mmdb.gz",
 		time.Now().Format("2006-01"),

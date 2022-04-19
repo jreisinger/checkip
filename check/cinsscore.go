@@ -22,7 +22,12 @@ func CinsScore(ipaddr net.IP) (checkip.Result, error) {
 		Info: checkip.EmptyInfo{},
 	}
 
-	file := "/var/tmp/cins.txt"
+	// file := "/var/tmp/cins.txt"
+	file, err := getDbFilesPath("cins.txt")
+	if err != nil {
+		return result, err
+	}
+
 	url := "http://cinsscore.com/list/ci-badguys.txt"
 
 	if err := updateFile(file, url, ""); err != nil {

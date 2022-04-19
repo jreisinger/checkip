@@ -19,7 +19,12 @@ func IPSum(ipaddr net.IP) (checkip.Result, error) {
 		Info: checkip.EmptyInfo{},
 	}
 
-	file := "/var/tmp/ipsum.txt"
+	// file := "/var/tmp/ipsum.txt"
+	file, err := getDbFilesPath("ipsum.txt")
+	if err != nil {
+		return result, err
+	}
+
 	url := "https://raw.githubusercontent.com/stamparm/ipsum/master/ipsum.txt"
 
 	if err := updateFile(file, url, ""); err != nil {
