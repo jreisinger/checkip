@@ -23,6 +23,8 @@ func (ps phishstats) Json() ([]byte, error) {
 	return json.Marshal(ps)
 }
 
+// PhishStats checks whether the ipaddr is involved in phishing according to
+// https://phishstats.info/phish_score.csv.
 func PhishStats(ipaddr net.IP) (checkip.Result, error) {
 	result := checkip.Result{
 		Name: "phishstats.info",
