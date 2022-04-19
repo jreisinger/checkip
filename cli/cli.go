@@ -66,8 +66,8 @@ func (rs Results) SortByName() {
 func (rs Results) PrintSummary() {
 	for _, r := range rs {
 		// To avoid "invalid memory address or nil pointer dereference"
-		// runtime error.
-		if r.Info == nil {
+		// runtime error and printing empty summary info.
+		if r.Info == nil || r.Info.Summary() == "" {
 			continue
 		}
 

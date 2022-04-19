@@ -16,7 +16,7 @@ type phishstats struct {
 }
 
 func (ps phishstats) Summary() string {
-	return na(ps.url)
+	return ps.url
 }
 
 func (ps phishstats) Json() ([]byte, error) {

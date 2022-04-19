@@ -12,7 +12,7 @@ import (
 type Names []string
 
 func (n Names) Summary() string {
-	return na(strings.Join(n, ", "))
+	return strings.Join(n, ", ")
 }
 
 func (n Names) Json() ([]byte, error) {
