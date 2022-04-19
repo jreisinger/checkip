@@ -1,5 +1,4 @@
-// Package checkip defines Check type, which provides information about an IP
-// address.
+// Package checkip defines how to Check an IP address.
 package checkip
 
 import (
@@ -30,18 +29,18 @@ func (t Type) String() string {
 	}
 }
 
-// Check checks an IP address providing generic and/or security information.
+// Check provides generic and/or security information about an IP address.
 type Check func(ipaddr net.IP) (Result, error)
 
-// Result is the information returned by a Check.
+// Result is the information provided by a Check.
 type Result struct {
 	Name      string `json:"name"`      // check name
 	Type      Type   `json:"type"`      // check type
-	Info      Info   `json:"info"`      // provided by TypeInfo check
+	Info      Info   `json:"info"`      // provided by TypeInfo and TypeInfoSec check
 	Malicious bool   `json:"malicious"` // provided by TypeSec check
 }
 
-// Info is some generic information provided by an Info or InfoSec Check.
+// Info is generic information provided by an TypeInfo or TypeInfoSec Check.
 type Info interface {
 	Summary() string       // summary info
 	Json() ([]byte, error) // all info in JSON format
