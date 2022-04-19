@@ -20,7 +20,7 @@ You can get output also in JSON (`-j`). Here we select Sec (1) and InfoSec (2) c
 
 ```
 $ checkip -j 218.92.0.158 | jq -r \
-'.checks[] | select((.type==1 or .type==2) and .info!=null) | "\(.malicious)\t\(.name)"'
+'.checks[] | select(.type==1 or .type==2) | "\(.malicious)\t\(.name)"'
 true	abuseipdb.com
 true	blocklist.de
 false	cinsscore.com
