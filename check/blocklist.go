@@ -1,41 +1,49 @@
 package check
 
 import (
-	"fmt"
+	"bufio"
 	"net"
-	"regexp"
-	"strconv"
+	"os"
+	"strings"
 
 	"github.com/jreisinger/checkip"
 )
 
 // BlockList searches the ipaddr in http://api.blocklist.de.
-func BlockList(ipddr net.IP) (checkip.Result, error) {
+func BlockList(ipaddr net.IP) (checkip.Result, error) {
 	result := checkip.Result{
 		Name: "blocklist.de",
 		Type: checkip.TypeSec,
 	}
 
-	url := fmt.Sprintf("http://api.blocklist.de/api.php?ip=%s&start=1", ipddr)
-
-	resp, err := defaultHttpClient.Get(url, map[string]string{}, map[string]string{})
+	file, err := getDbFilesPath("blocklist.de_all.list")
 	if err != nil {
+		return result, err
+	}
+
+	url := "https://lists.blocklist.de/lists/dnsbl/all.list"
+
+	if err := updateFile(file, url, ""); err != nil {
 		return result, newCheckError(err)
 	}
 
-	number := regexp.MustCompile(`\d+`)
-	numbers := number.FindAll(resp, 2)
-
-	attacks, err := strconv.Atoi(string(numbers[0]))
+	f, err := os.Open(file)
 	if err != nil {
-		return result, newCheckError(err)
+		return result, err
 	}
-	reports, err := strconv.Atoi(string(numbers[1]))
-	if err != nil {
-		return result, newCheckError(err)
-	}
+	defer f.Close()
 
-	result.Malicious = attacks > 0 && reports > 0
+	input := bufio.NewScanner(f)
+	for input.Scan() {
+		fields := strings.Split(input.Text(), ":")
+		if net.ParseIP(fields[0]).Equal(ipaddr) {
+			result.Malicious = true
+			return result, nil
+		}
+	}
+	if err := input.Err(); err != nil {
+		return result, err
+	}
 
 	return result, nil
 }
