@@ -40,21 +40,6 @@ go install github.com/jreisinger/checkip/cmd/checkip@latest
 
 or download a [release](https://github.com/jreisinger/checkip/releases) binary (from under "Assets") for your system and architecture.
 
-## Development
-
-Checkip is easy to extend. If you want to add a new way to check an IP address, just write a function of type [Check](https://pkg.go.dev/github.com/jreisinger/checkip#Check). Consider adding the check to `check.Default` [variable](https://pkg.go.dev/github.com/jreisinger/checkip/check#pkg-variables).
-
-```
-make run # test, install and run
-
-git commit -m "improve tag docs" main.go
-
-git tag | sort -V # or git ll
-git tag -a v0.16.2 -m "improve docs"
-
-git push --follow-tags
-```
-
 ## Configuration
 
 For some checks to work you need to register and get an API (LICENSE) key. See the service web site for how to do that.
@@ -70,3 +55,18 @@ VIRUSTOTAL_API_KEY: aaaaaaaabbbbbbbbccccccccddddddddeeeeeeeeffffffff111111112222
 ```
 
 You can also use environment variables with the same names.
+
+## Development
+
+Checkip is easy to extend. If you want to add a new way to check an IP address, just write a function of type [Check](https://pkg.go.dev/github.com/jreisinger/checkip#Check). Consider adding the check to `check.Default` [variable](https://pkg.go.dev/github.com/jreisinger/checkip/check#pkg-variables).
+
+```
+make run # test, install and run
+
+git commit -m "improve tag docs" main.go
+
+git tag | sort -V # or git ll
+git tag -a v0.16.2 -m "improve docs"
+
+git push --follow-tags
+```
