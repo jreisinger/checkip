@@ -5,7 +5,30 @@ import (
 	"github.com/jreisinger/checkip"
 )
 
-// Default are the checks recommended for most people.
+// All contains all available checks, except for TcpPorts that scans the target.
+var All = []checkip.Check{
+	AbuseIPDB,
+	BlockList,
+	CinsScore,
+	DBip,
+	DnsMX,
+	DnsName,
+	Firehol,
+	IPSum,
+	IPtoASN,
+	MaxMind,
+	OTX,
+	PhishStats,
+	Ping,
+	Shodan,
+	ThreadCrowd,
+	// TcpPorts,
+	Tls,
+	UrlScan,
+	VirusTotal,
+}
+
+// Default contains checks recommended for most people.
 var Default = []checkip.Check{
 	BlockList,
 	CinsScore,

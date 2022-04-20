@@ -19,6 +19,7 @@ func init() {
 	log.SetPrefix(os.Args[0] + ": ")
 }
 
+var a = flag.Bool("a", false, "run all checks except for TcpPorts")
 var j = flag.Bool("j", false, "output all results in JSON")
 var c = flag.Int("c", 5, "number of concurrent checks")
 
@@ -30,6 +31,11 @@ func main() {
 	// enforce a limit on concurrent checks.
 	var tokens = make(chan struct{}, *c)
 
+	checks := check.Default
+	if *a {
+		checks = check.All
+	}
+
 	var wg sync.WaitGroup
 	for _, ipaddr := range ipaddrs {
 		wg.Add(1)
@@ -37,7 +43,7 @@ func main() {
 			defer wg.Done()
 			tokens <- struct{}{} // acquire a token
 
-			results, errors := cli.Run(check.Default, ipaddr)
+			results, errors := cli.Run(checks, ipaddr)
 			for _, e := range errors {
 				log.Print(e)
 			}
