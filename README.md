@@ -25,6 +25,8 @@ false	otx.alienvault.com
 false	threatcrowd.org
 ```
 
+See [wiki](https://github.com/jreisinger/checkip/wiki) for more.
+
 ## Installation
 
 To install the CLI tool
