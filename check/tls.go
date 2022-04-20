@@ -3,8 +3,10 @@ package check
 import (
 	"crypto/tls"
 	"encoding/json"
+	"errors"
 	"net"
 	"strings"
+	"syscall"
 	"time"
 
 	"github.com/jreisinger/checkip"
@@ -41,6 +43,14 @@ func Tls(ipaddr net.IP) (checkip.Result, error) {
 	address := net.JoinHostPort(ipaddr.String(), "443")
 	conn, err := tls.DialWithDialer(&net.Dialer{Timeout: certTLSDialTimeout}, "tcp", address, &tls.Config{InsecureSkipVerify: true})
 	if err != nil {
+		// Ignore ECONNREFUSED error.
+		var s syscall.Errno
+		if errors.As(err, &s) {
+			if s == syscall.ECONNREFUSED {
+				return result, nil
+			}
+		}
+
 		return result, newCheckError(err)
 	}
 	defer conn.Close()
