@@ -3,50 +3,26 @@
 Checkip is a CLI tool and library that provides generic and security information about an IP address in an easy way. It uses various [checks](https://pkg.go.dev/github.com/jreisinger/checkip/check) to do so.
 
 ```
-$ checkip 218.92.0.158
-abuseipdb.com   --> domain: chinatelecom.com.cn, usage type: Data Center/Web Hosting/Transit
-db-ip.com       --> country: China (CN), city: Nanjing (Jiangning Qu), EU member: false
-dns mx          --> chinatelecom.com.cn: testmail.chinatelecom.com.cn
-iptoasn.com     --> AS description: CHINANET-BACKBONE No.31,Jin-rong Street
-maxmind.com     --> country: China (CN), city: Caolin, EU member: false
-shodan.io       --> OS: n/a, 2 open ports: tcp/22 (OpenSSH, 7.4), tcp/53
-virustotal.com  --> network: 218.92.0.0/16, SAN: n/a
-Malicious       --> 50% (5/10) 🚫
+$ checkip 1.1.1.1
+db-ip.com    country: Australia (AU), city: Sydney, EU member: false
+dns name     one.one.one.one
+iptoasn.com  AS description: CLOUDFLARENET
+ping         0% packet loss, sent 5, recv 5, avg round-trip 17 ms
+tls          version: TLS 1.3, SAN: cloudflare-dns.com, *.cloudflare-dns.com, one.one.one.one
+malicious    0% (0/6) ✅
 ```
 
 You can get output also in JSON (`-j`). Here we select Sec (1) and InfoSec (2) check [type](https://pkg.go.dev/github.com/jreisinger/checkip#Type) and show if the check considers the IP address to be malicious.
 
 ```
-$ checkip -j 218.92.0.158 | jq -r \
+$ checkip -j 1.1.1.1 | jq -r \
 '.checks[] | select(.type==1 or .type==2) | "\(.malicious)\t\(.name)"'
-true	abuseipdb.com
-true	blocklist.de
+false	blocklist.de
 false	cinsscore.com
 false	firehol.org
-true	github.com/stamparm/ipsum
-true	otx.alienvault.com
-false	phishstats.info
+false	github.com/stamparm/ipsum
+false	otx.alienvault.com
 false	threatcrowd.org
-false	urlscan.io
-true	virustotal.com
-```
-
-Active checks (`-a`) directly interact with the IP address. And scan checks (`-s`) scan the IP address! NOTE: You should run scan checks only against your hosts or hosts you have permission to scan.
-
-```
-$ checkip -a -s 45.33.32.156 # scanme.nmap.org
-checkip: Tls: dial tcp 45.33.32.156:443: connect: connection refused
-Open TCP ports  --> 22 (ssh), 80 (http), 9929 (nping-echo), 31337 (Elite)
-Ping            --> 0% packet loss, sent 5, recv 5, avg round-trip 168 ms
-abuseipdb.com   --> domain: linode.com, usage type: Data Center/Web Hosting/Transit
-db-ip.com       --> country: United States (US), city: Fremont, EU member: false
-dns mx          --> linode.com: inbound-mail1.linode.com, inbound-mail3.linode.com
-dns name        --> scanme.nmap.org
-iptoasn.com     --> AS description: LINODE-AP Linode, LLC
-maxmind.com     --> country: United States (US), city: Fremont, EU member: false
-shodan.io       --> OS: n/a, 3 open ports: tcp/22 (OpenSSH, 6.6.1p1 Ubuntu-2ubuntu2.13), tcp/80 (Apache httpd, 2.4.7), udp/123
-virustotal.com  --> network: 45.33.0.0/17, SAN: n/a
-Malicious       --> 0% (0/10) ✅
 ```
 
 ## Installation
@@ -61,6 +37,21 @@ go install github.com/jreisinger/checkip/cmd/checkip@latest
 ```
 
 or download a [release](https://github.com/jreisinger/checkip/releases) binary (from under "Assets") for your system and architecture.
+
+## Development
+
+Checkip is easy to extend. If you want to add a new way to check an IP address, just write a function of type [Check](https://pkg.go.dev/github.com/jreisinger/checkip#Check). Consider adding the check to `check.Default` [variable](https://pkg.go.dev/github.com/jreisinger/checkip/check#pkg-variables).
+
+```
+make run # test, install and run
+
+git commit -m "improve tag docs" main.go
+
+git tag | sort -V # or git ll
+git tag -a v0.16.2 -m "improve docs"
+
+git push --follow-tags
+```
 
 ## Configuration
 
@@ -77,18 +68,3 @@ VIRUSTOTAL_API_KEY: aaaaaaaabbbbbbbbccccccccddddddddeeeeeeeeffffffff111111112222
 ```
 
 You can also use environment variables with the same names.
-
-## Development
-
-Checkip is easy to extend. If you want to add a new way to check an IP address, just write a function of type [Check](https://pkg.go.dev/github.com/jreisinger/checkip#Check). Add the function to `check.Passive`, `check.Active` or `check.Scan` [variable](https://pkg.go.dev/github.com/jreisinger/checkip/check#pkg-variables).
-
-```
-make run # test, install and run
-
-git commit -m "improve tag docs" main.go
-
-git tag | sort -V # or git ll
-git tag -a v0.16.2 -m "improve docs"
-
-git push --follow-tags
-```

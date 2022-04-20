@@ -31,7 +31,7 @@ func (t tlsinfo) Json() ([]byte, error) {
 // 443.
 func Tls(ipaddr net.IP) (checkip.Result, error) {
 	result := checkip.Result{
-		Name: "Tls",
+		Name: "tls",
 		Type: checkip.TypeInfo,
 	}
 

@@ -5,36 +5,19 @@ import (
 	"github.com/jreisinger/checkip"
 )
 
-// Passive checks don't interact directly with the target IP address.
-var Passive = []checkip.Check{
-	AbuseIPDB,
+// Default are the checks recommended for most people.
+var Default = []checkip.Check{
 	BlockList,
 	CinsScore,
 	DBip,
-	DnsMX,
 	DnsName,
 	Firehol,
 	IPSum,
 	IPtoASN,
-	MaxMind,
 	OTX,
-	PhishStats,
-	Shodan,
-	ThreadCrowd,
-	UrlScan,
-	VirusTotal,
-}
-
-// Active checks interact with the target IP address.
-var Active = []checkip.Check{
 	Ping,
+	ThreadCrowd,
 	Tls,
-}
-
-// Scan checks scan the IP address. You should run them only against your hosts
-// or hosts you have permission to scan.
-var Scan = []checkip.Check{
-	TcpPorts,
 }
 
 // na returns "n/a" if s is empty.

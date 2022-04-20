@@ -14,7 +14,7 @@ import (
 // the statistics.
 func Ping(ipaddr net.IP) (checkip.Result, error) {
 	result := checkip.Result{
-		Name: "Ping",
+		Name: "ping",
 		Type: checkip.TypeInfo,
 	}
 
