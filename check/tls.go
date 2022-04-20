@@ -23,7 +23,11 @@ type tlsinfo struct {
 func (t tlsinfo) Summary() string {
 	var ss []string
 	ss = append(ss, t.Version)
-	ss = append(ss, t.Expiry.Format("2006/01/02"))
+	exp := "exp. " + t.Expiry.Format("2006/01/02")
+	if t.Expiry.Before(time.Now()) {
+		exp += "!!"
+	}
+	ss = append(ss, exp)
 	ss = append(ss, t.SAN...)
 	return strings.Join(ss, ", ")
 }
@@ -88,11 +92,11 @@ func tlsFormat(tlsVersion uint16) string {
 	case 0:
 		return ""
 	case tls.VersionSSL30:
-		return "SSLv3 - Deprecated!"
+		return "SSLv3!!"
 	case tls.VersionTLS10:
-		return "TLS 1.0 - Deprecated!"
+		return "TLS 1.0!!"
 	case tls.VersionTLS11:
-		return "TLS 1.1 - Deprecated!"
+		return "TLS 1.1!!"
 	case tls.VersionTLS12:
 		return "TLS 1.2"
 	case tls.VersionTLS13:

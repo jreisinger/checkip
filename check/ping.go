@@ -38,7 +38,7 @@ func Ping(ipaddr net.IP) (checkip.Result, error) {
 type stats ping.Statistics
 
 func (s stats) Summary() string {
-	return fmt.Sprintf("%.0f%% packet loss, sent %d, recv %d, avg round-trip %d ms", s.PacketLoss, s.PacketsSent, s.PacketsRecv, s.AvgRtt.Milliseconds())
+	return fmt.Sprintf("%.0f%% packet loss (%d/%d), avg round-trip %d ms", s.PacketLoss, s.PacketsSent, s.PacketsRecv, s.AvgRtt.Milliseconds())
 }
 
 func (s stats) Json() ([]byte, error) {
