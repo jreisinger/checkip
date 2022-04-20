@@ -62,14 +62,24 @@ func parseArgs(args []string) []net.IP {
 	var ipaddrs []net.IP
 
 	for _, arg := range args {
-		ipaddrs = append(ipaddrs, parseIP(arg))
+		ipaddr := net.ParseIP(arg)
+		if ipaddr == nil {
+			log.Printf("wrong IP address: %s", arg)
+			continue
+		}
+		ipaddrs = append(ipaddrs, ipaddr)
 	}
 
 	// Get IP addresses from stdin.
 	if len(ipaddrs) == 0 {
 		input := bufio.NewScanner(os.Stdin)
 		for input.Scan() {
-			ipaddrs = append(ipaddrs, parseIP(input.Text()))
+			ipaddr := net.ParseIP(input.Text())
+			if ipaddr == nil {
+				log.Printf("wrong IP address: %s", input.Text())
+				continue
+			}
+			ipaddrs = append(ipaddrs, ipaddr)
 		}
 		if err := input.Err(); err != nil {
 			log.Print(err)
@@ -77,12 +87,4 @@ func parseArgs(args []string) []net.IP {
 	}
 
 	return ipaddrs
-}
-
-func parseIP(ip string) net.IP {
-	ipaddr := net.ParseIP(ip)
-	if ipaddr == nil {
-		log.Printf("wrong IP address: %s", ip)
-	}
-	return ipaddr
 }
