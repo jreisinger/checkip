@@ -22,7 +22,7 @@ type AutonomousSystem struct {
 }
 
 func (a AutonomousSystem) Summary() string {
-	return fmt.Sprintf("AS description: %s", na(a.Description))
+	return a.Description
 }
 
 func (a AutonomousSystem) Json() ([]byte, error) {

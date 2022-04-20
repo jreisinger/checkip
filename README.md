@@ -4,12 +4,12 @@ Checkip is a CLI tool and library that provides generic and security information
 
 ```
 $ checkip 1.1.1.1
-db-ip.com    country: Australia (AU), city: Sydney, EU member: false
-dns name     one.one.one.one
-iptoasn.com  AS description: CLOUDFLARENET
-ping         0% packet loss, sent 5, recv 5, avg round-trip 17 ms
-tls          version: TLS 1.3, SAN: cloudflare-dns.com, *.cloudflare-dns.com, one.one.one.one
-malicious    0% (0/6) ✅
+db-ip.com   Sydney, Australia
+dns name    one.one.one.one
+iptoasn.com CLOUDFLARENET
+ping        0% packet loss, sent 5, recv 5, avg round-trip 14 ms
+tls         TLS 1.3, cloudflare-dns.com, *.cloudflare-dns.com, one.one.one.one
+malicious   0% (0/6) ✅
 ```
 
 You can get output also in JSON (`-j`). Here we select Sec (1) and InfoSec (2) check [type](https://pkg.go.dev/github.com/jreisinger/checkip#Type) and show if the check considers the IP address to be malicious.

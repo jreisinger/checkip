@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net"
+	"strings"
 	"time"
 
 	"github.com/jreisinger/checkip"
@@ -18,8 +19,7 @@ type dbip struct {
 }
 
 func (d dbip) Summary() string {
-	return fmt.Sprintf("country: %s (%s), city: %s, EU member: %t",
-		na(d.Country), na(d.IsoCode), na(d.City), d.IsInEU)
+	return strings.Join([]string{d.City, d.Country}, ", ")
 }
 
 func (d dbip) Json() ([]byte, error) {

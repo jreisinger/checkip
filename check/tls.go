@@ -3,7 +3,6 @@ package check
 import (
 	"crypto/tls"
 	"encoding/json"
-	"fmt"
 	"net"
 	"strings"
 	"time"
@@ -19,8 +18,10 @@ type tlsinfo struct {
 }
 
 func (t tlsinfo) Summary() string {
-	s := strings.Join(t.SAN, ", ")
-	return fmt.Sprintf("version: %s, SAN: %s", na(t.version), na(s))
+	var ss []string
+	ss = append(ss, t.version)
+	ss = append(ss, t.SAN...)
+	return strings.Join(ss, ", ")
 }
 
 func (t tlsinfo) Json() ([]byte, error) {
