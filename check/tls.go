@@ -14,12 +14,14 @@ const certTLSDialTimeout = 5 * time.Second
 
 type tlsinfo struct {
 	SAN     []string
-	version string
+	Version string
+	Expiry  time.Time
 }
 
 func (t tlsinfo) Summary() string {
 	var ss []string
-	ss = append(ss, t.version)
+	ss = append(ss, t.Version)
+	ss = append(ss, t.Expiry.Format("2006/01/02"))
 	ss = append(ss, t.SAN...)
 	return strings.Join(ss, ", ")
 }
@@ -32,7 +34,7 @@ func (t tlsinfo) Json() ([]byte, error) {
 // 443.
 func Tls(ipaddr net.IP) (checkip.Result, error) {
 	result := checkip.Result{
-		Name: "tls",
+		Name: "cert",
 		Type: checkip.TypeInfo,
 	}
 
@@ -46,8 +48,12 @@ func Tls(ipaddr net.IP) (checkip.Result, error) {
 	// search only unique dns names
 	dnsSet := make(map[string]struct{})
 	var dnsNames []string
+	var expiry time.Time
 	for _, cert := range conn.ConnectionState().PeerCertificates {
-		for _, dnsName := range cert.DNSNames {
+		for i, dnsName := range cert.DNSNames {
+			if i == 0 || cert.NotAfter.Before(expiry) {
+				expiry = cert.NotAfter
+			}
 			if _, ok := dnsSet[dnsName]; ok {
 				continue
 			}
@@ -58,7 +64,8 @@ func Tls(ipaddr net.IP) (checkip.Result, error) {
 
 	t := tlsinfo{
 		SAN:     dnsNames,
-		version: tlsFormat(conn.ConnectionState().Version),
+		Version: tlsFormat(conn.ConnectionState().Version),
+		Expiry:  expiry,
 	}
 
 	result.Info = t
