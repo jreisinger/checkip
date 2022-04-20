@@ -19,6 +19,7 @@ func init() {
 }
 
 var j = flag.Bool("j", false, "output all results in JSON")
+var c = flag.Int("c", 5, "number of concurrent checks")
 
 func main() {
 	flag.Parse()
@@ -40,7 +41,7 @@ func main() {
 
 	// tokens is a counting semaphore used to
 	// enforce a limit on concurrent requests.
-	var tokens = make(chan struct{}, 5)
+	var tokens = make(chan struct{}, *c)
 
 	var wg sync.WaitGroup
 	for _, ipaddr := range ipaddrs {
