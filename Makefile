@@ -7,4 +7,4 @@ install: test
 run: install
 	checkip 1.1.1.1
 	checkip -j 1.1.1.1 | jq -r \
-'.checks[] | select(.type==1 or .type==2) | "\(.malicious)\t\(.name)"'
+'.checks[] | select(.type==1 or .type==2) | "\(.malicious) \(.name)"'
