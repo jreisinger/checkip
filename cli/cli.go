@@ -45,16 +45,19 @@ func (rs Results) PrintJSON(ipaddr net.IP) {
 	// if len(rs) == 0 {
 	// 	return
 	// }
+
 	_, _, prob := rs.maliciousStats()
+
 	out := struct {
 		IpAddr        net.IP  `json:"ipaddr"`
-		Check         Results `json:"checks"`
 		MaliciousProb float64 `json:"malicious_prob"`
+		Check         Results `json:"checks"`
 	}{
 		ipaddr,
-		rs,
 		prob,
+		rs,
 	}
+
 	enc := json.NewEncoder(os.Stdout)
 	if err := enc.Encode(out); err != nil {
 		log.Fatal(err)
