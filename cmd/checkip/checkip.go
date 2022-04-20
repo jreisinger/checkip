@@ -3,9 +3,11 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"log"
 	"net"
 	"os"
+	"sync"
 
 	"github.com/jreisinger/checkip/check"
 	"github.com/jreisinger/checkip/cli"
@@ -21,24 +23,47 @@ var j = flag.Bool("j", false, "output all results in JSON")
 func main() {
 	flag.Parse()
 
-	if len(flag.Args()) != 1 {
-		log.Fatal("supply an IP address")
+	if len(flag.Args()) < 1 {
+		log.Fatal("supply at least one IP address")
 	}
 
-	ipaddr := net.ParseIP(flag.Args()[0])
-	if ipaddr == nil {
-		log.Fatalf("wrong IP address: %s\n", flag.Args()[0])
+	var ipaddrs []net.IP
+
+	for _, arg := range flag.Args() {
+		ipaddr := net.ParseIP(arg)
+		if ipaddr == nil {
+			log.Printf("wrong IP address: %s", arg)
+			continue
+		}
+		ipaddrs = append(ipaddrs, ipaddr)
 	}
 
-	results, errors := cli.Run(check.Default, ipaddr)
-	for _, e := range errors {
-		log.Print(e)
+	// tokens is a counting semaphore used to
+	// enforce a limit on concurrent requests.
+	var tokens = make(chan struct{}, 5)
+
+	var wg sync.WaitGroup
+	for _, ipaddr := range ipaddrs {
+		wg.Add(1)
+		go func(ipaddr net.IP) {
+			defer wg.Done()
+			tokens <- struct{}{} // acquire a token
+			results, errors := cli.Run(check.Default, ipaddr)
+			for _, e := range errors {
+				log.Print(e)
+			}
+			if *j {
+				results.PrintJSON(ipaddr)
+			} else {
+				if len(ipaddrs) > 1 {
+					fmt.Printf("--- %s ---\n", ipaddr.String())
+				}
+				results.SortByName()
+				results.PrintSummary()
+				results.PrintMalicious()
+			}
+			<-tokens // release the token
+		}(ipaddr)
 	}
-	results.SortByName()
-	if *j {
-		results.PrintJSON()
-	} else {
-		results.PrintSummary()
-		results.PrintMalicious()
-	}
+	wg.Wait()
 }

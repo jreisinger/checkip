@@ -33,6 +33,7 @@ func Run(checks []checkip.Check, ipaddr net.IP) (Results, []error) {
 		}(chk)
 	}
 	wg.Wait()
+
 	return results, errors
 }
 
@@ -40,13 +41,15 @@ func Run(checks []checkip.Check, ipaddr net.IP) (Results, []error) {
 type Results []checkip.Result
 
 // PrintJSON prints all results in JSON.
-func (rs Results) PrintJSON() {
+func (rs Results) PrintJSON(ipaddr net.IP) {
 	// if len(rs) == 0 {
 	// 	return
 	// }
 	out := struct {
-		Check Results `json:"checks"`
+		IpAddr net.IP  `json:"ipaddr"`
+		Check  Results `json:"checks"`
 	}{
+		ipaddr,
 		rs,
 	}
 	enc := json.NewEncoder(os.Stdout)
