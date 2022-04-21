@@ -19,7 +19,15 @@ type dbip struct {
 }
 
 func (d dbip) Summary() string {
-	return strings.Join([]string{d.City, d.Country}, ", ")
+	// Get just non-empty strings.
+	var parts []string
+	for _, s := range []string{d.City, d.Country} {
+		if strings.TrimSpace(s) != "" {
+			parts = append(parts, s)
+		}
+	}
+
+	return strings.Join(parts, ", ")
 }
 
 func (d dbip) Json() ([]byte, error) {

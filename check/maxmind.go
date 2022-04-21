@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net"
+	"strings"
 
 	"github.com/jreisinger/checkip"
 	"github.com/oschwald/geoip2-golang"
@@ -17,8 +18,15 @@ type maxmind struct {
 }
 
 func (m maxmind) Summary() string {
-	return fmt.Sprintf("country: %s (%s), city: %s, EU member: %t",
-		na(m.Country), na(m.IsoCode), na(m.City), m.IsInEU)
+	// Get just non-empty strings.
+	var parts []string
+	for _, s := range []string{m.City, m.Country} {
+		if strings.TrimSpace(s) != "" {
+			parts = append(parts, s)
+		}
+	}
+
+	return strings.Join(parts, ", ")
 }
 
 func (m maxmind) Json() ([]byte, error) {
