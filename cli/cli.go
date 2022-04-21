@@ -81,7 +81,7 @@ func (rs Results) PrintSummary() {
 		}
 
 		if r.Type == checkip.TypeInfo || r.Type == checkip.TypeInfoSec {
-			fmt.Printf("%-14s %s\n", r.Name, r.Info.Summary())
+			fmt.Printf("%-15s %s\n", r.Name, r.Info.Summary())
 		}
 	}
 }
@@ -90,7 +90,7 @@ func (rs Results) PrintSummary() {
 // address to be malicious.
 func (rs Results) PrintMalicious() {
 	total, malicious, prob := rs.maliciousStats()
-	msg := fmt.Sprintf("%-14s %.0f%% (%d/%d) ",
+	msg := fmt.Sprintf("%-15s %.0f%% (%d/%d) ",
 		"malicious", math.Round(prob*100), malicious, total)
 	switch {
 	case prob >= 0.50:
