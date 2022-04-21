@@ -25,7 +25,7 @@ false threatcrowd.org
 false otx.alienvault.com
 ```
 
-See [wiki](https://github.com/jreisinger/checkip/wiki) for more usage examples.
+See Wiki for more [usage examples](https://github.com/jreisinger/checkip/wiki/Usage-examples).
 
 ## Installation
 
