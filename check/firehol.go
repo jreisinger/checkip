@@ -13,7 +13,7 @@ type firehol struct {
 	blacklisted bool
 }
 
-// Firehol checks whether the ipaddr is found on a blacklist from
+// Firehol checks whether the ipaddr is found on blacklist
 // https://iplists.firehol.org/?ipset=firehol_level1.
 func Firehol(ipaddr net.IP) (checkip.Result, error) {
 	result := checkip.Result{

@@ -16,8 +16,8 @@ type otx struct {
 	} `json:"pulse_info"`
 }
 
-// OTX counts pulses on otx.alienvault.com to find out whether the ipaddr is
-// malicious.
+// OTX counts pulses to find out whether the ipaddr is malicious. Is uses
+// https://otx.alienvault.com/api/v1/indicators/IPv4.
 func OTX(ipaddr net.IP) (checkip.Result, error) {
 	result := checkip.Result{
 		Name: "otx.alienvault.com",

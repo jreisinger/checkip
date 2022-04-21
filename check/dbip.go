@@ -26,7 +26,7 @@ func (d dbip) Json() ([]byte, error) {
 	return json.Marshal(d)
 }
 
-// DBip gets geolocation data from https://db-ip.com/db/download/ip-to-city-lite
+// DBip gets geolocation from https://db-ip.com/db/download/ip-to-city-lite.
 func DBip(ip net.IP) (checkip.Result, error) {
 	result := checkip.Result{
 		Name: "db-ip.com",

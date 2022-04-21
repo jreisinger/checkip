@@ -11,7 +11,8 @@ import (
 	"github.com/jreisinger/checkip"
 )
 
-// IPSum checks how many blacklists the ipaddr is found on.
+// IPSum checks how many blacklists the ipaddr is found on. It uses
+// https://raw.githubusercontent.com/stamparm/ipsum/master/ipsum.txt.
 func IPSum(ipaddr net.IP) (checkip.Result, error) {
 	result := checkip.Result{
 		Name: "github.com/stamparm/ipsum",

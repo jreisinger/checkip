@@ -36,8 +36,7 @@ func (t tlsinfo) Json() ([]byte, error) {
 	return json.Marshal(t)
 }
 
-// Tls finds out TLS version and SANs by connecting to the ipaddr and TCP port
-// 443.
+// Tls finds out TLS information by connecting to the ipaddr and TCP port 443.
 func Tls(ipaddr net.IP) (checkip.Result, error) {
 	result := checkip.Result{
 		Name: "cert",

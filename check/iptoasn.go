@@ -29,8 +29,8 @@ func (a AutonomousSystem) Json() ([]byte, error) {
 	return json.Marshal(a)
 }
 
-// IPtoASN gets info about autonomous system (IPtoASN) of the ipaddr. The data
-// is taken from a TSV file ip2asn-combined downloaded from iptoasn.com.
+// IPtoASN gets info about autonomous system of the ipaddr. The data is taken
+// from https://iptoasn.com/data/ip2asn-combined.tsv.gz.
 func IPtoASN(ipaddr net.IP) (checkip.Result, error) {
 	result := checkip.Result{
 		Name: "iptoasn.com",
