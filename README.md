@@ -12,7 +12,7 @@ ping        0% packet loss (5/5), avg round-trip 20 ms
 malicious   0% (0/6) ✅
 ```
 
-You can get output also in JSON (`-j`). Here we select Sec (1) and InfoSec (2) check [type](https://pkg.go.dev/github.com/jreisinger/checkip#Type) and show if the check considers the IP address to be malicious.
+You can also get output in JSON (`-j`). Here we select Sec (1) and InfoSec (2) check [type](https://pkg.go.dev/github.com/jreisinger/checkip#Type) and show which check considers the IP address to be malicious.
 
 ```
 $ checkip -j 1.1.1.1 | jq -r \
