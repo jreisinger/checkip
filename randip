@@ -4,7 +4,7 @@
 if [[ -z $1 ]]; then
     count=1 # generate 1 IP address by default
 elif ! [[ $1 =~ ^[0-9]+$ ]]; then
-   echo "usage: randip [int]" >&2; exit 1
+   echo "usage: randip [uint]" >&2; exit 1
 else
     count=$1
 fi
