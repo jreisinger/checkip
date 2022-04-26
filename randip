@@ -1,0 +1,16 @@
+#!/bin/bash
+# Generate random IP addresses.
+
+if [[ -z $1 ]]; then
+    count=1 # generate 1 IP address by default
+elif ! [[ $1 =~ ^[0-9]+$ ]]; then
+   echo "usage: randip [int]" >&2; exit 1
+else
+    count=$1
+fi
+
+i=0
+while [[ $i -lt $count ]]; do
+    printf "%d.%d.%d.%d\n" "$((RANDOM % 256))" "$((RANDOM % 256))" "$((RANDOM % 256))" "$((RANDOM % 256))"
+    i=$((i+1))
+done
