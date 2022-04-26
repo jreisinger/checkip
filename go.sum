@@ -4,8 +4,6 @@ github.com/go-ping/ping v0.0.0-20211014180314-6e2b003bffdd h1:WwvAAgvP2MO5bxYtSl
 github.com/go-ping/ping v0.0.0-20211014180314-6e2b003bffdd/go.mod h1:xIFjORFzTxqIV/tDVGO4eDy/bLuSyawEeojSm3GfRGk=
 github.com/google/uuid v1.2.0 h1:qJYtXnJRWmpe7m/3XlyhrsLrEURqHRM2kxzoxXqyUDs=
 github.com/google/uuid v1.2.0/go.mod h1:TIyPZe4MgqvfeYDBFedMoGGpEw/LqOeaOT+nhxU+yHo=
-github.com/jreisinger/nmapservices v0.1.2 h1:I0W1uEcipojtI8CpcRBuLh6pKA5v1LG1MOnj1E4MaMw=
-github.com/jreisinger/nmapservices v0.1.2/go.mod h1:THd4lTeAoL7N7hLl0ObImf/xVLFVPGmEJR54p+AH//c=
 github.com/oschwald/geoip2-golang v1.5.0 h1:igg2yQIrrcRccB1ytFXqBfOHCjXWIoMv85lVJ1ONZzw=
 github.com/oschwald/geoip2-golang v1.5.0/go.mod h1:xdvYt5xQzB8ORWFqPnqMwZpCpgNagttWdoZLlJQzg7s=
 github.com/oschwald/maxminddb-golang v1.8.0 h1:Uh/DSnGoxsyp/KYbY1AuP0tYEwfs0sCph9p/UMXK/Hk=

@@ -5,7 +5,7 @@ import (
 	"github.com/jreisinger/checkip"
 )
 
-// All contains all available checks, except for TcpPorts that scans the target.
+// All contains all available checks.
 var All = []checkip.Check{
 	AbuseIPDB,
 	BlockList,
@@ -22,7 +22,6 @@ var All = []checkip.Check{
 	Ping,
 	Shodan,
 	ThreadCrowd,
-	// TcpPorts,
 	Tls,
 	UrlScan,
 	VirusTotal,

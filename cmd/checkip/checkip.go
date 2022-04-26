@@ -19,7 +19,7 @@ func init() {
 	log.SetPrefix(os.Args[0] + ": ")
 }
 
-var a = flag.Bool("a", false, "run all checks except for TcpPorts")
+var a = flag.Bool("a", false, "run all available checks")
 var j = flag.Bool("j", false, "output all results in JSON")
 var c = flag.Int("c", 5, "number of concurrent checks")
 
