@@ -16,18 +16,25 @@ const certTLSDialTimeout = 5 * time.Second
 
 type tlsinfo struct {
 	SAN     []string
-	Version string
+	Version uint16
 	Expiry  time.Time
 }
 
 func (t tlsinfo) Summary() string {
 	var ss []string
-	ss = append(ss, t.Version)
+
+	ver := tlsFormat(t.Version)
+	if oldTlsVersion(t.Version) {
+		ver += "!!"
+	}
+	ss = append(ss, ver)
+
 	exp := "exp. " + t.Expiry.Format("2006/01/02")
 	if expiredCert(t.Expiry) {
 		exp += "!!"
 	}
 	ss = append(ss, exp)
+
 	ss = append(ss, t.SAN...)
 	return strings.Join(ss, ", ")
 }
@@ -77,7 +84,7 @@ func Tls(ipaddr net.IP) (checkip.Result, error) {
 
 	t := tlsinfo{
 		SAN:     dnsNames,
-		Version: tlsFormat(conn.ConnectionState().Version),
+		Version: conn.ConnectionState().Version,
 		Expiry:  expiry,
 	}
 
@@ -109,11 +116,11 @@ func tlsFormat(tlsVersion uint16) string {
 	case 0:
 		return ""
 	case tls.VersionSSL30:
-		return "SSLv3!!"
+		return "SSLv3"
 	case tls.VersionTLS10:
-		return "TLS 1.0!!"
+		return "TLS 1.0"
 	case tls.VersionTLS11:
-		return "TLS 1.1!!"
+		return "TLS 1.1"
 	case tls.VersionTLS12:
 		return "TLS 1.2"
 	case tls.VersionTLS13:
