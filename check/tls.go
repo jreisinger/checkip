@@ -24,7 +24,7 @@ func (t tlsinfo) Summary() string {
 	var ss []string
 	ss = append(ss, t.Version)
 	exp := "exp. " + t.Expiry.Format("2006/01/02")
-	if t.Expiry.Before(time.Now()) {
+	if expiredCert(t.Expiry) {
 		exp += "!!"
 	}
 	ss = append(ss, exp)
@@ -39,8 +39,8 @@ func (t tlsinfo) Json() ([]byte, error) {
 // Tls finds out TLS information by connecting to the ipaddr and TCP port 443.
 func Tls(ipaddr net.IP) (checkip.Result, error) {
 	result := checkip.Result{
-		Name: "cert",
-		Type: checkip.TypeInfo,
+		Name: "tls",
+		Type: checkip.TypeInfoSec,
 	}
 
 	address := net.JoinHostPort(ipaddr.String(), "443")
@@ -83,7 +83,25 @@ func Tls(ipaddr net.IP) (checkip.Result, error) {
 
 	result.Info = t
 
+	if oldTlsVersion(conn.ConnectionState().Version) || expiredCert(t.Expiry) {
+		result.Malicious = true
+	}
+
 	return result, nil
+}
+
+func oldTlsVersion(tlsVersion uint16) bool {
+	if tlsVersion == tls.VersionTLS12 || tlsVersion == tls.VersionTLS13 {
+		return false
+	}
+	return true
+}
+
+func expiredCert(expiryDate time.Time) bool {
+	if expiryDate.Before(time.Now()) {
+		return true
+	}
+	return false
 }
 
 func tlsFormat(tlsVersion uint16) string {
