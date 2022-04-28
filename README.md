@@ -4,12 +4,12 @@ Checkip is a CLI tool and library that provides generic and security information
 
 ```
 $ checkip 1.1.1.1
-cert        TLS 1.3, exp. 2022/10/25, cloudflare-dns.com, *.cloudflare-dns.com, one.one.one.one
-db-ip.com   Sydney, Australia
-dns name    one.one.one.one
-iptoasn.com CLOUDFLARENET
-ping        0% packet loss (5/5), avg round-trip 20 ms
-malicious   0% (0/6) ✅
+db-ip.com       Sydney, Australia
+dns name        one.one.one.one
+iptoasn.com     CLOUDFLARENET
+ping            0% packet loss (5/5), avg round-trip 15 ms
+tls             TLS 1.3, exp. 2022/10/25, cloudflare-dns.com, *.cloudflare-dns.com, one.one.one.one
+malicious       0% (0/7) ✅
 ```
 
 ## Usage examples
@@ -19,10 +19,11 @@ Select Sec (1) and InfoSec (2) check [type](https://pkg.go.dev/github.com/jreisi
 ```
 $ checkip -j 1.1.1.1 | \
 jq -r '.checks[] | select(.type==1 or .type==2) | "\(.malicious) \(.name)"'
-false firehol.org
 false cinsscore.com
-false github.com/stamparm/ipsum
+false firehol.org
 false blocklist.de
+false tls
+false github.com/stamparm/ipsum
 false threatcrowd.org
 false otx.alienvault.com
 ```
