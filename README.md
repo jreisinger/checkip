@@ -12,17 +12,28 @@ ping        0% packet loss (5/5), avg round-trip 20 ms
 malicious   0% (0/6) ✅
 ```
 
-You can also get output in JSON (`-j`). Here we select Sec (1) and InfoSec (2) check [type](https://pkg.go.dev/github.com/jreisinger/checkip#Type) and show which check considers the IP address to be malicious.
+## Usage examples
+
+Select Sec (1) and InfoSec (2) check [type](https://pkg.go.dev/github.com/jreisinger/checkip#Type) and show which check considers the IP address to be malicious:
 
 ```
-$ checkip -j 1.1.1.1 | jq -r \
-'.checks[] | select(.type==1 or .type==2) | "\(.malicious) \(.name)"'
+$ checkip -j 1.1.1.1 | \
+jq -r '.checks[] | select(.type==1 or .type==2) | "\(.malicious) \(.name)"'
 false firehol.org
 false cinsscore.com
 false github.com/stamparm/ipsum
 false blocklist.de
 false threatcrowd.org
 false otx.alienvault.com
+```
+
+Generate two random IP addresses and see if they are considered malicious:
+
+```
+$ ./randip 2 | checkip -a -j 2> /dev/null | \
+jq -r '"\(.malicious_prob)\t\(.ipaddr)"'
+0	176.214.10.86
+0.1	229.236.76.24
 ```
 
 See Wiki for more [usage examples](https://github.com/jreisinger/checkip/wiki/Usage-examples).
