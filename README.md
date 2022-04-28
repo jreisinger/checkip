@@ -1,6 +1,6 @@
 # checkip
 
-Checkip is a CLI tool and library that provides generic and security information about IP addresses in an easy way. It uses various [checks](https://pkg.go.dev/github.com/jreisinger/checkip/check) to do so.
+Checkip is a CLI tool and [library](https://pkg.go.dev/github.com/jreisinger/checkip) that provides generic and security information about IP addresses in an easy way.
 
 ```
 $ checkip 1.1.1.1
@@ -14,7 +14,7 @@ malicious   0% (0/6) ✅
 
 ## Usage examples
 
-Select Sec (1) and InfoSec (2) check [type](https://pkg.go.dev/github.com/jreisinger/checkip#Type) and show which check considers the IP address to be malicious:
+Select Sec (1) and InfoSec (2) check [type](https://pkg.go.dev/github.com/jreisinger/checkip#Type) and show which [check](https://pkg.go.dev/github.com/jreisinger/checkip/check) considers the IP address to be malicious:
 
 ```
 $ checkip -j 1.1.1.1 | \
