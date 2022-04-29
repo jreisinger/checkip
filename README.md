@@ -1,6 +1,9 @@
+[![Go Reference](https://pkg.go.dev/badge/github.com/jreisinger/checkip.svg)](https://pkg.go.dev/github.com/jreisinger/checkip)
+[![Go Report Card](https://goreportcard.com/badge/github.com/jreisinger/checkip)](https://goreportcard.com/report/github.com/jreisinger/checkip)
+
 # checkip
 
-Checkip is a CLI tool and [library](https://pkg.go.dev/github.com/jreisinger/checkip) that provides generic and security information about IP addresses in an easy way.
+Checkip is a CLI tool and library that provides generic and security information about IP addresses in an easy way.
 
 ```
 $ checkip 1.1.1.1
