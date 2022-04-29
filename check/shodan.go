@@ -24,7 +24,9 @@ type shodanData []struct {
 	Transport string `json:"transport"` // tcp, udp
 }
 
-// Shodan gets generic information from https://api.shodan.io.
+var shodanUrl = "https://api.shodan.io"
+
+// Shodan gets generic information from api.shodan.io.
 func Shodan(ipaddr net.IP) (checkip.Result, error) {
 	result := checkip.Result{
 		Name: "shodan.io",
@@ -40,7 +42,7 @@ func Shodan(ipaddr net.IP) (checkip.Result, error) {
 	}
 
 	var shodan shodan
-	apiURL := fmt.Sprintf("https://api.shodan.io/shodan/host/%s?key=%s", ipaddr, apiKey)
+	apiURL := fmt.Sprintf("%s/shodan/host/%s?key=%s", shodanUrl, ipaddr, apiKey)
 	if err := defaultHttpClient.GetJson(apiURL, map[string]string{}, map[string]string{}, &shodan); err != nil {
 		return result, newCheckError(err)
 	}

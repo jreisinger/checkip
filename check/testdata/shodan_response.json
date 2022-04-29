@@ -1,0 +1,194 @@
+{
+  "region_code": "SH",
+  "tags": [],
+  "ip": 1981351463,
+  "area_code": null,
+  "domains": [],
+  "hostnames": [],
+  "country_code": "CN",
+  "org": "Tencent Cloud Computing (Beijing) Co., Ltd",
+  "data": [
+    {
+      "vulns": {
+        "CVE-2018-15919": {
+          "references": [
+            "http://seclists.org/oss-sec/2018/q3/180",
+            "http://www.securityfocus.com/bid/105163",
+            "https://security.netapp.com/advisory/ntap-20181221-0001/"
+          ],
+          "verified": false,
+          "cvss": "5.0",
+          "summary": "Remotely observable behaviour in auth-gss2.c in OpenSSH through 7.8 could be used by remote attackers to detect existence of users on a target system when GSS2 is in use. NOTE: the discoverer states 'We understand that the OpenSSH developers do not want to treat such a username enumeration (or \"oracle\") as a vulnerability.'"
+        },
+        "CVE-2017-15906": {
+          "references": [
+            "http://www.securityfocus.com/bid/101552",
+            "https://access.redhat.com/errata/RHSA-2018:0980",
+            "https://github.com/openbsd/src/commit/a6981567e8e215acc1ef690c8dbb30f2d9b00a19",
+            "https://lists.debian.org/debian-lts-announce/2018/09/msg00010.html",
+            "https://security.gentoo.org/glsa/201801-05",
+            "https://security.netapp.com/advisory/ntap-20180423-0004/",
+            "https://www.openssh.com/txt/release-7.6"
+          ],
+          "verified": false,
+          "cvss": 5,
+          "summary": "The process_open function in sftp-server.c in OpenSSH before 7.6 does not properly prevent write operations in readonly mode, which allows attackers to create zero-length files."
+        }
+      },
+      "port": 2222,
+      "transport": "tcp",
+      "version": "7.4",
+      "location": {
+        "city": "Shanghai",
+        "region_code": "SH",
+        "area_code": null,
+        "longitude": 121.45806,
+        "country_name": "China",
+        "country_code": "CN",
+        "latitude": 31.22222
+      },
+      "ip": 1981351463,
+      "product": "OpenSSH",
+      "hash": 2021677969,
+      "timestamp": "2022-04-26T13:14:29.860144",
+      "hostnames": [],
+      "ssh": {
+        "type": "ssh-rsa",
+        "fingerprint": "ce:4d:99:cb:cb:6a:1a:01:8d:61:fe:db:fd:50:5a:a4",
+        "mac": "hmac-sha2-256",
+        "cipher": "aes128-ctr",
+        "key": "AAAAB3NzaC1yc2EAAAADAQABAAABAQDHy3zpJ/EWJJeDRM305KR1LbqQYhJ8I0MIJhCEV+8q57iq\nBhyDokWy0aBWkyt43qXvRzYWYRXXg6K/IS6cxdQbZn4pJzR92QkGB4uBWBR5wBNKyOf1VWqWUKdR\nETp3Gd99XEvQgf+fEUyrIBwAS7GgGHlAZTodrFHDGNiYCr7cFbqyTpDy/1yI3pOfxnswBMhPaIOQ\n2BM7ARLOvGmEn2S8Ezje6MZ6+nMJZpofLAF0HaNjdwQtFgHLezYKkrDu5VALS3/wHWsnMS/7AuBO\n714dRNdY4ksau8J9pfYr+JeQPWY0rtHqf08l34dlOXbOJQFeX055jCnKsgners0AhbPr\n",
+        "kex": {
+          "unused": 0,
+          "server_host_key_algorithms": [
+            "ssh-rsa",
+            "rsa-sha2-512",
+            "rsa-sha2-256",
+            "ecdsa-sha2-nistp256",
+            "ssh-ed25519"
+          ],
+          "encryption_algorithms": [
+            "aes128-ctr",
+            "aes192-ctr",
+            "aes256-ctr"
+          ],
+          "kex_follows": false,
+          "languages": [
+            ""
+          ],
+          "kex_algorithms": [
+            "curve25519-sha256",
+            "curve25519-sha256@libssh.org",
+            "ecdh-sha2-nistp256",
+            "ecdh-sha2-nistp384",
+            "ecdh-sha2-nistp521",
+            "diffie-hellman-group-exchange-sha256",
+            "diffie-hellman-group16-sha512",
+            "diffie-hellman-group18-sha512",
+            "diffie-hellman-group-exchange-sha1",
+            "diffie-hellman-group14-sha256",
+            "diffie-hellman-group14-sha1",
+            "diffie-hellman-group1-sha1"
+          ],
+          "compression_algorithms": [
+            "none",
+            "zlib@openssh.com"
+          ],
+          "mac_algorithms": [
+            "umac-64-etm@openssh.com",
+            "umac-128-etm@openssh.com",
+            "hmac-sha2-256-etm@openssh.com",
+            "hmac-sha2-512-etm@openssh.com",
+            "hmac-sha1-etm@openssh.com",
+            "umac-64@openssh.com",
+            "umac-128@openssh.com",
+            "hmac-sha2-256",
+            "hmac-sha2-512",
+            "hmac-sha1"
+          ]
+        },
+        "hassh": "1e8d173d18edcf48f53edc6db304f91b"
+      },
+      "org": "Tencent Cloud Computing (Beijing) Co., Ltd",
+      "data": "SSH-2.0-OpenSSH_7.4\nKey type: ssh-rsa\nKey: AAAAB3NzaC1yc2EAAAADAQABAAABAQDHy3zpJ/EWJJeDRM305KR1LbqQYhJ8I0MIJhCEV+8q57iq\nBhyDokWy0aBWkyt43qXvRzYWYRXXg6K/IS6cxdQbZn4pJzR92QkGB4uBWBR5wBNKyOf1VWqWUKdR\nETp3Gd99XEvQgf+fEUyrIBwAS7GgGHlAZTodrFHDGNiYCr7cFbqyTpDy/1yI3pOfxnswBMhPaIOQ\n2BM7ARLOvGmEn2S8Ezje6MZ6+nMJZpofLAF0HaNjdwQtFgHLezYKkrDu5VALS3/wHWsnMS/7AuBO\n714dRNdY4ksau8J9pfYr+JeQPWY0rtHqf08l34dlOXbOJQFeX055jCnKsgners0AhbPr\nFingerprint: ce:4d:99:cb:cb:6a:1a:01:8d:61:fe:db:fd:50:5a:a4\n\nKex Algorithms:\n\tcurve25519-sha256\n\tcurve25519-sha256@libssh.org\n\tecdh-sha2-nistp256\n\tecdh-sha2-nistp384\n\tecdh-sha2-nistp521\n\tdiffie-hellman-group-exchange-sha256\n\tdiffie-hellman-group16-sha512\n\tdiffie-hellman-group18-sha512\n\tdiffie-hellman-group-exchange-sha1\n\tdiffie-hellman-group14-sha256\n\tdiffie-hellman-group14-sha1\n\tdiffie-hellman-group1-sha1\n\nServer Host Key Algorithms:\n\tssh-rsa\n\trsa-sha2-512\n\trsa-sha2-256\n\tecdsa-sha2-nistp256\n\tssh-ed25519\n\nEncryption Algorithms:\n\taes128-ctr\n\taes192-ctr\n\taes256-ctr\n\nMAC Algorithms:\n\tumac-64-etm@openssh.com\n\tumac-128-etm@openssh.com\n\thmac-sha2-256-etm@openssh.com\n\thmac-sha2-512-etm@openssh.com\n\thmac-sha1-etm@openssh.com\n\tumac-64@openssh.com\n\tumac-128@openssh.com\n\thmac-sha2-256\n\thmac-sha2-512\n\thmac-sha1\n\nCompression Algorithms:\n\tnone\n\tzlib@openssh.com\n\n",
+      "asn": "AS45090",
+      "cpe23": [
+        "cpe:2.3:a:openbsd:openssh:7.4"
+      ],
+      "info": "protocol 2.0",
+      "isp": "Shenzhen Tencent Computer Systems Company Limited",
+      "cpe": [
+        "cpe:/a:openbsd:openssh:7.4"
+      ],
+      "domains": [],
+      "ip_str": "118.25.6.39",
+      "os": null,
+      "_shodan": {
+        "id": "6b3d5375-b353-46dc-bcea-3bb36d8190ba",
+        "ptr": true,
+        "options": {},
+        "module": "ssh",
+        "crawler": "de861e38ad9739a151ba9b1499d28fd87f646fd3"
+      },
+      "opts": {}
+    },
+    {
+      "info": "protocol 3.8",
+      "_shodan": {
+        "id": "d6f530bc-88ff-4d86-ab99-4a3211b660e3",
+        "ptr": true,
+        "options": {},
+        "module": "http-simple-new",
+        "crawler": "308515b6113c0645034fb8122d0ff0d5194e7e72"
+      },
+      "product": "VNC",
+      "vnc": {
+        "protocol_version": "3.8",
+        "security_types": {
+          "19": "VeNCrypt",
+          "2": "VNC Authentication"
+        }
+      },
+      "os": null,
+      "opts": {},
+      "timestamp": "2022-04-08T10:00:44.719350",
+      "isp": "Shenzhen Tencent Computer Systems Company Limited",
+      "port": 5901,
+      "hash": 547647208,
+      "hostnames": [],
+      "location": {
+        "city": "Shanghai",
+        "region_code": "SH",
+        "area_code": null,
+        "longitude": 121.45806,
+        "country_name": "China",
+        "country_code": "CN",
+        "latitude": 31.22222
+      },
+      "ip": 1981351463,
+      "domains": [],
+      "org": "Tencent Cloud Computing (Beijing) Co., Ltd",
+      "data": "RFB 003.008\n\nVNC:\n  Protocol Version: 3.8\n  Security Types:\n    2: VNC Authentication\n    19: VeNCrypt\n",
+      "asn": "AS45090",
+      "transport": "tcp",
+      "ip_str": "118.25.6.39"
+    }
+  ],
+  "asn": "AS45090",
+  "city": "Shanghai",
+  "latitude": 31.22222,
+  "isp": "Shenzhen Tencent Computer Systems Company Limited",
+  "longitude": 121.45806,
+  "last_update": "2022-04-26T13:14:29.860144",
+  "vulns": [
+    "CVE-2018-15919",
+    "CVE-2017-15906"
+  ],
+  "country_name": "China",
+  "ip_str": "118.25.6.39",
+  "os": null,
+  "ports": [
+    5901,
+    2222
+  ]
+}
