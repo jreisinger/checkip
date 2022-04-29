@@ -43,7 +43,7 @@ malicious       0% (0/8) ✅
 Select Sec (1) and InfoSec (2) check [type](https://pkg.go.dev/github.com/jreisinger/checkip#Type) and show which [check](https://pkg.go.dev/github.com/jreisinger/checkip/check) considers the IP address to be malicious:
 
 ```
-checkip -j 91.228.166.47 | \
+$ checkip -j 91.228.166.47 | \
 jq -r '.checks[] | select(.type==1 or .type==2) | "\(.malicious) \(.name)"'
 false firehol.org
 false cinsscore.com
