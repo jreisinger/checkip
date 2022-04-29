@@ -15,6 +15,7 @@ type shodan struct {
 	Data  shodanData `json:"data"`
 	OS    string     `json:"os"`
 	Ports []int      `json:"ports"`
+	Vulns []string   `json:"vulns"`
 }
 
 type shodanData []struct {
@@ -30,7 +31,7 @@ var shodanUrl = "https://api.shodan.io"
 func Shodan(ipaddr net.IP) (checkip.Result, error) {
 	result := checkip.Result{
 		Name: "shodan.io",
-		Type: checkip.TypeInfo,
+		Type: checkip.TypeInfoSec,
 	}
 
 	apiKey, err := getConfigValue("SHODAN_API_KEY")
@@ -47,6 +48,10 @@ func Shodan(ipaddr net.IP) (checkip.Result, error) {
 		return result, newCheckError(err)
 	}
 	result.Info = shodan
+
+	if len(shodan.Vulns) > 0 {
+		result.Malicious = true
+	}
 
 	return result, nil
 }
@@ -80,14 +85,7 @@ func (s shodan) Summary() string {
 		}
 	}
 
-	portStr := "port"
-	if len(portInfo) != 1 {
-		portStr += "s"
-	}
-	if len(portInfo) > 0 {
-		portStr += ":"
-	}
-	return fmt.Sprintf("OS: %s, %d open %s %s", na(s.OS), len(portInfo), portStr, strings.Join(portInfo, ", "))
+	return fmt.Sprintf("OS: %s, open: %s, vulns: %s", na(s.OS), strings.Join(portInfo, ", "), na(strings.Join(s.Vulns, ", ")))
 }
 
 func (s shodan) Json() ([]byte, error) {
