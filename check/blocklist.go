@@ -9,7 +9,7 @@ import (
 	"github.com/jreisinger/checkip"
 )
 
-// BlockList searches the ipaddr in http://api.blocklist.de.
+// BlockList searches the ipaddr in lists.blocklist.de/lists/dnsbl/all.list.
 func BlockList(ipaddr net.IP) (checkip.Result, error) {
 	result := checkip.Result{
 		Name: "blocklist.de",
@@ -21,9 +21,8 @@ func BlockList(ipaddr net.IP) (checkip.Result, error) {
 		return result, err
 	}
 
-	url := "https://lists.blocklist.de/lists/dnsbl/all.list"
-
-	if err := updateFile(file, url, ""); err != nil {
+	u := "https://lists.blocklist.de/lists/dnsbl/all.list"
+	if err := updateFile(file, u, ""); err != nil {
 		return result, newCheckError(err)
 	}
 
@@ -38,7 +37,7 @@ func BlockList(ipaddr net.IP) (checkip.Result, error) {
 		fields := strings.Split(input.Text(), ":")
 		if net.ParseIP(fields[0]).Equal(ipaddr) {
 			result.Malicious = true
-			return result, nil
+			break
 		}
 	}
 	if err := input.Err(); err != nil {

@@ -12,8 +12,8 @@ import (
 	"time"
 )
 
-// getDbFilesPath returns absolute path to a filename. On Unix it will be
-// $HOME/.checkip/<filename>
+// getDbFilesPath returns OS specific absolute path to filename. On Unix it will
+// be $HOME/.checkip/<filename>
 func getDbFilesPath(filename string) (string, error) {
 	usr, err := user.Current()
 	if err != nil {
