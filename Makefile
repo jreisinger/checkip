@@ -1,5 +1,5 @@
 test:
-	go test ./...
+	go test -cover ./...
 
 install: test
 	go install cmd/checkip/checkip.go
