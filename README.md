@@ -6,13 +6,13 @@
 Checkip is a CLI tool and library that provides generic and security information about IP addresses in an easy way.
 
 ```
-$ checkip 1.1.1.1
-db-ip.com       Sydney, Australia
-dns name        one.one.one.one
-iptoasn.com     CLOUDFLARENET
-ping            0% packet loss (5/5), avg round-trip 17 ms
-shodan.io       OS: n/a, open: tcp/53, udp/53, udp/69, tcp/80 (CloudFlare), tcp/443 (CloudFlare), vulns: n/a
-tls             TLS 1.3, exp. 2022/10/25, cloudflare-dns.com, *.cloudflare-dns.com, one.one.one.one
+$ checkip 91.228.166.47
+db-ip.com       Petržalka, Slovakia
+dns name        skh1-webredir01-v.eset.com
+iptoasn.com     ESET-AS
+ping            0% packet loss (5/5), avg round-trip 12 ms
+shodan.io       OS: n/a, open: tcp/80 (nginx), tcp/443 (nginx), vulns: n/a
+tls             TLS 1.3, exp. 2023/01/02, www.eset.com, eset.com
 malicious       0% (0/8) ✅
 ```
 
@@ -21,12 +21,12 @@ malicious       0% (0/8) ✅
 Select Sec (1) and InfoSec (2) check [type](https://pkg.go.dev/github.com/jreisinger/checkip#Type) and show which [check](https://pkg.go.dev/github.com/jreisinger/checkip/check) considers the IP address to be malicious:
 
 ```
-$ checkip -j 1.1.1.1 | \
+checkip -j 91.228.166.47 | \
 jq -r '.checks[] | select(.type==1 or .type==2) | "\(.malicious) \(.name)"'
 false firehol.org
 false cinsscore.com
-false blocklist.de
 false tls
+false blocklist.de
 false github.com/stamparm/ipsum
 false threatcrowd.org
 false shodan.io
@@ -38,8 +38,8 @@ Generate two random IP addresses and see if they are considered malicious:
 ```
 $ ./randip 2 | checkip -a -j 2> /dev/null | \
 jq -r '"\(.malicious_prob) \(.ipaddr)"'
-0 176.214.10.86
-0.1	229.236.76.24
+0 53.18.151.128
+0 163.201.51.56
 ```
 
 See Wiki for more [usage examples](https://github.com/jreisinger/checkip/wiki/Usage-examples).
