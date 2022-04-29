@@ -3,6 +3,7 @@ package check
 import (
 	"strings"
 	"testing"
+	"time"
 )
 
 func TestGetDbFilesPath(t *testing.T) {
@@ -21,6 +22,23 @@ func TestGetDbFilesPath(t *testing.T) {
 		}
 		if !strings.HasSuffix(got, tc.suffix) {
 			t.Fatalf("path %s doesn't have %s suffix", got, tc.suffix)
+		}
+	}
+}
+
+func TestIsOlderThanOneWeek(t *testing.T) {
+	testcases := []struct {
+		t                time.Time
+		olderThanOneWeek bool
+	}{
+		{time.Now(), false},
+		{time.Now().Add(-time.Hour * 24 * 6), false},
+		{time.Now().Add(-time.Hour * 24 * 8), true},
+	}
+	for i, tc := range testcases {
+		got := isOlderThanOneWeek(tc.t)
+		if got != tc.olderThanOneWeek {
+			t.Fatalf("test case %d: got %t expected %t", i+1, got, tc.olderThanOneWeek)
 		}
 	}
 }
