@@ -97,7 +97,7 @@ You can also use environment variables with the same names.
 
 ## Development
 
-Checkip is easy to extend. If you want to add a new way of checking an IP address, just write a function of type [Check](https://pkg.go.dev/github.com/jreisinger/checkip#Check). Add the new check to `check.All` [variable](https://pkg.go.dev/github.com/jreisinger/checkip/check#pkg-variables) and consider adding it to `check.Default` variable.
+Checkip is easy to extend. If you want to add a new way of checking IP addresses, just write a function of type [Check](https://pkg.go.dev/github.com/jreisinger/checkip#Check). Add the new check to `check.All` [variable](https://pkg.go.dev/github.com/jreisinger/checkip/check#pkg-variables) and consider adding it to `check.Default` variable.
 
 ```
 make run # test, install and run
