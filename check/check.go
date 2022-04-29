@@ -27,7 +27,7 @@ var All = []checkip.Check{
 	VirusTotal,
 }
 
-// Default contains checks recommended for most people.
+// Default contains subset of all available checks recommended for most people.
 var Default = []checkip.Check{
 	BlockList,
 	CinsScore,
@@ -38,6 +38,7 @@ var Default = []checkip.Check{
 	IPtoASN,
 	OTX,
 	Ping,
+	Shodan,
 	ThreadCrowd,
 	Tls,
 }
