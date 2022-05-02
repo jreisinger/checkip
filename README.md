@@ -3,7 +3,7 @@
 
 # checkip
 
-Checkip is a CLI tool and library that provides generic and security information about IP addresses in an easy way.
+Checkip is a CLI tool and a Go library that provides generic and security information about IP addresses in an easy way.
 
 ```
 $ checkip 91.228.166.47
