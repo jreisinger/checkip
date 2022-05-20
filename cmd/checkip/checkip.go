@@ -1,4 +1,4 @@
-// Checkip is a command-line tool that checks an IP address.
+// Checkip is a command-line tool that provides information on IP addresses.
 package main
 
 import (
