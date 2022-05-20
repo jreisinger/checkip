@@ -17,9 +17,9 @@ func TestAbuseIPDB(t *testing.T) {
 			rw.WriteHeader(http.StatusOK)
 			rw.Write(loadResponse(t, "abuseipdb_response.json"))
 		})
-		setAbuseIPDBConfig(t)
+		setAbuseIPDBMockConfig(t)
 		testUrl := setMockHttpClient(t, handlerFn)
-		setAbuseIPDBUrl(t, testUrl)
+		setAbuseIPDBMockUrl(t, testUrl)
 
 		result, err := AbuseIPDB(net.ParseIP("118.25.6.39"))
 		require.NoError(t, err)
@@ -33,9 +33,9 @@ func TestAbuseIPDB(t *testing.T) {
 		handlerFn := http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
 			rw.WriteHeader(http.StatusInternalServerError)
 		})
-		setAbuseIPDBConfig(t)
+		setAbuseIPDBMockConfig(t)
 		testUrl := setMockHttpClient(t, handlerFn)
-		setAbuseIPDBUrl(t, testUrl)
+		setAbuseIPDBMockUrl(t, testUrl)
 
 		_, err := AbuseIPDB(net.ParseIP("118.25.6.39"))
 		require.Error(t, err)
@@ -44,15 +44,17 @@ func TestAbuseIPDB(t *testing.T) {
 
 // --- test helpers ---
 
-func setAbuseIPDBUrl(t *testing.T, testUrl string) {
-	url := abuseIPDBUrl
+// setAbuseIPDBMockUrl temporarily sets abuseIPDBUrl variable to testUrl.
+func setAbuseIPDBMockUrl(t *testing.T, testUrl string) {
+	origUrl := abuseIPDBUrl
 	abuseIPDBUrl = testUrl
 	t.Cleanup(func() {
-		abuseIPDBUrl = url
+		abuseIPDBUrl = origUrl
 	})
 }
 
-func setAbuseIPDBConfig(t *testing.T) {
+// setAbuseIPDBMockConfig sets ABUSEIPDB_API_KEY to a dummy value.
+func setAbuseIPDBMockConfig(t *testing.T) {
 	setMockConfig(t, func(key string) (string, error) {
 		if key == "ABUSEIPDB_API_KEY" {
 			return "123-secret-789", nil

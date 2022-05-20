@@ -10,14 +10,15 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-// loadResponse loads named file form testdata directory
+// loadResponse loads named file form testdata directory.
 func loadResponse(t *testing.T, name string) []byte {
 	b, err := ioutil.ReadFile(filepath.Join("testdata", name))
 	require.NoError(t, err)
 	return b
 }
 
-// setMockHttpClient sets DefaultHttpClient to httptest handler and returns test url
+// setMockHttpClient temporarily sets defaultHttpClient to handlerFn and returns
+// test URL.
 func setMockHttpClient(t *testing.T, handlerFn http.HandlerFunc) string {
 	server := httptest.NewServer(handlerFn)
 	dHC := defaultHttpClient
@@ -29,11 +30,11 @@ func setMockHttpClient(t *testing.T, handlerFn http.HandlerFunc) string {
 	return server.URL
 }
 
-// setMockConfig helper to replace GetConfigValue function
+// setMockConfig temporarily replaces getConfigValue function with fn.
 func setMockConfig(t *testing.T, fn func(key string) (string, error)) {
-	defaultConfig := getConfigValue
+	origGetConfigValue := getConfigValue
 	getConfigValue = fn
 	t.Cleanup(func() {
-		getConfigValue = defaultConfig
+		getConfigValue = origGetConfigValue
 	})
 }
