@@ -1,0 +1,23 @@
+:127.0.0.2:Infected System, see http://www.blocklist.de/en/view.html?ip=$
+127.0.0.2
+:127.0.0.3:Infected System (Service: apacheddos), see http://www.blocklist.de/en/view.html?ip=$
+46.114.91.252:127.0.0.3:Infected System (Service: apacheddos, Last-Attack: 1652898638), see http://www.blocklist.de/en/view.html?ip=$
+:127.0.0.5:Infected System (Service: badbot), see http://www.blocklist.de/en/view.html?ip=$
+144.76.71.176:127.0.0.5:Infected System (Service: badbot, Last-Attack: 1652893765), see http://www.blocklist.de/en/view.html?ip=$
+144.91.125.96:127.0.0.5:Infected System (Service: badbot, Last-Attack: 1652960214), see http://www.blocklist.de/en/view.html?ip=$
+116.179.32.130:127.0.0.5:Infected System (Service: badbot, Last-Attack: 1652997594), see http://www.blocklist.de/en/view.html?ip=$
+116.179.32.25:127.0.0.5:Infected System (Service: badbot, Last-Attack: 1652956829), see http://www.blocklist.de/en/view.html?ip=$
+116.179.32.20:127.0.0.5:Infected System (Service: badbot, Last-Attack: 1652959772), see http://www.blocklist.de/en/view.html?ip=$
+# ... SNIP ...
+66.249.70.34:127.0.0.5:Infected System (Service: badbot, Last-Attack: 1652898269), see http://www.blocklist.de/en/view.html?ip=$
+# ... SNIP ...
+176.9.219.38
+46.118.112.135
+50.7.240.10
+96.47.224.42
+104.20.22.42
+96.44.142.250
+195.254.134.10
+195.254.134.194
+95.143.192.159
+188.95.234.6

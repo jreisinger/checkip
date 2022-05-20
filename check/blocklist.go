@@ -16,23 +16,13 @@ func BlockList(ipaddr net.IP) (checkip.Result, error) {
 		Type: checkip.TypeSec,
 	}
 
-	file, err := getDbFilesPath("blocklist.de_all.list")
+	file, err := getBlockListFile()
 	if err != nil {
 		return result, err
 	}
+	defer file.Close()
 
-	u := "https://lists.blocklist.de/lists/dnsbl/all.list"
-	if err := updateFile(file, u, ""); err != nil {
-		return result, newCheckError(err)
-	}
-
-	f, err := os.Open(file)
-	if err != nil {
-		return result, err
-	}
-	defer f.Close()
-
-	input := bufio.NewScanner(f)
+	input := bufio.NewScanner(file)
 	for input.Scan() {
 		fields := strings.Split(input.Text(), ":")
 		if net.ParseIP(fields[0]).Equal(ipaddr) {
@@ -45,4 +35,21 @@ func BlockList(ipaddr net.IP) (checkip.Result, error) {
 	}
 
 	return result, nil
+}
+
+// getBlockListFile downloads (if outdated) and returns open file containing
+// blocklist.de database.
+var getBlockListFile = func() (*os.File, error) {
+	file, err := getDbFilesPath("blocklist.de_all.list")
+	if err != nil {
+		return nil, err
+	}
+
+	u := "https://lists.blocklist.de/lists/dnsbl/all.list"
+	if err := updateFile(file, u, ""); err != nil {
+		return nil, newCheckError(err)
+	}
+
+	f, err := os.Open(file)
+	return f, nil
 }
