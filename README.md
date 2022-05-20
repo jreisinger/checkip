@@ -16,30 +16,6 @@ tls             TLS 1.3, exp. 2023/01/02, www.eset.com, eset.com
 malicious       0% (0/8) ✅
 ```
 
-## Usage examples
-
-Check multiple IP addresses coming from stdin:
-
-```
-$ dig +short eset.sk | checkip
---- 91.228.167.128 ---
-db-ip.com       Petržalka, Slovakia
-dns name        h3-webredir02-v.eset.com
-iptoasn.com     ESET-AS
-ping            0% packet loss (5/5), avg round-trip 42 ms
-shodan.io       OS: n/a, open: tcp/80 (nginx), tcp/443 (nginx), vulns: n/a
-tls             TLS 1.3, exp. 2023/01/02, www.eset.com, eset.com
-malicious       0% (0/8) ✅
---- 91.228.166.47 ---
-db-ip.com       Petržalka, Slovakia
-dns name        skh1-webredir01-v.eset.com
-iptoasn.com     ESET-AS
-ping            0% packet loss (5/5), avg round-trip 11 ms
-shodan.io       OS: n/a, open: tcp/80 (nginx), tcp/443 (nginx), vulns: n/a
-tls             TLS 1.3, exp. 2023/01/02, www.eset.com, eset.com
-malicious       0% (0/8) ✅
-```
-
 Select Sec (1) and InfoSec (2) check [type](https://pkg.go.dev/github.com/jreisinger/checkip#Type) and show which [check](https://pkg.go.dev/github.com/jreisinger/checkip/check) considers the IP address to be malicious:
 
 ```
