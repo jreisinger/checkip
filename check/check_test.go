@@ -19,3 +19,35 @@ func TestNa(t *testing.T) {
 		}
 	}
 }
+
+func TestNonEmpty(t *testing.T) {
+	tests := []struct {
+		strings []string
+		want    []string
+	}{
+		{[]string{""}, nil},
+		{[]string{"", ""}, nil},
+		{[]string{"a", ""}, []string{"a"}},
+		{[]string{"a", "b"}, []string{"a", "b"}},
+		{[]string{"", "b"}, []string{"b"}},
+	}
+	for _, test := range tests {
+		if got := nonEmpty(test.strings...); !equal(got, test.want) {
+
+		}
+	}
+}
+
+// equal tells whether a and b contain the same elements. A nil argument is
+// equivalent to an empty slice.
+func equal(a, b []string) bool {
+	if len(a) != len(b) {
+		return false
+	}
+	for i, v := range a {
+		if v != b[i] {
+			return false
+		}
+	}
+	return true
+}
