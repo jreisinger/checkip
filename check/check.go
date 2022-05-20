@@ -2,6 +2,8 @@
 package check
 
 import (
+	"regexp"
+
 	"github.com/jreisinger/checkip"
 )
 
@@ -43,9 +45,10 @@ var Default = []checkip.Check{
 	Tls,
 }
 
-// na returns "n/a" if s is empty.
+// na returns n/a if s is empty or contains only whitespace.
 func na(s string) string {
-	if s == "" {
+	ws := regexp.MustCompile(`^\s+$`)
+	if s == "" || ws.MatchString(s) {
 		return "n/a"
 	}
 	return s
