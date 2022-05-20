@@ -14,6 +14,7 @@ const abuseIPDBMaxAgeInDays = "90"
 
 var abuseIPDBUrl = "https://api.abuseipdb.com/api/v2/check"
 
+// abuseIPDB represents JSON data returned by the AbuseIPDB API.
 type abuseIPDB struct {
 	IsWhitelisted        bool          `json:"isWhitelisted"`
 	AbuseConfidenceScore int           `json:"abuseConfidenceScore"`
@@ -37,7 +38,7 @@ func (a abuseIPDB) Json() ([]byte, error) {
 }
 
 // AbuseIPDB uses api.abuseipdb.com to get generic information about ipaddr and
-// see if the ipaddr has been reported as malicious.
+// to see if the ipaddr has been reported as malicious.
 func AbuseIPDB(ipaddr net.IP) (checkip.Result, error) {
 	result := checkip.Result{Name: "abuseipdb.com", Type: checkip.TypeInfoSec}
 
@@ -45,7 +46,7 @@ func AbuseIPDB(ipaddr net.IP) (checkip.Result, error) {
 	if err != nil {
 		return result, newCheckError(err)
 	}
-	if apiKey == "" {
+	if apiKey == "" { // we don't consider missing to be an error
 		return result, nil
 	}
 
@@ -60,19 +61,18 @@ func AbuseIPDB(ipaddr net.IP) (checkip.Result, error) {
 		"maxAgeInDays": abuseIPDBMaxAgeInDays,
 	}
 
-	var data struct {
-		AbuseIPDB abuseIPDB `json:"data"`
+	var response struct {
+		Data abuseIPDB `json:"data"`
 	}
 	// docs.abuseipdb.com/#check-endpoint
-	if err := defaultHttpClient.GetJson(abuseIPDBUrl, headers, queryParams, &data); err != nil {
+	if err := defaultHttpClient.GetJson(abuseIPDBUrl, headers, queryParams, &response); err != nil {
 		return result, newCheckError(err)
 	}
 
-	result.Info = data.AbuseIPDB
-	result.Malicious = data.AbuseIPDB.TotalReports > 0 &&
-		!data.AbuseIPDB.IsWhitelisted &&
-		data.AbuseIPDB.AbuseConfidenceScore > 25
+	result.Info = response.Data
+	result.Malicious = response.Data.TotalReports > 0 &&
+		!response.Data.IsWhitelisted &&
+		response.Data.AbuseConfidenceScore > 25
 
 	return result, nil
-
 }

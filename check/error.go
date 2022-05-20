@@ -6,12 +6,14 @@ import (
 	"strings"
 )
 
-// checkError is an error returned by a check.
+// checkError is an error that should be returned by a check.
 type checkError struct {
 	err       error  // might contain secrets, like API keys
-	ErrString string `json:"error"` // secrets redacted
+	ErrString string `json:"error"` // secrets redacted, ok to print
 }
 
+// newCheckError returns an error that contains caller name and has potential
+// secrets redacted.
 func newCheckError(err error) *checkError {
 	callerName := "unknownCaller"
 	pc, _, _, ok := runtime.Caller(1)
