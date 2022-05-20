@@ -55,7 +55,7 @@ false shodan.io
 false otx.alienvault.com
 ```
 
-Generate two random IP addresses and see if they are considered malicious:
+Generate two random IP addresses and see if they are considered malicious by any of the available checks:
 
 ```
 $ ./randip 2 | checkip -a -j 2> /dev/null | \
