@@ -78,10 +78,10 @@ Checkip is easy to extend. If you want to add a new way of checking IP addresses
 ```
 make run # test, install and run
 
-git commit -m "improve tag docs" main.go
+git commit -m "backwards compatible bug fix" main.go
 
-git tag | sort -V # or git ll
-git tag -a v0.16.2 -m "improve docs"
+git tag | sort -V               # or git ll
+git tag -a v0.16.1 -m "patch"   # will build a new release
 
 git push --follow-tags
 ```
