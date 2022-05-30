@@ -11,21 +11,18 @@ import (
 
 // IsWellKnown implements checkip.Check.
 func IsWellKnown(ipaddr net.IP) (checkip.Result, error) {
-	res := checkip.Result{Name: "well known"}
-
 	wellKnown := []net.IP{
 		net.ParseIP("1.1.1.1"),
 		net.ParseIP("4.4.4.4"),
 		net.ParseIP("8.8.8.8"),
 	}
-
+	var known WellKnown
 	for _, wk := range wellKnown {
 		if string(ipaddr) == string(wk) {
-			res.Info = WellKnown(true)
+			known = true
 		}
 	}
-
-	return res, nil
+	return checkip.Result{Name: "well known", Info: known}, nil
 }
 
 // WellKnown implements checkip.Info.
@@ -44,4 +41,11 @@ func Example() {
 	results, _ := cli.Run([]checkip.Check{IsWellKnown}, ipaddr)
 	results.PrintSummary()
 	// Output: well known      true
+}
+
+func ExampleCheck() {
+	ipaddr := net.ParseIP("2.2.2.2")
+	result, _ := IsWellKnown(ipaddr)
+	fmt.Println(result)
+	// Output: {well known Info false false}
 }
