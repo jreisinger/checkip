@@ -55,7 +55,7 @@ go install github.com/jreisinger/checkip/cmd/checkip@latest
 
 or download a [release](https://github.com/jreisinger/checkip/releases) binary (from under "Assets") for your system and architecture.
 
-NOTE: depending on your Internet connection the first run can take a while because data are downloaded (to `$HOME/.checkip`).
+NOTE: depending on your Internet connection the first run can take a while because data is downloaded (to `$HOME/.checkip`).
 
 ## Configuration
 
