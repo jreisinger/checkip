@@ -36,7 +36,7 @@ func main() {
 	// enforce a limit on concurrent checks.
 	var tokens = make(chan struct{}, *c)
 
-	var resultsPerIP map[string]cli.Results
+	resultsPerIP := make(map[string]cli.Results)
 
 	var wg sync.WaitGroup
 	for _, ipaddr := range ipaddrs {
