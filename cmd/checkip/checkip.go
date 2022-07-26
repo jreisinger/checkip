@@ -27,14 +27,16 @@ func main() {
 	flag.Parse()
 	ipaddrs := parseArgs(flag.Args())
 
-	// tokens is a counting semaphore used to
-	// enforce a limit on concurrent checks.
-	var tokens = make(chan struct{}, *c)
-
 	checks := check.Default
 	if *a {
 		checks = check.All
 	}
+
+	// tokens is a counting semaphore used to
+	// enforce a limit on concurrent checks.
+	var tokens = make(chan struct{}, *c)
+
+	resultsPerIP := make(map[string]cli.Results)
 
 	var wg sync.WaitGroup
 	for _, ipaddr := range ipaddrs {
@@ -43,25 +45,29 @@ func main() {
 			defer wg.Done()
 			tokens <- struct{}{} // acquire a token
 
-			results, errors := cli.Run(checks, ipaddr)
+			r, errors := cli.Run(checks, ipaddr)
+			resultsPerIP[ipaddr.String()] = r
 			for _, e := range errors {
 				log.Print(e)
-			}
-			if *j {
-				results.PrintJSON(ipaddr)
-			} else {
-				if len(ipaddrs) > 1 {
-					fmt.Printf("--- %s ---\n", ipaddr.String())
-				}
-				results.SortByName()
-				results.PrintSummary()
-				results.PrintMalicious()
 			}
 
 			<-tokens // release the token
 		}(ipaddr)
 	}
 	wg.Wait()
+
+	for ip, results := range resultsPerIP {
+		if *j {
+			results.PrintJSON(net.ParseIP(ip))
+		} else {
+			if len(ipaddrs) > 1 {
+				fmt.Printf("--- %s ---\n", ip)
+			}
+			results.SortByName()
+			results.PrintSummary()
+			results.PrintMalicious()
+		}
+	}
 }
 
 func parseArgs(args []string) []net.IP {
