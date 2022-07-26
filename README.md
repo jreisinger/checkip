@@ -16,30 +16,6 @@ tls             TLS 1.3, exp. 2023/01/02, www.eset.com, eset.com
 malicious       0% (0/8) ✅
 ```
 
-Select Sec (1) and InfoSec (2) check [type](https://pkg.go.dev/github.com/jreisinger/checkip#Type) and show which [check](https://pkg.go.dev/github.com/jreisinger/checkip/check) considers the IP address to be malicious:
-
-```
-$ checkip -j 91.228.166.47 | \
-jq -r '.checks[] | select(.type==1 or .type==2) | "\(.malicious) \(.name)"'
-false firehol.org
-false cinsscore.com
-false tls
-false blocklist.de
-false github.com/stamparm/ipsum
-false threatcrowd.org
-false shodan.io
-false otx.alienvault.com
-```
-
-Generate two random IP addresses and see if they are considered malicious by any of the available checks:
-
-```
-$ ./randip 2 | checkip -a -j 2> /dev/null | \
-jq -r '"\(.malicious_prob) \(.ipaddr)"'
-0 53.18.151.128
-0 163.201.51.56
-```
-
 See Wiki for more [usage examples](https://github.com/jreisinger/checkip/wiki/Usage-examples).
 
 ## Installation
