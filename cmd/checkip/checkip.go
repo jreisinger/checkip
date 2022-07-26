@@ -8,8 +8,8 @@ import (
 	"log"
 	"net"
 	"os"
-	"sync"
 
+	"github.com/jreisinger/checkip"
 	"github.com/jreisinger/checkip/check"
 	"github.com/jreisinger/checkip/cli"
 )
@@ -21,7 +21,12 @@ func init() {
 
 var a = flag.Bool("a", false, "run all available checks")
 var j = flag.Bool("j", false, "output all results in JSON")
-var c = flag.Int("c", 5, "number of concurrent checks")
+var c = flag.Int("c", 5, "number of concurrent checkers")
+
+type IpAndResults struct {
+	IP      net.IP
+	Results cli.Results
+}
 
 func main() {
 	flag.Parse()
@@ -32,46 +37,43 @@ func main() {
 		checks = check.All
 	}
 
-	// tokens is a counting semaphore used to
-	// enforce a limit on concurrent checks.
-	var tokens = make(chan struct{}, *c)
+	ipaddrsCh := make(chan net.IP)
+	ipAndResultsCh := make(chan IpAndResults)
 
-	resultsPerIP := make(map[string]cli.Results)
-
-	var wg sync.WaitGroup
-	for _, ipaddr := range ipaddrs {
-		if _, checked := resultsPerIP[ipaddr.String()]; checked {
-			continue // IP address already checked
-		}
-		resultsPerIP[ipaddr.String()] = cli.Results{}
-
-		wg.Add(1)
-		go func(ipaddr net.IP) {
-			defer wg.Done()
-			tokens <- struct{}{} // acquire a token
-
-			r, errors := cli.Run(checks, ipaddr)
-			resultsPerIP[ipaddr.String()] = r
-			for _, e := range errors {
-				log.Print(e)
-			}
-
-			<-tokens // release the token
-		}(ipaddr)
+	for i := 0; i < *c; i++ {
+		go checker(checks, ipaddrsCh, ipAndResultsCh)
 	}
-	wg.Wait()
 
-	for ip, results := range resultsPerIP {
+	go func() {
+		for _, ipaddr := range ipaddrs {
+			ipaddrsCh <- ipaddr
+		}
+	}()
+
+	for range ipaddrs {
+		c := <-ipAndResultsCh
 		if *j {
-			results.PrintJSON(net.ParseIP(ip))
+			c.Results.PrintJSON(c.IP)
 		} else {
 			if len(ipaddrs) > 1 {
-				fmt.Printf("--- %s ---\n", ip)
+				fmt.Printf("--- %s ---\n", c.IP.String())
 			}
-			results.SortByName()
-			results.PrintSummary()
-			results.PrintMalicious()
+			c.Results.SortByName()
+			c.Results.PrintSummary()
+			c.Results.PrintMalicious()
 		}
+	}
+}
+
+// checker runs checks against IP addresses coming from ipaddrs and sends back
+// the IP address and checks results.
+func checker(checks []checkip.Check, ipaddrs chan net.IP, ipAndResults chan IpAndResults) {
+	for ipaddr := range ipaddrs {
+		r, errors := cli.Run(checks, ipaddr)
+		for _, e := range errors {
+			log.Print(e)
+		}
+		ipAndResults <- IpAndResults{ipaddr, r}
 	}
 }
 
