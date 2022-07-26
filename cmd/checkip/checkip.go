@@ -36,10 +36,15 @@ func main() {
 	// enforce a limit on concurrent checks.
 	var tokens = make(chan struct{}, *c)
 
-	resultsPerIP := make(map[string]cli.Results)
+	var resultsPerIP map[string]cli.Results
 
 	var wg sync.WaitGroup
 	for _, ipaddr := range ipaddrs {
+		if _, checked := resultsPerIP[ipaddr.String()]; checked {
+			continue // IP address already checked
+		}
+		resultsPerIP[ipaddr.String()] = cli.Results{}
+
 		wg.Add(1)
 		go func(ipaddr net.IP) {
 			defer wg.Done()
