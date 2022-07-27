@@ -7,6 +7,7 @@ Sometimes I come across an IP address, for example when reviewing logs. And I wa
 
 ```
 $ checkip 91.228.166.47
+--- 91.228.166.47 ---
 db-ip.com       Petržalka, Slovakia
 dns name        skh1-webredir01-v.eset.com
 iptoasn.com     ESET-AS
