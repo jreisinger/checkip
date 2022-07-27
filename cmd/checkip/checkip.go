@@ -8,8 +8,8 @@ import (
 	"log"
 	"net"
 	"os"
+	"sync"
 
-	"github.com/jreisinger/checkip"
 	"github.com/jreisinger/checkip/check"
 	"github.com/jreisinger/checkip/cli"
 )
@@ -21,7 +21,7 @@ func init() {
 
 var a = flag.Bool("a", false, "run all available checks")
 var j = flag.Bool("j", false, "output all results in JSON")
-var c = flag.Int("c", 5, "number of concurrent checkers")
+var c = flag.Int("c", 5, "number IP addresses being checked concurrently")
 
 type IpAndResults struct {
 	IP      net.IP
@@ -30,7 +30,6 @@ type IpAndResults struct {
 
 func main() {
 	flag.Parse()
-	ipaddrs := parseArgs(flag.Args())
 
 	checks := check.Default
 	if *a {
@@ -38,26 +37,40 @@ func main() {
 	}
 
 	ipaddrsCh := make(chan net.IP)
-	ipAndResultsCh := make(chan IpAndResults)
+	resultsCh := make(chan IpAndResults)
+
+	var wg sync.WaitGroup
+
+	wg.Add(1)
+	go func() {
+		getIpAddrs(flag.Args(), ipaddrsCh)
+		wg.Done()
+	}()
 
 	for i := 0; i < *c; i++ {
-		go checker(checks, ipaddrsCh, ipAndResultsCh)
+		wg.Add(1)
+		go func() {
+			for ipaddr := range ipaddrsCh {
+				r, errors := cli.Run(checks, ipaddr)
+				for _, e := range errors {
+					log.Print(e)
+				}
+				resultsCh <- IpAndResults{ipaddr, r}
+			}
+			wg.Done()
+		}()
 	}
 
 	go func() {
-		for _, ipaddr := range ipaddrs {
-			ipaddrsCh <- ipaddr
-		}
+		wg.Wait()
+		close(resultsCh)
 	}()
 
-	for range ipaddrs {
-		c := <-ipAndResultsCh
+	for c := range resultsCh {
 		if *j {
 			c.Results.PrintJSON(c.IP)
 		} else {
-			if len(ipaddrs) > 1 {
-				fmt.Printf("--- %s ---\n", c.IP.String())
-			}
+			fmt.Printf("--- %s ---\n", c.IP.String())
 			c.Results.SortByName()
 			c.Results.PrintSummary()
 			c.Results.PrintMalicious()
@@ -65,32 +78,12 @@ func main() {
 	}
 }
 
-// checker runs checks against IP addresses coming from ipaddrs and sends back
-// the IP address and checks results.
-func checker(checks []checkip.Check, ipaddrs chan net.IP, ipAndResults chan IpAndResults) {
-	for ipaddr := range ipaddrs {
-		r, errors := cli.Run(checks, ipaddr)
-		for _, e := range errors {
-			log.Print(e)
-		}
-		ipAndResults <- IpAndResults{ipaddr, r}
-	}
-}
+// getIpAddrs parses IP addresses supplied as command line arguments or as
+// STDIN. It sends the received IP addresses down the ipaddrsCh.
+func getIpAddrs(args []string, ipaddrsCh chan net.IP) {
+	defer close(ipaddrsCh)
 
-func parseArgs(args []string) []net.IP {
-	var ipaddrs []net.IP
-
-	for _, arg := range args {
-		ipaddr := net.ParseIP(arg)
-		if ipaddr == nil {
-			log.Printf("wrong IP address: %s", arg)
-			continue
-		}
-		ipaddrs = append(ipaddrs, ipaddr)
-	}
-
-	// Get IP addresses from stdin.
-	if len(ipaddrs) == 0 {
+	if len(args) == 0 { // get IP addresses from stdin.
 		input := bufio.NewScanner(os.Stdin)
 		for input.Scan() {
 			ipaddr := net.ParseIP(input.Text())
@@ -98,12 +91,19 @@ func parseArgs(args []string) []net.IP {
 				log.Printf("wrong IP address: %s", input.Text())
 				continue
 			}
-			ipaddrs = append(ipaddrs, ipaddr)
+			ipaddrsCh <- ipaddr
 		}
 		if err := input.Err(); err != nil {
 			log.Print(err)
 		}
+	} else {
+		for _, arg := range args {
+			ipaddr := net.ParseIP(arg)
+			if ipaddr == nil {
+				log.Printf("wrong IP address: %s", arg)
+				continue
+			}
+			ipaddrsCh <- ipaddr
+		}
 	}
-
-	return ipaddrs
 }
