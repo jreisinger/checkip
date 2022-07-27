@@ -50,11 +50,11 @@ func (rs Results) PrintJSON(ipaddr net.IP) {
 
 	out := struct {
 		IpAddr        net.IP  `json:"ipaddr"`
-		MaliciousProb float64 `json:"malicious_prob"`
+		MaliciousProb string  `json:"malicious_prob"`
 		Check         Results `json:"checks"`
 	}{
 		ipaddr,
-		prob,
+		fmt.Sprintf("%.2f", prob),
 		rs,
 	}
 
