@@ -3,7 +3,7 @@ module github.com/jreisinger/checkip
 go 1.18
 
 require (
-	github.com/go-ping/ping v0.0.0-20211014180314-6e2b003bffdd
+	github.com/go-ping/ping v1.1.0
 	github.com/oschwald/geoip2-golang v1.5.0
 	github.com/stretchr/testify v1.7.0
 	gopkg.in/yaml.v3 v3.0.1
