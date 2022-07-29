@@ -21,7 +21,7 @@ func init() {
 
 var a = flag.Bool("a", false, "run all available checks")
 var j = flag.Bool("j", false, "output all results in JSON")
-var c = flag.Int("c", 5, "number IP addresses being checked concurrently")
+var c = flag.Int("c", 5, "IP addresses being checked concurrently")
 
 type IpAndResults struct {
 	IP      net.IP
