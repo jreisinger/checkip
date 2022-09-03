@@ -60,8 +60,8 @@ make run # test, install and run
 
 git commit -m "backwards compatible bug fix" main.go
 
-git tag | sort -V               # or git ll
-git tag -a v0.16.1 -m "patch"   # will build a new release
+git tag | sort -V
+git tag -a v0.16.1 -m "patch" # will build a new release on GitHub
 
 git push --follow-tags
 ```
