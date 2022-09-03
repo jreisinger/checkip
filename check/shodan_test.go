@@ -11,6 +11,11 @@ import (
 )
 
 func TestShodan(t *testing.T) {
+	apiKey, err := getConfigValue("SHODAN_API_KEY")
+	if err != nil || apiKey == "" {
+		return
+	}
+
 	t.Run("given valid response then result and no error is returned", func(t *testing.T) {
 		handlerFn := http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
 			rw.WriteHeader(http.StatusOK)
