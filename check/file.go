@@ -5,6 +5,7 @@ import (
 	"compress/gzip"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"os"
 	"os/user"
@@ -69,6 +70,7 @@ func isOlderThanOneWeek(t time.Time) bool {
 }
 
 func downloadFile(url string) (r io.ReadCloser, err error) {
+	log.Printf("downloading %s", url)
 	resp, err := http.Get(url)
 	if err != nil {
 		return nil, err
