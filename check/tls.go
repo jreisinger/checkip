@@ -105,18 +105,13 @@ func oldTlsVersion(tlsVersion uint16) bool {
 }
 
 func expiredCert(expiryDate time.Time) bool {
-	if expiryDate.Before(time.Now()) {
-		return true
-	}
-	return false
+	return expiryDate.Before(time.Now())
 }
 
 func tlsFormat(tlsVersion uint16) string {
 	switch tlsVersion {
 	case 0:
 		return ""
-	case tls.VersionSSL30:
-		return "SSLv3"
 	case tls.VersionTLS10:
 		return "TLS 1.0"
 	case tls.VersionTLS11:

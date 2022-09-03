@@ -50,6 +50,5 @@ var getBlockListFile = func() (*os.File, error) {
 		return nil, newCheckError(err)
 	}
 
-	f, err := os.Open(file)
-	return f, nil
+	return os.Open(file)
 }

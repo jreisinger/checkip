@@ -33,7 +33,7 @@ func TestNonEmpty(t *testing.T) {
 	}
 	for _, test := range tests {
 		if got := nonEmpty(test.strings...); !equal(got, test.want) {
-
+			t.Errorf("nonEmpty(%v) = %v, want %v", test.strings, got, test.want)
 		}
 	}
 }

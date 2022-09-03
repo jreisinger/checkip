@@ -1,9 +1,9 @@
 package check
 
 import (
-	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"path/filepath"
 	"testing"
 
@@ -12,7 +12,7 @@ import (
 
 // loadResponse loads named file form testdata directory.
 func loadResponse(t *testing.T, name string) []byte {
-	b, err := ioutil.ReadFile(filepath.Join("testdata", name))
+	b, err := os.ReadFile(filepath.Join("testdata", name))
 	require.NoError(t, err)
 	return b
 }
