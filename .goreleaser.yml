@@ -1,7 +1,10 @@
 # Check the documentation at https://goreleaser.com
-before:
-  hooks:
-    - go mod tidy
+
+# Commented out because it's a security risk (https://go.dev/blog/supply-chain).
+# before:
+#   hooks:
+#     - go mod tidy
+
 builds:
   - env:
       - CGO_ENABLED=0
