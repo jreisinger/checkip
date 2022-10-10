@@ -2,4 +2,5 @@
 !.gitignore
 !.github
 !.goreleaser.yml
+!.gitleaksignore
 dist/
