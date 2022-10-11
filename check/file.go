@@ -10,6 +10,7 @@ import (
 	"os"
 	"os/user"
 	"path/filepath"
+	"sync"
 	"time"
 )
 
@@ -34,10 +35,16 @@ func getDbFilesPath(filename string) (string, error) {
 	return filepath.Join(dir, filename), nil
 }
 
+var mu sync.Mutex
+
 // updateFile updates file from url if the file is older than a week. If file
 // does not exist it downloads and creates it. compressFmt is the compression
 // format of the file to download; gz or tgz. Empty string means no compression.
+// Only one instance on updateFile can run at any given time.
 func updateFile(file, url string, compressFmt string) error {
+	mu.Lock()
+	defer mu.Unlock()
+
 	f, err := os.Stat(file)
 
 	if os.IsNotExist(err) {
