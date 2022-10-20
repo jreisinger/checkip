@@ -77,7 +77,7 @@ func isOlderThanOneWeek(t time.Time) bool {
 }
 
 func downloadFile(url string) (r io.ReadCloser, err error) {
-	log.Printf("downloading %s", url)
+	log.Printf("downloading %s", redactSecrets(url))
 	resp, err := http.Get(url)
 	if err != nil {
 		return nil, err
@@ -85,7 +85,7 @@ func downloadFile(url string) (r io.ReadCloser, err error) {
 
 	// Check the server response.
 	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("can't download %v: %v", url, resp.Status)
+		return nil, fmt.Errorf("can't download %v: %v", redactSecrets(url), resp.Status)
 	}
 
 	return resp.Body, nil
