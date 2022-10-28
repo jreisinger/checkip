@@ -23,7 +23,7 @@ var All = []checkip.Check{
 	PhishStats,
 	Ping,
 	Shodan,
-	ThreadCrowd,
+	ThreatCrowd,
 	Tls,
 	UrlScan,
 	VirusTotal,

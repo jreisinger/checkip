@@ -10,9 +10,9 @@ type threatCrowd struct {
 	Votes int `json:"votes"`
 }
 
-// ThreadCrowd threatcrowd.org to find out whether the ipaddr was voted
+// ThreatCrowd threatcrowd.org to find out whether the ipaddr was voted
 // malicious.
-func ThreadCrowd(ipaddr net.IP) (checkip.Result, error) {
+func ThreatCrowd(ipaddr net.IP) (checkip.Result, error) {
 	result := checkip.Result{
 		Name: "threatcrowd.org",
 		Type: checkip.TypeSec,
@@ -26,11 +26,11 @@ func ThreadCrowd(ipaddr net.IP) (checkip.Result, error) {
 	// -1 	voted malicious by most users
 	// 0 	voted malicious/harmless by equal number of users
 	// 1:  	voted harmless by most users
-	var threadCrowd threatCrowd
-	if err := defaultHttpClient.GetJson("https://www.threatcrowd.org/searchApi/v2/ip/report", map[string]string{}, queryParams, &threadCrowd); err != nil {
+	var threatCrowd threatCrowd
+	if err := defaultHttpClient.GetJson("https://www.threatcrowd.org/searchApi/v2/ip/report", map[string]string{}, queryParams, &threatCrowd); err != nil {
 		return result, newCheckError(err)
 	}
-	result.Malicious = threadCrowd.Votes < 0
+	result.Malicious = threatCrowd.Votes < 0
 
 	return result, nil
 }
