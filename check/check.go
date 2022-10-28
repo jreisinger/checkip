@@ -41,7 +41,6 @@ var Default = []checkip.Check{
 	OTX,
 	Ping,
 	Shodan,
-	ThreadCrowd,
 	Tls,
 }
 
