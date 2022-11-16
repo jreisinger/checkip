@@ -6,7 +6,7 @@
 
 Sometimes I come across an IP address, for example when reviewing logs. And I want to know something more about it. Checkip is CLI tool and Go library that provides generic and security information about IP addresses in a quick way.
 
-```
+```sh
 $ checkip 91.228.166.47
 --- 91.228.166.47 ---
 db-ip.com       Petržalka, Slovakia
@@ -16,6 +16,41 @@ ping            0% packet loss (5/5), avg round-trip 12 ms
 shodan.io       OS: n/a, open: tcp/80 (nginx), tcp/443 (nginx), vulns: n/a
 tls             TLS 1.3, exp. 2023/01/02, www.eset.com, eset.com
 malicious       0% (0/8) ✅
+```
+
+```sh
+$ checkip -j 34.250.182.30 | jq '.checks[] | select(.type > 0 and .malicious == true)'
+{
+  "name": "shodan.io",
+  "type": 2,
+  "malicious": true,
+  "info": {
+    "org": "Amazon Data Services Ireland Limited",
+    "data": [
+      {
+        "product": "lighttpd",
+        "version": "1.4.53",
+        "port": 80,
+        "transport": "tcp"
+      },
+      {
+        "product": "AWS ELB",
+        "version": "2.0",
+        "port": 443,
+        "transport": "tcp"
+      }
+    ],
+    "os": "",
+    "ports": [
+      80,
+      443
+    ],
+    "vulns": [
+      "CVE-2022-22707",
+      "CVE-2019-11072"
+    ]
+  }
+}
 ```
 
 See Wiki for more [usage examples](https://github.com/jreisinger/checkip/wiki/Usage-examples).
