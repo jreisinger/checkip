@@ -22,6 +22,7 @@ var All = []checkip.Check{
 	OTX,
 	PhishStats,
 	Ping,
+	SansISC,
 	Shodan,
 	ThreatCrowd,
 	Tls,
