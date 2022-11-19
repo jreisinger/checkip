@@ -24,7 +24,6 @@ var All = []checkip.Check{
 	Ping,
 	SansISC,
 	Shodan,
-	ThreatCrowd,
 	Tls,
 	UrlScan,
 	VirusTotal,
