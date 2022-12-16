@@ -68,8 +68,6 @@ go install github.com/jreisinger/checkip/cmd/checkip@latest
 
 or download a [release](https://github.com/jreisinger/checkip/releases) binary (from under "Assets") for your system and architecture.
 
-NOTE: depending on your Internet connection the first run can take a while because data is downloaded (to `$HOME/.checkip`).
-
 ## Configuration
 
 For some checks to start working you need to register and get an API (LICENSE) key. See the service web site for how to do that. An absent key is not reported as an error, the check is simply ignored.
@@ -86,9 +84,17 @@ VIRUSTOTAL_API_KEY: aaaaaaaabbbbbbbbccccccccddddddddeeeeeeeeffffffff111111112222
 
 You can also use environment variables with the same names.
 
+Data used by some checks are downloaded (cached) to `$HOME/.checkip/` folder. They are periodically re-downloaded so they are fresh.
+
 ## Development
 
-Checkip is easy to extend. If you want to add a new way of checking IP addresses, just write a function of type [Check](https://pkg.go.dev/github.com/jreisinger/checkip#Check). Add the new check to `check.All` [variable](https://pkg.go.dev/github.com/jreisinger/checkip/check#pkg-variables) and consider adding it to `check.Default` variable.
+Checkip is easy to extend. If you want to add a new way of checking IP addresses:
+
+1. Write a function of type [Check](https://pkg.go.dev/github.com/jreisinger/checkip#Check). 
+2. Add the new check to `check.All` [variable](https://pkg.go.dev/github.com/jreisinger/checkip/check#pkg-variables)
+3. Optional: consider adding the new check to `check.Default` variable.
+
+Typical workflow:
 
 ```
 make run # test, install and run
@@ -96,7 +102,7 @@ make run # test, install and run
 git commit -m "backwards compatible bug fix" main.go
 
 git tag | sort -V
-git tag -a v0.16.1 -m "patch" # will build a new release on GitHub
+git tag -a v0.16.1 -m "patch" # will build a new release on GitHub when pushed
 
 git push --follow-tags
 ```
