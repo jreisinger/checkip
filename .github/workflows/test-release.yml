@@ -1,0 +1,11 @@
+name: test and release
+
+on: [push]
+
+jobs:
+  go:
+    uses: jreisinger/github-actions/.github/workflows/go.yml@main
+  go-release:
+    needs:
+      - go
+    uses: jreisinger/github-actions/.github/workflows/go-releaser.yml@main
