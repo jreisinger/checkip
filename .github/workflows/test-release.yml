@@ -1,11 +1,11 @@
-name: test and release
+name: test, scan and release
 
 on: [push]
 
 jobs:
-  go:
-    uses: jreisinger/github-actions/.github/workflows/go.yml@main
+  go-test-scan:
+    uses: jreisinger/github-actions/.github/workflows/go-test-scan.yml@main
   go-release:
     needs:
-      - go
-    uses: jreisinger/github-actions/.github/workflows/go-releaser.yml@main
+      - go-test-scan
+    uses: jreisinger/github-actions/.github/workflows/go-release.yml@main
