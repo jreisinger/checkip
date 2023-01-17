@@ -19,7 +19,7 @@ malicious       0% (0/8) ✅
 ```
 
 ```sh
-$ checkip -j 34.250.182.30 | jq '.checks[] | select(.type > 0 and .malicious == true)'
+$ checkip -j 34.250.182.30 | jq '.checks[] | select(.malicious == true)'
 {
   "name": "shodan.io",
   "type": 2,
