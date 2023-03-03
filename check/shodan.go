@@ -47,6 +47,9 @@ func Shodan(ipaddr net.IP) (checkip.Result, error) {
 	if err := defaultHttpClient.GetJson(apiURL, map[string]string{}, map[string]string{}, &shodan); err != nil {
 		return result, newCheckError(err)
 	}
+	if len(shodan.Vulns) == 0 {
+		shodan.Vulns = make([]string, 0)
+	}
 	result.Info = shodan
 
 	if len(shodan.Vulns) > 0 {
