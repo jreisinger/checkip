@@ -4,7 +4,7 @@
 
 # checkip
 
-Sometimes I come across an IP address, for example when reviewing logs. And I'd like to find out more about this numerical label. Checkip is CLI tool and Go library that provides generic and security information about IP addresses in a quick way.
+Sometimes I come across an IP address, for example when reviewing logs. And I'd like to find out more about this numerical label. Checkip is CLI tool and Go [library](https://pkg.go.dev/github.com/jreisinger/checkip/check) that provides generic and security information about IP addresses in a quick way.
 
 ```sh
 $ checkip 91.228.166.47
