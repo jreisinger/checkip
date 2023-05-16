@@ -4,6 +4,7 @@ import (
 	"crypto/tls"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"net"
 	"strings"
 	"syscall"
@@ -61,7 +62,7 @@ func Tls(ipaddr net.IP) (checkip.Result, error) {
 			}
 		}
 
-		return result, newCheckError(err)
+		return result, newCheckError(fmt.Errorf("connect to %s: %v", address, err))
 	}
 	defer conn.Close()
 
