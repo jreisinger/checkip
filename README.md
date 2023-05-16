@@ -12,10 +12,11 @@ $ checkip 91.228.166.47
 db-ip.com       Petržalka, Slovakia
 dns name        skh1-webredir01-v.eset.com
 iptoasn.com     ESET-AS
-ping            0% packet loss (5/5), avg round-trip 12 ms
+is on AWS       false
+ping            100% packet loss (5/0), avg round-trip 0 ms
 shodan.io       OS: n/a, open: tcp/80 (nginx), tcp/443 (nginx), vulns: n/a
-tls             TLS 1.3, exp. 2023/01/02, www.eset.com, eset.com
-malicious       0% (0/8) ✅
+tls             TLS 1.3, exp. 2024/01/02, www.eset.com, eset.com
+malicious       0% (0/7) ✅
 ```
 
 ```sh
