@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net"
+	"os"
 
 	"github.com/jreisinger/checkip"
 )
@@ -46,10 +47,24 @@ func IsOnAWS(ipaddr net.IP) (checkip.Result, error) {
 			NetworkBorderGroup string `json:"network_border_group"`
 		} `json:"prefixes"`
 	}{}
-	apiUrl := "https://ip-ranges.amazonaws.com/ip-ranges.json"
-	if err := defaultHttpClient.GetJson(apiUrl, map[string]string{}, map[string]string{}, &resp); err != nil {
-		return result, newCheckError(err)
+
+	filename, err := getDbFilesPath("aws-ip-ranges.json")
+	if err != nil {
+		return result, err
 	}
+	if err := updateFile(filename, "https://ip-ranges.amazonaws.com/ip-ranges.json", ""); err != nil {
+		return result, err
+	}
+
+	f, err := os.Open(filename)
+	if err != nil {
+		return result, err
+	}
+	dec := json.NewDecoder(f)
+	if err := dec.Decode(&resp); err != nil {
+		return result, err
+	}
+
 	var a awsIpRanges
 	for _, prefix := range resp.Prefixes {
 		_, network, err := net.ParseCIDR(prefix.IpPrefix)

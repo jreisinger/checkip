@@ -10,7 +10,7 @@ import (
 )
 
 // defaultHttpClient is reused by checks that make HTTP requests.
-var defaultHttpClient = newHttpClient(&http.Client{Timeout: 10 * time.Second})
+var defaultHttpClient = newHttpClient(&http.Client{Timeout: 5 * time.Second})
 
 type httpClient struct {
 	client *http.Client
