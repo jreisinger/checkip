@@ -21,7 +21,7 @@ func TestGetDbFilesPath(t *testing.T) {
 		{"GeoLite2-City.mmdb", "GeoLite2-City.mmdb"},
 	}
 	for _, tc := range testcases {
-		got, err := getDbFilesPath(tc.filename)
+		got, err := getCachePath(tc.filename)
 		if err != nil {
 			t.Fatal(err)
 		}

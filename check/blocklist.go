@@ -40,7 +40,7 @@ func BlockList(ipaddr net.IP) (checkip.Result, error) {
 // getBlockListFile downloads (if outdated) and returns open file containing
 // blocklist.de database.
 var getBlockListFile = func() (*os.File, error) {
-	file, err := getDbFilesPath("blocklist.de_all.list")
+	file, err := getCachePath("blocklist.de_all.list")
 	if err != nil {
 		return nil, err
 	}

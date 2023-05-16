@@ -48,7 +48,7 @@ func IsOnAWS(ipaddr net.IP) (checkip.Result, error) {
 		} `json:"prefixes"`
 	}{}
 
-	filename, err := getDbFilesPath("aws-ip-ranges.json")
+	filename, err := getCachePath("aws-ip-ranges.json")
 	if err != nil {
 		return result, err
 	}

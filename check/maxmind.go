@@ -49,7 +49,7 @@ func MaxMind(ip net.IP) (checkip.Result, error) {
 	}
 
 	// file := "/var/tmp/GeoLite2-City.mmdb"
-	file, err := getDbFilesPath("GeoLite2-City.mmdb")
+	file, err := getCachePath("GeoLite2-City.mmdb")
 	if err != nil {
 		return result, err
 	}

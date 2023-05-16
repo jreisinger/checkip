@@ -14,9 +14,9 @@ import (
 	"time"
 )
 
-// getDbFilesPath returns OS specific absolute path to filename. On Unix it will
-// be $HOME/.checkip/<filename>
-func getDbFilesPath(filename string) (string, error) {
+// getCachePath returns OS specific absolute path to filename that is used to
+// caching data from the Internet. On Unix it will be $HOME/.checkip/<filename>
+func getCachePath(filename string) (string, error) {
 	usr, err := user.Current()
 	if err != nil {
 		return "", err

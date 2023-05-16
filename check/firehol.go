@@ -17,7 +17,7 @@ func Firehol(ipaddr net.IP) (checkip.Result, error) {
 		Type: checkip.TypeSec,
 	}
 
-	file, err := getDbFilesPath("firehol_level1.netset")
+	file, err := getCachePath("firehol_level1.netset")
 	if err != nil {
 		return result, err
 	}

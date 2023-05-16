@@ -38,7 +38,7 @@ func IPtoASN(ipaddr net.IP) (checkip.Result, error) {
 	}
 
 	// file := "/var/tmp/ip2asn-combined.tsv"
-	file, err := getDbFilesPath("ip2asn-combined.tsv")
+	file, err := getCachePath("ip2asn-combined.tsv")
 	if err != nil {
 		return result, err
 	}

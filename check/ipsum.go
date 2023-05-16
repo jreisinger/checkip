@@ -20,7 +20,7 @@ func IPSum(ipaddr net.IP) (checkip.Result, error) {
 	}
 
 	// file := "/var/tmp/ipsum.txt"
-	file, err := getDbFilesPath("ipsum.txt")
+	file, err := getCachePath("ipsum.txt")
 	if err != nil {
 		return result, err
 	}

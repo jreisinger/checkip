@@ -22,7 +22,7 @@ func CinsScore(ipaddr net.IP) (checkip.Result, error) {
 	}
 
 	// file := "/var/tmp/cins.txt"
-	file, err := getDbFilesPath("cins.txt")
+	file, err := getCachePath("cins.txt")
 	if err != nil {
 		return result, err
 	}

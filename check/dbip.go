@@ -42,7 +42,7 @@ func DBip(ip net.IP) (checkip.Result, error) {
 	}
 
 	// file := "/var/tmp/dbip-city-lite.mmdb"
-	file, err := getDbFilesPath("dbip-city-lite.mmdb")
+	file, err := getCachePath("dbip-city-lite.mmdb")
 	if err != nil {
 		return result, err
 	}

@@ -31,7 +31,7 @@ func PhishStats(ipaddr net.IP) (checkip.Result, error) {
 		Type: checkip.TypeInfoSec,
 	}
 
-	file, err := getDbFilesPath("phish_score.csv")
+	file, err := getCachePath("phish_score.csv")
 	if err != nil {
 		return result, err
 	}
