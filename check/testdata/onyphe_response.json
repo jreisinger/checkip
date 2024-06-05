@@ -1,0 +1,198 @@
+{
+    "count": 3,
+    "error": 0,
+    "max_page": 1,
+    "myip": "192.168.1.3",
+    "page": 1,
+    "page_size": 3,
+    "results": [
+        {
+            "@category": "datascan",
+            "@timestamp": "2024-06-03T00:09:07.000Z",
+            "app": {
+                "length": 20
+            },
+            "asn": "AS0",
+            "city": "Fortaleza",
+            "country": "BR",
+            "data": "",
+            "datamd5": "",
+            "datammh3": 0,
+            "domain": [
+                "example.org"
+            ],
+            "geolocus": {
+                "asn": "AS0",
+                "continent": "SA",
+                "continentname": "South America",
+                "country": "BR",
+                "countryname": "Brazil",
+                "domain": [
+                    "cert.br",
+                    "example.org"
+                ],
+                "isineu": "false",
+                "latitude": "-14.000000",
+                "location": "-14.000000,-51.00000",
+                "longitude": "-51.00000",
+                "netname": "",
+                "organization": "SERVICOS DE TELECOM",
+                "subnet": "10.20.64.0/18"
+            },
+            "host": [
+                "10.20-84-242"
+            ],
+            "hostname": [
+                "10.20-84-242.example.org"
+            ],
+            "ip": "10.20.84.242",
+            "ipv6": "false",
+            "latitude": "-3.0000",
+            "location": "-3.0000,-38.0000",
+            "longitude": "-38.0000",
+            "node": {
+            },
+            "organization": "SERVICOS DE TELECOM",
+            "os": "Linux Kernel",
+            "osvendor": "Linux",
+            "port": 8291,
+            "protocol": "winbox",
+            "reverse": [
+                "10.20-84-242.example.org"
+            ],
+            "seen_date": "2024-06-03",
+            "source": "datascan",
+            "subnet": "10.20.64.0/18",
+            "tld": [
+                "com.br"
+            ],
+            "tls": "false",
+            "transport": "tcp"
+        },
+        {
+            "@category": "datascan",
+            "@timestamp": "2024-05-08T09:54:12.000Z",
+            "app": {
+                "length": 20
+            },
+            "asn": "AS0",
+            "city": "Fortaleza",
+            "country": "BR",
+            "data": "",
+            "datamd5": "",
+            "datammh3": 0,
+            "domain": [
+                "example.org"
+            ],
+            "geolocus": {
+                "asn": "AS0",
+                "continent": "SA",
+                "continentname": "South America",
+                "country": "BR",
+                "countryname": "Brazil",
+                "domain": [
+                    "cert.br",
+                    "example.org"
+                ],
+                "isineu": "false",
+                "latitude": "-14.000000",
+                "location": "-14.000000,-51.00000",
+                "longitude": "-51.00000",
+                "netname": "",
+                "organization": "SERVICOS DE TELECOM",
+                "subnet": "10.20.64.0/18"
+            },
+            "host": [
+                "10.20-84-242"
+            ],
+            "hostname": [
+                "10.20-84-242.example.org"
+            ],
+            "ip": "10.20.84.242",
+            "ipv6": "false",
+            "latitude": "-3.0000",
+            "location": "-3.0000,-38.0000",
+            "longitude": "-38.0000",
+            "node": {
+            },
+            "organization": "SERVICOS DE TELECOM",
+            "os": "Linux Kernel",
+            "osvendor": "Linux",
+            "port": 8291,
+            "protocol": "winbox",
+            "reverse": [
+                "10.20-84-242.example.org"
+            ],
+            "seen_date": "2024-05-08",
+            "source": "datascan",
+            "subnet": "10.20.64.0/18",
+            "tld": [
+                "com.br"
+            ],
+            "tls": "false",
+            "transport": "tcp"
+        },
+        {
+            "@category": "datascan",
+            "@timestamp": "2024-05-07T12:19:10.000Z",
+            "app": {
+                "length": "60"
+            },
+            "asn": "AS0",
+            "city": "Fortaleza",
+            "country": "BR",
+            "data": "",
+            "datamd5": "",
+            "device": {
+            },
+            "domain": [
+                "example.org"
+            ],
+            "geolocus": {
+                "asn": "AS0",
+                "continent": "SA",
+                "continentname": "South America",
+                "country": "BR",
+                "countryname": "Brazil",
+                "isineu": "false",
+                "latitude": "-14.000000",
+                "location": "-14.000000,-51.00000",
+                "longitude": "-51.00000",
+                "netname": "",
+                "organization": "SERVICOS DE TELECOM",
+                "subnet": "10.20.64.0/18"
+            },
+            "host": [
+                "10.20-84-242"
+            ],
+            "hostname": [
+                "10.20-84-242.example.org"
+            ],
+            "ip": "10.20.84.242",
+            "ipv6": "false",
+            "latitude": "-3.0000",
+            "location": "-3.0000,-38.0000",
+            "longitude": "-38.0000",
+            "organization": "SERVICOS DE TELECOM",
+            "os": "RouterOS",
+            "osvendor": "Mikrotik",
+            "port": "161",
+            "protocol": "snmp",
+            "reverse": [
+                "10.20-84-242.example.org"
+            ],
+            "seen_date": "2024-05-07",
+            "source": "udpscan",
+            "subnet": "10.20.64.0/18",
+            "tld": [
+                "com.br"
+            ],
+            "tls": "false",
+            "transport": "udp"
+        }
+    ],
+    "status": "ok",
+    "text": "Success",
+    "took": 0.119,
+    "total": 3
+}
