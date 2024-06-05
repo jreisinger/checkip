@@ -8,6 +8,11 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+// GetConfigValue export getConfigValue function for main
+func GetConfigValue(key string) (string, error) {
+	return getConfigValue(key)
+}
+
 // getConfigValue tries to get value for key first from an environment variable
 // then from a configuration file at $HOME/.checkip.yaml. If value is not found
 // an empty string and nil is returned (i.e. it's not considered an error).

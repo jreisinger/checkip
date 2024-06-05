@@ -7,11 +7,20 @@ import (
 	"github.com/jreisinger/checkip"
 )
 
+// Use : function list to be used in checks
+var Use = []checkip.Check{}
+
+// AddUse : methode to add function in checks
+func AddUse(s interface{}) {
+	Use = append(Use,s.(checkip.Check))
+}
+
 // All contains all available checks.
 var All = []checkip.Check{
 	AbuseIPDB,
 	BlockList,
 	CinsScore,
+	Censys,
 	DBip,
 	DnsMX,
 	DnsName,
@@ -21,6 +30,7 @@ var All = []checkip.Check{
 	IsOnAWS,
 	MaxMind,
 	OTX,
+	Onyphe,
 	PhishStats,
 	Ping,
 	SansISC,
