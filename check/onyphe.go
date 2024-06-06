@@ -58,10 +58,10 @@ func Onyphe(ipaddr net.IP) (checkip.Result, error) {
 	for _, d := range onyphe.Results {
 		var port string
 		switch v := d.Port.(type) {
-		case float64:
-			port = fmt.Sprintf("%d", int(v))
 		case string:
 			port = v
+		default:
+			port = fmt.Sprintf("%d", v)
 		}
 		if port != "80" && port != "443" && port != "53" { // undecidable ports
 			result.Malicious = true
@@ -77,21 +77,17 @@ type byPortO onypheData
 
 func (x byPortO) Len() int { return len(x) }
 func (x byPortO) Less(i, j int) bool {
-	var portI float64
-	var portJ float64
+	var portI int
+	var portJ int
 	switch v := x[i].Port.(type) {
-	case float64:
-		portI = v
 	case string:
-		portI, _ = strconv.ParseFloat(v, 64)
+		portI, _ = strconv.Atoi(v)
+    case float64:
+	    portI = int(v)
+    case int:
+	    portI = v
 	}
-	switch v := x[j].Port.(type) {
-	case float64:
-		portJ = v
-	case string:
-		portJ, _ = strconv.ParseFloat(v, 64)
-	}
-	return portI < portJ
+	return portI > portJ
 }
 
 func (x byPortO) Swap(i, j int) { x[i], x[j] = x[j], x[i] }
