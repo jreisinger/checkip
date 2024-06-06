@@ -11,7 +11,6 @@ import (
 var All = []checkip.Check{
 	AbuseIPDB,
 	BlockList,
-	Censys,
 	CinsScore,
 	DBip,
 	DnsMX,
