@@ -15,8 +15,8 @@ const (
 	TypeInfoAndIsMalicious             // both of the above
 )
 
-// All contains all available checks.
-var All = []IpAddr{
+// Funcs contains all available functions for checking IP addresses.
+var Funcs = []Func{
 	AbuseIPDB,
 	BlockList,
 	CinsScore,
@@ -51,8 +51,8 @@ func (t Type) MarshalJSON() ([]byte, error) {
 	return json.Marshal(s)
 }
 
-// IpAddr gatahers generic and/or security information about an IpAddr address.
-type IpAddr func(ipaddr net.IP) (Check, error)
+// Func gathers generic and/or security information about an IP address.
+type Func func(ipaddr net.IP) (Check, error)
 
 // Check is the information gathered about an IP address.
 type Check struct {

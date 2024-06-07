@@ -45,7 +45,7 @@ func main() {
 		wg.Add(1)
 		go func() {
 			for ipaddr := range ipaddrsCh {
-				r, errors := cli.Run(check.All, ipaddr)
+				r, errors := cli.Run(check.Funcs, ipaddr)
 				for _, e := range errors {
 					log.Print(e)
 				}

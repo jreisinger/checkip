@@ -9,10 +9,13 @@ import (
 	"github.com/jreisinger/checkip/cli"
 )
 
-// Example shows how to run two checks: CheckIsWellKnow we define here and check.DnsName.
+// Example shows how to run two IP address checks
+//
+//   - CheckIsWellKnown that we define here
+//   - check.DnsName
 func Example() {
 	ipaddr := net.ParseIP("1.1.1.1")
-	results, _ := cli.Run([]check.IpAddr{CheckIsWellKnown, check.DnsName}, ipaddr)
+	results, _ := cli.Run([]check.Func{CheckIsWellKnown, check.DnsName}, ipaddr)
 	results.PrintSummary()
 	// Output: well known      true
 	// dns name        one.one.one.one

@@ -15,14 +15,14 @@ import (
 )
 
 // Run runs checks concurrently against the ippaddr.
-func Run(checks []check.IpAddr, ipaddr net.IP) (Checks, []error) {
+func Run(checks []check.Func, ipaddr net.IP) (Checks, []error) {
 	var results Checks
 	var errors []error
 
 	var wg sync.WaitGroup
 	for _, chk := range checks {
 		wg.Add(1)
-		go func(c check.IpAddr) {
+		go func(c check.Func) {
 			defer wg.Done()
 			r, err := c(ipaddr)
 			if err != nil {
