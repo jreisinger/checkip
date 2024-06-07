@@ -4,8 +4,6 @@ import (
 	"encoding/json"
 	"net"
 	"strings"
-
-	"github.com/jreisinger/checkip"
 )
 
 // Names are the DNS names of the given IP address.
@@ -20,10 +18,10 @@ func (n Names) Json() ([]byte, error) {
 }
 
 // DnsName does a reverse lookup for a given IP address to get its names.
-func DnsName(ipaddr net.IP) (checkip.Result, error) {
-	result := checkip.Result{
+func DnsName(ipaddr net.IP) (Result, error) {
+	result := Result{
 		Name: "dns name",
-		Type: checkip.TypeInfo,
+		Type: TypeInfo,
 	}
 
 	names, err := net.LookupAddr(ipaddr.String())

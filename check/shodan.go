@@ -6,8 +6,6 @@ import (
 	"net"
 	"sort"
 	"strings"
-
-	"github.com/jreisinger/checkip"
 )
 
 type shodan struct {
@@ -28,10 +26,10 @@ type shodanData []struct {
 var shodanUrl = "https://api.shodan.io"
 
 // Shodan gets generic information from api.shodan.io.
-func Shodan(ipaddr net.IP) (checkip.Result, error) {
-	result := checkip.Result{
+func Shodan(ipaddr net.IP) (Result, error) {
+	result := Result{
 		Name: "shodan.io",
-		Type: checkip.TypeInfoSec,
+		Type: TypeInfoSec,
 	}
 
 	apiKey, err := getConfigValue("SHODAN_API_KEY")

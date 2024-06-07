@@ -6,7 +6,6 @@ import (
 	"net"
 	"strings"
 
-	"github.com/jreisinger/checkip"
 	"github.com/oschwald/geoip2-golang"
 )
 
@@ -34,10 +33,10 @@ func (m maxmind) Json() ([]byte, error) {
 }
 
 // MaxMind gets geolocation data from maxmind.com's GeoLite2-City.mmdb.
-func MaxMind(ip net.IP) (checkip.Result, error) {
-	result := checkip.Result{
+func MaxMind(ip net.IP) (Result, error) {
+	result := Result{
 		Name: "maxmind.com",
-		Type: checkip.TypeInfo,
+		Type: TypeInfo,
 	}
 
 	licenseKey, err := getConfigValue("MAXMIND_LICENSE_KEY")

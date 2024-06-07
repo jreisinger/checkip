@@ -7,15 +7,14 @@ import (
 	"time"
 
 	"github.com/go-ping/ping"
-	"github.com/jreisinger/checkip"
 )
 
 // Ping sends five pings (ICMP echo request packets) to the ippaddr and returns
 // the statistics.
-func Ping(ipaddr net.IP) (checkip.Result, error) {
-	result := checkip.Result{
+func Ping(ipaddr net.IP) (Result, error) {
+	result := Result{
 		Name: "ping",
-		Type: checkip.TypeInfo,
+		Type: TypeInfo,
 	}
 
 	pinger, err := ping.NewPinger(ipaddr.String())

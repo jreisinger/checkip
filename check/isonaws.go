@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"net"
 	"os"
-
-	"github.com/jreisinger/checkip"
 )
 
 type awsIpRanges struct {
@@ -35,8 +33,8 @@ func (a awsIpRanges) Summary() string {
 
 // IsOnAWS checks if ipaddr belongs to AWS. If so it provides info about the IP
 // address. It gets the info from https://ip-ranges.amazonaws.com/ip-ranges.json
-func IsOnAWS(ipaddr net.IP) (checkip.Result, error) {
-	result := checkip.Result{
+func IsOnAWS(ipaddr net.IP) (Result, error) {
+	result := Result{
 		Name: "is on AWS",
 	}
 	resp := struct {

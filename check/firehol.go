@@ -5,16 +5,14 @@ import (
 	"net"
 	"os"
 	"strings"
-
-	"github.com/jreisinger/checkip"
 )
 
 // Firehol checks whether the ipaddr is found on blacklist
 // https://iplists.firehol.org/?ipset=firehol_level1.
-func Firehol(ipaddr net.IP) (checkip.Result, error) {
-	result := checkip.Result{
+func Firehol(ipaddr net.IP) (Result, error) {
+	result := Result{
 		Name: "firehol.org",
-		Type: checkip.TypeSec,
+		Type: TypeSec,
 	}
 
 	file, err := getCachePath("firehol_level1.netset")

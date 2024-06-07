@@ -9,8 +9,6 @@ import (
 	"os"
 	"strconv"
 	"strings"
-
-	"github.com/jreisinger/checkip"
 )
 
 type AutonomousSystem struct {
@@ -31,10 +29,10 @@ func (a AutonomousSystem) Json() ([]byte, error) {
 
 // IPtoASN gets info about autonomous system of the ipaddr. The data is taken
 // from https://iptoasn.com/data/ip2asn-combined.tsv.gz.
-func IPtoASN(ipaddr net.IP) (checkip.Result, error) {
-	result := checkip.Result{
+func IPtoASN(ipaddr net.IP) (Result, error) {
+	result := Result{
 		Name: "iptoasn.com",
-		Type: checkip.TypeInfo,
+		Type: TypeInfo,
 	}
 
 	// file := "/var/tmp/ip2asn-combined.tsv"

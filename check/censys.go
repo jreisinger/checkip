@@ -7,8 +7,6 @@ import (
 	"net"
 	"sort"
 	"strings"
-
-	"github.com/jreisinger/checkip"
 )
 
 type censys struct {
@@ -42,10 +40,10 @@ func basicAuth(username, password string) string {
 }
 
 // Censys gets generic information from search.censys.io.
-func Censys(ipaddr net.IP) (checkip.Result, error) {
-	result := checkip.Result{
+func Censys(ipaddr net.IP) (Result, error) {
+	result := Result{
 		Name: "censys.io",
-		Type: checkip.TypeInfoSec,
+		Type: TypeInfoSec,
 	}
 
 	apiKey, err := getConfigValue("CENSYS_KEY")

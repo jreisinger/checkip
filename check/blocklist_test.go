@@ -5,7 +5,6 @@ import (
 	"os"
 	"testing"
 
-	"github.com/jreisinger/checkip"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -16,7 +15,7 @@ func TestBlockList(t *testing.T) {
 		result, err := BlockList(net.ParseIP("66.249.70.34"))
 		require.NoError(t, err)
 		assert.Equal(t, "blocklist.de", result.Name)
-		assert.Equal(t, checkip.TypeSec, result.Type)
+		assert.Equal(t, TypeSec, result.Type)
 		assert.Equal(t, true, result.Malicious)
 	})
 }

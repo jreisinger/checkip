@@ -7,16 +7,14 @@ import (
 	"os"
 	"strconv"
 	"strings"
-
-	"github.com/jreisinger/checkip"
 )
 
 // IPSum checks how many blacklists the ipaddr is found on. It uses
 // https://raw.githubusercontent.com/stamparm/ipsum/master/ipsum.txt.
-func IPSum(ipaddr net.IP) (checkip.Result, error) {
-	result := checkip.Result{
+func IPSum(ipaddr net.IP) (Result, error) {
+	result := Result{
 		Name: "github.com/stamparm/ipsum",
-		Type: checkip.TypeSec,
+		Type: TypeSec,
 	}
 
 	// file := "/var/tmp/ipsum.txt"

@@ -9,8 +9,6 @@ import (
 	"strings"
 	"syscall"
 	"time"
-
-	"github.com/jreisinger/checkip"
 )
 
 const certTLSDialTimeout = 5 * time.Second
@@ -45,10 +43,10 @@ func (t tlsinfo) Json() ([]byte, error) {
 }
 
 // Tls finds out TLS information by connecting to the ipaddr and TCP port 443.
-func Tls(ipaddr net.IP) (checkip.Result, error) {
-	result := checkip.Result{
+func Tls(ipaddr net.IP) (Result, error) {
+	result := Result{
 		Name: "tls",
-		Type: checkip.TypeInfoSec,
+		Type: TypeInfoSec,
 	}
 
 	address := net.JoinHostPort(ipaddr.String(), "443")

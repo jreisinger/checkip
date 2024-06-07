@@ -6,8 +6,6 @@ import (
 	"net"
 	"net/url"
 	"path"
-
-	"github.com/jreisinger/checkip"
 )
 
 const sansUrl = "https://isc.sans.edu/api/ip/"
@@ -30,10 +28,10 @@ func (s sans) Json() ([]byte, error) {
 
 // SansISC gets info from SANS Internet Storm Center API.
 // curl "https://isc.sans.edu/api/ip/${IPADDR}?json"
-func SansISC(ipaddr net.IP) (checkip.Result, error) {
-	result := checkip.Result{
+func SansISC(ipaddr net.IP) (Result, error) {
+	result := Result{
 		Name: "isc.sans.edu",
-		Type: checkip.TypeInfoSec,
+		Type: TypeInfoSec,
 	}
 
 	u, err := url.Parse(sansUrl)

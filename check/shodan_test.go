@@ -5,7 +5,6 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/jreisinger/checkip"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -28,7 +27,7 @@ func TestShodan(t *testing.T) {
 		result, err := Shodan(net.ParseIP("118.25.6.39"))
 		require.NoError(t, err)
 		assert.Equal(t, "shodan.io", result.Name)
-		assert.Equal(t, checkip.TypeInfoSec, result.Type)
+		assert.Equal(t, TypeInfoSec, result.Type)
 		assert.Equal(t, true, result.Malicious)
 	})
 

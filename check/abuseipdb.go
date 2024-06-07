@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"net"
 	"time"
-
-	"github.com/jreisinger/checkip"
 )
 
 // Only return reports within the last x amount of days. Default is 30.
@@ -39,8 +37,8 @@ func (a abuseIPDB) Json() ([]byte, error) {
 
 // AbuseIPDB uses api.abuseipdb.com to get generic information about ipaddr and
 // to see if the ipaddr has been reported as malicious.
-func AbuseIPDB(ipaddr net.IP) (checkip.Result, error) {
-	result := checkip.Result{Name: "abuseipdb.com", Type: checkip.TypeInfoSec}
+func AbuseIPDB(ipaddr net.IP) (Result, error) {
+	result := Result{Name: "abuseipdb.com", Type: TypeInfoSec}
 
 	apiKey, err := getConfigValue("ABUSEIPDB_API_KEY")
 	if err != nil {

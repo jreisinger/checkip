@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"net"
 	"strings"
-
-	"github.com/jreisinger/checkip"
 )
 
 type virusTotal struct {
@@ -41,10 +39,10 @@ func (v virusTotal) Json() ([]byte, error) {
 
 // VirusTotal gets generic information and security reputation about the ippaddr
 // from https://www.virustotal.com/api.
-func VirusTotal(ipaddr net.IP) (checkip.Result, error) {
-	result := checkip.Result{
+func VirusTotal(ipaddr net.IP) (Result, error) {
+	result := Result{
 		Name: "virustotal.com",
-		Type: checkip.TypeInfoSec,
+		Type: TypeInfoSec,
 	}
 
 	apiKey, err := getConfigValue("VIRUSTOTAL_API_KEY")

@@ -6,8 +6,6 @@ import (
 	"net"
 	"os"
 	"strconv"
-
-	"github.com/jreisinger/checkip"
 )
 
 type phishstats struct {
@@ -25,10 +23,10 @@ func (ps phishstats) Json() ([]byte, error) {
 
 // PhishStats checks whether the ipaddr is involved in phishing according to
 // https://phishstats.info/phish_score.csv.
-func PhishStats(ipaddr net.IP) (checkip.Result, error) {
-	result := checkip.Result{
+func PhishStats(ipaddr net.IP) (Result, error) {
+	result := Result{
 		Name: "phishstats.info",
-		Type: checkip.TypeInfoSec,
+		Type: TypeInfoSec,
 	}
 
 	file, err := getCachePath("phish_score.csv")

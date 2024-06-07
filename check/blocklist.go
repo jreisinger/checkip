@@ -5,15 +5,13 @@ import (
 	"net"
 	"os"
 	"strings"
-
-	"github.com/jreisinger/checkip"
 )
 
 // BlockList searches the ipaddr in lists.blocklist.de/lists/dnsbl/all.list.
-func BlockList(ipaddr net.IP) (checkip.Result, error) {
-	result := checkip.Result{
+func BlockList(ipaddr net.IP) (Result, error) {
+	result := Result{
 		Name: "blocklist.de",
-		Type: checkip.TypeSec,
+		Type: TypeSec,
 	}
 
 	file, err := getBlockListFile()

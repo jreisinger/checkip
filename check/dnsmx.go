@@ -5,8 +5,6 @@ import (
 	"encoding/json"
 	"net"
 	"strings"
-
-	"github.com/jreisinger/checkip"
 )
 
 // MX maps MX records to domain names.
@@ -35,10 +33,10 @@ func (mx MX) Json() ([]byte, error) {
 // DnsMX performs reverse lookup and consults AbuseIPDB to get domain names fo
 // the ipaddr. Then it looks up MX records (mail servers) for the given domain
 // names.
-func DnsMX(ipaddr net.IP) (checkip.Result, error) {
-	result := checkip.Result{
+func DnsMX(ipaddr net.IP) (Result, error) {
+	result := Result{
 		Name: "dns mx",
-		Type: checkip.TypeInfo,
+		Type: TypeInfo,
 	}
 
 	names, _ := net.LookupAddr(ipaddr.String()) // NOTE: ignoring error

@@ -7,7 +7,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/jreisinger/checkip"
 	"github.com/oschwald/geoip2-golang"
 )
 
@@ -35,10 +34,10 @@ func (d dbip) Json() ([]byte, error) {
 }
 
 // DBip gets geolocation from https://db-ip.com/db/download/ip-to-city-lite.
-func DBip(ip net.IP) (checkip.Result, error) {
-	result := checkip.Result{
+func DBip(ip net.IP) (Result, error) {
+	result := Result{
 		Name: "db-ip.com",
-		Type: checkip.TypeInfo,
+		Type: TypeInfo,
 	}
 
 	// file := "/var/tmp/dbip-city-lite.mmdb"

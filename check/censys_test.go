@@ -5,7 +5,6 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/jreisinger/checkip"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -33,7 +32,7 @@ func TestCensys(t *testing.T) {
 		result, err := Censys(net.ParseIP("118.25.6.39"))
 		require.NoError(t, err)
 		assert.Equal(t, "censys.io", result.Name)
-		assert.Equal(t, checkip.TypeInfoSec, result.Type)
+		assert.Equal(t, TypeInfoSec, result.Type)
 		assert.Equal(t, true, result.Malicious)
 		assert.Equal(t, "MikroTik, RB760iGS, udp/161 (snmp), tcp/2000 (mikrotik_bw), tcp/51922 (ssh)", result.Info.Summary())
 	})

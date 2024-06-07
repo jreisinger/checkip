@@ -6,8 +6,6 @@ import (
 	"net"
 	"strings"
 	"time"
-
-	"github.com/jreisinger/checkip"
 )
 
 const days = 30 // limit search to last 30 days
@@ -15,10 +13,10 @@ const days = 30 // limit search to last 30 days
 // UrlScan gets data from urlscan.io. When a URL is submitted to urlscan.io, an
 // automated process will browse to the URL like a regular user and record the
 // activity that this page navigation creates.
-func UrlScan(ipaddr net.IP) (checkip.Result, error) {
-	result := checkip.Result{
+func UrlScan(ipaddr net.IP) (Result, error) {
+	result := Result{
 		Name: "urlscan.io",
-		Type: checkip.TypeInfoSec,
+		Type: TypeInfoSec,
 	}
 
 	apiKey, err := getConfigValue("URLSCAN_API_KEY")

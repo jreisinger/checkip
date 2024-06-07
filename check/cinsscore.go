@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"net"
 	"os"
-
-	"github.com/jreisinger/checkip"
 )
 
 type cins struct {
@@ -15,10 +13,10 @@ type cins struct {
 }
 
 // CinsScore searches ipaddr in https://cinsscore.com/list/ci-badguys.txt.
-func CinsScore(ipaddr net.IP) (checkip.Result, error) {
-	result := checkip.Result{
+func CinsScore(ipaddr net.IP) (Result, error) {
+	result := Result{
 		Name: "cinsscore.com",
-		Type: checkip.TypeSec,
+		Type: TypeSec,
 	}
 
 	// file := "/var/tmp/cins.txt"
