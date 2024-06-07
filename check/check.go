@@ -7,8 +7,8 @@ import (
 	"github.com/jreisinger/checkip"
 )
 
-// All contains all available checks.
-var All = []checkip.Check{
+// Checks contains all available checks.
+var Checks = []checkip.Check{
 	AbuseIPDB,
 	BlockList,
 	CinsScore,
@@ -28,22 +28,6 @@ var All = []checkip.Check{
 	Tls,
 	UrlScan,
 	VirusTotal,
-}
-
-// Default contains subset of all available checks recommended for most people.
-var Default = []checkip.Check{
-	BlockList,
-	CinsScore,
-	DBip,
-	DnsName,
-	Firehol,
-	IPSum,
-	IPtoASN,
-	IsOnAWS,
-	OTX,
-	Ping,
-	Shodan,
-	Tls,
 }
 
 // na returns n/a if s is empty or contains only whitespace.

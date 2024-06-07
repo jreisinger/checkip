@@ -19,9 +19,8 @@ func init() {
 	log.SetPrefix(os.Args[0] + ": ")
 }
 
-var a = flag.Bool("a", false, "run all available checks")
 var j = flag.Bool("j", false, "output all results in JSON")
-var c = flag.Int("c", 5, "IP addresses being checked concurrently")
+var p = flag.Int("p", 5, "check `n` IP addresses in parallel")
 
 type IpAndResults struct {
 	IP      net.IP
@@ -30,11 +29,6 @@ type IpAndResults struct {
 
 func main() {
 	flag.Parse()
-
-	checks := check.Default
-	if *a {
-		checks = check.All
-	}
 
 	ipaddrsCh := make(chan net.IP)
 	resultsCh := make(chan IpAndResults)
@@ -47,11 +41,11 @@ func main() {
 		wg.Done()
 	}()
 
-	for i := 0; i < *c; i++ {
+	for i := 0; i < *p; i++ {
 		wg.Add(1)
 		go func() {
 			for ipaddr := range ipaddrsCh {
-				r, errors := cli.Run(checks, ipaddr)
+				r, errors := cli.Run(check.Checks, ipaddr)
 				for _, e := range errors {
 					log.Print(e)
 				}
