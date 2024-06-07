@@ -17,9 +17,10 @@ db-ip.com       Petržalka, Slovakia
 dns name        skh1-webredir01-v.eset.com
 iptoasn.com     ESET-AS
 is on AWS       false
+isc.sans.edu    attacks: 0, abuse contact: domains@eset.sk
 ping            100% packet loss (5/0), avg round-trip 0 ms
 tls             TLS 1.3, exp. 2024/01/02!!, www.eset.com, eset.com
-malicious       14% (1/7) ✅
+malicious       8% (1/12) ✅
 ```
 
 Check multiple IP addresses coming from STDIN:
@@ -31,28 +32,30 @@ db-ip.com       Petržalka, Slovakia
 dns name        h3-webredir02-v.eset.com
 iptoasn.com     ESET-AS
 is on AWS       false
+isc.sans.edu    attacks: 0, abuse contact: domains@eset.sk
 ping            100% packet loss (5/0), avg round-trip 0 ms
 tls             TLS 1.3, exp. 2024/01/02!!, www.eset.com, eset.com
-malicious       14% (1/7) ✅
+malicious       9% (1/11) ✅
 --- 91.228.166.47 ---
 db-ip.com       Petržalka, Slovakia
 dns name        skh1-webredir01-v.eset.com
 iptoasn.com     ESET-AS
 is on AWS       false
+isc.sans.edu    attacks: 0, abuse contact: domains@eset.sk
 ping            100% packet loss (5/0), avg round-trip 0 ms
 tls             TLS 1.3, exp. 2024/01/02!!, www.eset.com, eset.com
-malicious       14% (1/7) ✅
+malicious       8% (1/12) ✅
 ```
 
-Use more detailed JSON output to filter out those checks that consider the IP address to be malicious:
+Use detailed JSON output to filter out those checks that consider the IP address to be malicious:
 
 ```
-❯ checkip -j 91.228.166.47 | jq '.checks[] | select(.malicious == true)'
+❯ checkip -j 91.228.166.47 | jq '.checks[] | select(.ipAddrIsMalicious == true)'
 {
-  "name": "tls",
-  "type": "infoAndSecurity",
-  "malicious": true,
-  "info": {
+  "description": "tls",
+  "type": "InfoAndIsMalicious",
+  "ipAddrIsMalicious": true,
+  "ipAddrInfo": {
     "SAN": [
       "www.eset.com",
       "eset.com"
@@ -67,28 +70,30 @@ Continuously generate [random IP addresses](https://github.com/jreisinger/checki
 
 ```
 ❯ while true; do ./randip; sleep 2; done | checkip 2> /dev/null
---- 120.0.40.221 ---
-db-ip.com       Zhoutou, China
-iptoasn.com     CHINA169-BACKBONE CHINA UNICOM China169 Backbone
+--- 155.186.85.125 ---
+db-ip.com       Ashburn, United States
+dns name        syn-155-186-085-125.res.spectrum.com
+iptoasn.com     CHARTER-20115
 is on AWS       false
+isc.sans.edu    attacks: 0, abuse contact: abuse@charter.net
 ping            100% packet loss (5/0), avg round-trip 0 ms
-malicious       0% (0/6) ✅
---- 109.31.58.28 ---
-db-ip.com       Paris, France
-dns name        28.58.31.109.rev.sfr.net
-iptoasn.com     LDCOMNET
+malicious       0% (0/10) ✅
+--- 115.159.53.216 ---
+db-ip.com       Shenzhen (Futian Qu), China
+iptoasn.com     TENCENT-NET-AP Shenzhen Tencent Computer Systems Company Limited
 is on AWS       false
+isc.sans.edu    attacks: 0, abuse contact: ipas@cnnic.cn
 ping            100% packet loss (5/0), avg round-trip 0 ms
-malicious       0% (0/6) ✅
+malicious       0% (0/10) ✅
 ```
 
 Generate 100 random IP addresses and select Russian or Chinese:
 
 ```
-❯ ./randip 100 | checkip -c 20 -j 2> /dev/null | \
-jq -r '.ipaddr as $ip | .checks[] | select (.name == "db-ip.com" and (.info.iso_code == "RU" or .info.iso_code == "CN")) | $ip'
-43.33.161.208
-223.13.196.8
+❯ ./randip 100 | checkip -p 20 -j 2> /dev/null | jq -r '.ipAddr as $ip | .checks[] | select (.description == "db-ip.com" and (.ipAddrInfo.iso_code == "RU" or .ipAddrInfo.iso_code == "CN")) | $ip'
+218.19.226.129
+119.32.13.38
+139.210.45.205
 ```
 
 Find out who is trying to SSH into your Linux system:
@@ -145,10 +150,8 @@ Data used by some checks are downloaded (cached) to `$HOME/.checkip/` folder. Th
 
 Checkip is easy to extend. If you want to add a new way of checking IP addresses:
 
-1. Write a function of type `check.Check`.
-2. Add the new check to `check.Checks` variable.
-
-See `checkip_test.go` for an example.
+1. Write a function of type `check.Func`.
+2. Add the new check to `check.Funcs` variable.
 
 Typical workflow:
 
