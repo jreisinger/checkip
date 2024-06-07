@@ -20,7 +20,7 @@ is on AWS       false
 isc.sans.edu    attacks: 0, abuse contact: domains@eset.sk
 ping            100% packet loss (5/0), avg round-trip 0 ms
 tls             TLS 1.3, exp. 2024/01/02!!, www.eset.com, eset.com
-malicious       8% (1/12) ✅
+malicious prob. 8% (1/12) ✅
 ```
 
 Check multiple IP addresses coming from STDIN:
@@ -35,7 +35,7 @@ is on AWS       false
 isc.sans.edu    attacks: 0, abuse contact: domains@eset.sk
 ping            100% packet loss (5/0), avg round-trip 0 ms
 tls             TLS 1.3, exp. 2024/01/02!!, www.eset.com, eset.com
-malicious       9% (1/11) ✅
+malicious prob. 9% (1/11) ✅
 --- 91.228.166.47 ---
 db-ip.com       Petržalka, Slovakia
 dns name        skh1-webredir01-v.eset.com
@@ -44,7 +44,7 @@ is on AWS       false
 isc.sans.edu    attacks: 0, abuse contact: domains@eset.sk
 ping            100% packet loss (5/0), avg round-trip 0 ms
 tls             TLS 1.3, exp. 2024/01/02!!, www.eset.com, eset.com
-malicious       8% (1/12) ✅
+malicious prob. 8% (1/12) ✅
 ```
 
 Use detailed JSON output to filter out those checks that consider the IP address to be malicious:
@@ -77,14 +77,14 @@ iptoasn.com     CHARTER-20115
 is on AWS       false
 isc.sans.edu    attacks: 0, abuse contact: abuse@charter.net
 ping            100% packet loss (5/0), avg round-trip 0 ms
-malicious       0% (0/10) ✅
+malicious prob. 0% (0/10) ✅
 --- 115.159.53.216 ---
 db-ip.com       Shenzhen (Futian Qu), China
 iptoasn.com     TENCENT-NET-AP Shenzhen Tencent Computer Systems Company Limited
 is on AWS       false
 isc.sans.edu    attacks: 0, abuse contact: ipas@cnnic.cn
 ping            100% packet loss (5/0), avg round-trip 0 ms
-malicious       0% (0/10) ✅
+malicious prob. 0% (0/10) ✅
 ```
 
 Generate 100 random IP addresses and select Russian or Chinese:
@@ -107,12 +107,12 @@ db-ip.com       Frankfurt am Main, Germany
 iptoasn.com     DIGITALOCEAN-ASN
 ping            0% packet loss (5/5), avg round-trip 21 ms
 tls             TLS 1.3, exp. 2024/12/27, portal.itruck.com.sa, www.portal.itruck.com.sa
-malicious       43% (3/7) 🤏
+malicious prob. 43% (3/7) 🤏
 --- 180.168.95.234 ---
 db-ip.com       Shanghai, China
 iptoasn.com     CHINANET-SH-AP China Telecom Group
 ping            0% packet loss (5/5), avg round-trip 213 ms
-malicious       50% (3/6) 🚫
+malicious prob. 50% (3/6) 🚫
 ```
 
 ## Installation

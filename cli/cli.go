@@ -91,7 +91,7 @@ func (rs Checks) PrintSummary() {
 func (rs Checks) PrintMalicious() {
 	total, malicious, prob := rs.maliciousStats()
 	msg := fmt.Sprintf("%-15s %.0f%% (%d/%d) ",
-		"malicious", math.Round(prob*100), malicious, total)
+		"malicious prob.", math.Round(prob*100), malicious, total)
 	switch {
 	case prob >= 0.50:
 		msg += `🚫`
