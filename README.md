@@ -6,6 +6,13 @@
 
 Sometimes I come across an IP address, for example when reviewing logs. And I'd like to find out more about this numerical label. Checkip is CLI tool and Go [library](https://pkg.go.dev/github.com/jreisinger/checkip/check) that provides infomation on and security posture of IP addresses. Most checks are passive and active checks (like ping and tls) are not aggressive.
 
+## Quick start
+
+```
+❯ go install github.com/jreisinger/checkip@latest
+❯ checkip 1.1.1.1
+```
+
 ## Usage examples
 
 Check an IP address:
