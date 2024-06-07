@@ -145,9 +145,10 @@ Data used by some checks are downloaded (cached) to `$HOME/.checkip/` folder. Th
 
 Checkip is easy to extend. If you want to add a new way of checking IP addresses:
 
-1. Write a function of type [Check](https://pkg.go.dev/github.com/jreisinger/checkip#Check). 
-2. Add the new check to `check.All` [variable](https://pkg.go.dev/github.com/jreisinger/checkip/check#pkg-variables)
-3. Optional: consider adding the new check to `check.Default` variable.
+1. Write a function of type `check.Check`.
+2. Add the new check to `check.Checks` variable.
+
+See `checkip_test.go` for an example.
 
 Typical workflow:
 

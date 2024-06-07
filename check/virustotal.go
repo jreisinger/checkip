@@ -39,10 +39,10 @@ func (v virusTotal) Json() ([]byte, error) {
 
 // VirusTotal gets generic information and security reputation about the ippaddr
 // from https://www.virustotal.com/api.
-func VirusTotal(ipaddr net.IP) (Result, error) {
-	result := Result{
-		Name: "virustotal.com",
-		Type: TypeInfoSec,
+func VirusTotal(ipaddr net.IP) (Check, error) {
+	result := Check{
+		Description: "virustotal.com",
+		Type:        TypeInfoAndIsMalicious,
 	}
 
 	apiKey, err := getConfigValue("VIRUSTOTAL_API_KEY")
@@ -62,8 +62,8 @@ func VirusTotal(ipaddr net.IP) (Result, error) {
 		return result, newCheckError(err)
 	}
 
-	result.Info = virusTotal
-	result.Malicious = virusTotal.Data.Attributes.Reputation < 0
+	result.IpAddrInfo = virusTotal
+	result.IpAddrIsMalicious = virusTotal.Data.Attributes.Reputation < 0
 
 	return result, nil
 }

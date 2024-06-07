@@ -7,12 +7,12 @@ import (
 	"strings"
 )
 
-// MX maps MX records to domain names.
-type MX struct {
+// mx maps mx records to domain names.
+type mx struct {
 	Records map[string][]string `json:"records"` // domain => MX records
 }
 
-func (mx MX) Summary() string {
+func (mx mx) Summary() string {
 	var s string
 	for domain, mxRecords := range mx.Records {
 		if domain == "" && len(mxRecords) == 0 {
@@ -26,17 +26,17 @@ func (mx MX) Summary() string {
 	return na(s)
 }
 
-func (mx MX) Json() ([]byte, error) {
+func (mx mx) Json() ([]byte, error) {
 	return json.Marshal(mx)
 }
 
 // DnsMX performs reverse lookup and consults AbuseIPDB to get domain names fo
 // the ipaddr. Then it looks up MX records (mail servers) for the given domain
 // names.
-func DnsMX(ipaddr net.IP) (Result, error) {
-	result := Result{
-		Name: "dns mx",
-		Type: TypeInfo,
+func DnsMX(ipaddr net.IP) (Check, error) {
+	result := Check{
+		Description: "dns mx",
+		Type:        TypeInfo,
 	}
 
 	names, _ := net.LookupAddr(ipaddr.String()) // NOTE: ignoring error
@@ -54,10 +54,10 @@ func DnsMX(ipaddr net.IP) (Result, error) {
 	if err != nil {
 		return result, newCheckError(err)
 	}
-	if r.Info == nil {
+	if r.IpAddrInfo == nil {
 		return result, nil
 	}
-	j, err := r.Info.Json()
+	j, err := r.IpAddrInfo.Json()
 	if err != nil {
 		return result, newCheckError(err)
 	}
@@ -69,7 +69,7 @@ func DnsMX(ipaddr net.IP) (Result, error) {
 	}
 	names = append(names, a.Domain)
 
-	var mx MX
+	var mx mx
 	for _, n := range names {
 		var mxRecords2 []string
 		mxRecords, _ := net.LookupMX(n) // NOTE: ingoring error
@@ -81,7 +81,7 @@ func DnsMX(ipaddr net.IP) (Result, error) {
 		}
 		mx.Records[n] = mxRecords2
 	}
-	result.Info = mx
+	result.IpAddrInfo = mx
 
 	return result, nil
 }

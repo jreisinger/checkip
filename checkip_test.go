@@ -12,14 +12,14 @@ import (
 // Example shows how to run two checks: CheckIsWellKnow we define here and check.DnsName.
 func Example() {
 	ipaddr := net.ParseIP("1.1.1.1")
-	results, _ := cli.Run([]check.Check{CheckIsWellKnown, check.DnsName}, ipaddr)
+	results, _ := cli.Run([]check.IpAddr{CheckIsWellKnown, check.DnsName}, ipaddr)
 	results.PrintSummary()
 	// Output: well known      true
 	// dns name        one.one.one.one
 }
 
-func CheckIsWellKnown(ipaddr net.IP) (check.Result, error) {
-	res := check.Result{Name: "well known"}
+func CheckIsWellKnown(ipaddr net.IP) (check.Check, error) {
+	res := check.Check{Description: "well known"}
 
 	wellKnown := []net.IP{
 		net.ParseIP("1.1.1.1"),
@@ -29,7 +29,7 @@ func CheckIsWellKnown(ipaddr net.IP) (check.Result, error) {
 
 	for _, wk := range wellKnown {
 		if string(ipaddr) == string(wk) {
-			res.Info = IsWellKnown(true)
+			res.IpAddrInfo = IsWellKnown(true)
 			break
 		}
 	}

@@ -15,14 +15,14 @@ import (
 )
 
 // Run runs checks concurrently against the ippaddr.
-func Run(checks []check.Check, ipaddr net.IP) (Results, []error) {
-	var results Results
+func Run(checks []check.IpAddr, ipaddr net.IP) (Checks, []error) {
+	var results Checks
 	var errors []error
 
 	var wg sync.WaitGroup
 	for _, chk := range checks {
 		wg.Add(1)
-		go func(c check.Check) {
+		go func(c check.IpAddr) {
 			defer wg.Done()
 			r, err := c(ipaddr)
 			if err != nil {
@@ -37,11 +37,11 @@ func Run(checks []check.Check, ipaddr net.IP) (Results, []error) {
 	return results, errors
 }
 
-// Results are generic or security information provided by a Check.
-type Results []check.Result
+// Checks are generic or security information provided by a Check.
+type Checks []check.Check
 
 // PrintJSON prints all results in JSON.
-func (rs Results) PrintJSON(ipaddr net.IP) {
+func (rs Checks) PrintJSON(ipaddr net.IP) {
 	// if len(rs) == 0 {
 	// 	return
 	// }
@@ -49,9 +49,9 @@ func (rs Results) PrintJSON(ipaddr net.IP) {
 	_, _, prob := rs.maliciousStats()
 
 	out := struct {
-		IpAddr        net.IP  `json:"ipaddr"`
-		MaliciousProb string  `json:"malicious_prob"`
-		Check         Results `json:"checks"`
+		IpAddr        net.IP `json:"ipAddr"`
+		MaliciousProb string `json:"maliciousProb"`
+		Checks        Checks `json:"checks"`
 	}{
 		ipaddr,
 		fmt.Sprintf("%.2f", prob),
@@ -65,30 +65,30 @@ func (rs Results) PrintJSON(ipaddr net.IP) {
 }
 
 // SortByName sorts Results by name.
-func (rs Results) SortByName() {
+func (rs Checks) SortByName() {
 	sort.Slice(rs, func(i, j int) bool {
-		return rs[i].Name < rs[j].Name
+		return rs[i].Description < rs[j].Description
 	})
 }
 
 // PrintSummary prints summary results from Info and InfoSec checks.
-func (rs Results) PrintSummary() {
+func (rs Checks) PrintSummary() {
 	for _, r := range rs {
 		// To avoid "invalid memory address or nil pointer dereference"
 		// runtime error and printing empty summary info.
-		if r.Info == nil || r.Info.Summary() == "" {
+		if r.IpAddrInfo == nil || r.IpAddrInfo.Summary() == "" {
 			continue
 		}
 
-		if r.Type == check.TypeInfo || r.Type == check.TypeInfoSec {
-			fmt.Printf("%-15s %s\n", r.Name, r.Info.Summary())
+		if r.Type == check.TypeInfo || r.Type == check.TypeInfoAndIsMalicious {
+			fmt.Printf("%-15s %s\n", r.Description, r.IpAddrInfo.Summary())
 		}
 	}
 }
 
 // PrintMalicious prints how many of the InfoSec and Sec checks consider the IP
 // address to be malicious.
-func (rs Results) PrintMalicious() {
+func (rs Checks) PrintMalicious() {
 	total, malicious, prob := rs.maliciousStats()
 	msg := fmt.Sprintf("%-15s %.0f%% (%d/%d) ",
 		"malicious", math.Round(prob*100), malicious, total)
@@ -103,14 +103,14 @@ func (rs Results) PrintMalicious() {
 	fmt.Println(msg)
 }
 
-func (rs Results) maliciousStats() (total, malicious int, prob float64) {
+func (rs Checks) maliciousStats() (total, malicious int, prob float64) {
 	for _, r := range rs {
 		// if r.Info == nil {
 		// 	continue
 		// }
-		if r.Type == check.TypeSec || r.Type == check.TypeInfoSec {
+		if r.Type == check.TypeIsMalicious || r.Type == check.TypeInfoAndIsMalicious {
 			total++
-			if r.Malicious {
+			if r.IpAddrIsMalicious {
 				malicious++
 			}
 		}

@@ -9,10 +9,10 @@ import (
 
 // Firehol checks whether the ipaddr is found on blacklist
 // https://iplists.firehol.org/?ipset=firehol_level1.
-func Firehol(ipaddr net.IP) (Result, error) {
-	result := Result{
-		Name: "firehol.org",
-		Type: TypeSec,
+func Firehol(ipaddr net.IP) (Check, error) {
+	result := Check{
+		Description: "firehol.org",
+		Type:        TypeIsMalicious,
 	}
 
 	file, err := getCachePath("firehol_level1.netset")
@@ -36,7 +36,7 @@ func Firehol(ipaddr net.IP) (Result, error) {
 	if err != nil {
 		return result, err
 	}
-	result.Malicious = found
+	result.IpAddrIsMalicious = found
 
 	return result, nil
 }

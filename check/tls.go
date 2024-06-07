@@ -43,10 +43,10 @@ func (t tlsinfo) Json() ([]byte, error) {
 }
 
 // Tls finds out TLS information by connecting to the ipaddr and TCP port 443.
-func Tls(ipaddr net.IP) (Result, error) {
-	result := Result{
-		Name: "tls",
-		Type: TypeInfoSec,
+func Tls(ipaddr net.IP) (Check, error) {
+	result := Check{
+		Description: "tls",
+		Type:        TypeInfoAndIsMalicious,
 	}
 
 	address := net.JoinHostPort(ipaddr.String(), "443")
@@ -87,10 +87,10 @@ func Tls(ipaddr net.IP) (Result, error) {
 		Expiry:  expiry,
 	}
 
-	result.Info = t
+	result.IpAddrInfo = t
 
 	if oldTlsVersion(conn.ConnectionState().Version) || expiredCert(t.Expiry) {
-		result.Malicious = true
+		result.IpAddrIsMalicious = true
 	}
 
 	return result, nil

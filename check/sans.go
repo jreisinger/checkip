@@ -28,10 +28,10 @@ func (s sans) Json() ([]byte, error) {
 
 // SansISC gets info from SANS Internet Storm Center API.
 // curl "https://isc.sans.edu/api/ip/${IPADDR}?json"
-func SansISC(ipaddr net.IP) (Result, error) {
-	result := Result{
-		Name: "isc.sans.edu",
-		Type: TypeInfoSec,
+func SansISC(ipaddr net.IP) (Check, error) {
+	result := Check{
+		Description: "isc.sans.edu",
+		Type:        TypeInfoAndIsMalicious,
 	}
 
 	u, err := url.Parse(sansUrl)
@@ -46,8 +46,8 @@ func SansISC(ipaddr net.IP) (Result, error) {
 		return result, newCheckError(err)
 	}
 
-	result.Info = sans
-	result.Malicious = sans.Ip.Attacks > 0
+	result.IpAddrInfo = sans
+	result.IpAddrIsMalicious = sans.Ip.Attacks > 0
 
 	return result, nil
 }

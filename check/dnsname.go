@@ -6,22 +6,22 @@ import (
 	"strings"
 )
 
-// Names are the DNS names of the given IP address.
-type Names []string
+// dnsNames are the DNS names of the given IP address.
+type dnsNames []string
 
-func (n Names) Summary() string {
+func (n dnsNames) Summary() string {
 	return strings.Join(n, ", ")
 }
 
-func (n Names) Json() ([]byte, error) {
+func (n dnsNames) Json() ([]byte, error) {
 	return json.Marshal(n)
 }
 
 // DnsName does a reverse lookup for a given IP address to get its names.
-func DnsName(ipaddr net.IP) (Result, error) {
-	result := Result{
-		Name: "dns name",
-		Type: TypeInfo,
+func DnsName(ipaddr net.IP) (Check, error) {
+	result := Check{
+		Description: "dns name",
+		Type:        TypeInfo,
 	}
 
 	names, err := net.LookupAddr(ipaddr.String())
@@ -36,7 +36,7 @@ func DnsName(ipaddr net.IP) (Result, error) {
 	for i := range names {
 		names[i] = strings.TrimSuffix(names[i], ".")
 	}
-	result.Info = Names(names)
+	result.IpAddrInfo = dnsNames(names)
 
 	return result, nil
 }

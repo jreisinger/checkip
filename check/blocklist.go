@@ -8,10 +8,10 @@ import (
 )
 
 // BlockList searches the ipaddr in lists.blocklist.de/lists/dnsbl/all.list.
-func BlockList(ipaddr net.IP) (Result, error) {
-	result := Result{
-		Name: "blocklist.de",
-		Type: TypeSec,
+func BlockList(ipaddr net.IP) (Check, error) {
+	result := Check{
+		Description: "blocklist.de",
+		Type:        TypeIsMalicious,
 	}
 
 	file, err := getBlockListFile()
@@ -24,7 +24,7 @@ func BlockList(ipaddr net.IP) (Result, error) {
 	for input.Scan() {
 		fields := strings.Split(input.Text(), ":")
 		if net.ParseIP(fields[0]).Equal(ipaddr) {
-			result.Malicious = true
+			result.IpAddrIsMalicious = true
 			break
 		}
 	}

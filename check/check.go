@@ -1,4 +1,4 @@
-// Package check contains functions that can check an IP address.
+// Package check contains types and functions for getting information on IP addresses.
 package check
 
 import (
@@ -10,13 +10,13 @@ import (
 
 // Existing Check types.
 const (
-	TypeInfo    Type = iota // generic information about the IP address
-	TypeSec                 // whether the IP address is considered malicious
-	TypeInfoSec             // both of the above
+	TypeInfo               Type = iota // some information about the IP address
+	TypeIsMalicious                    // whether the IP address is considered malicious
+	TypeInfoAndIsMalicious             // both of the above
 )
 
-// Checks contains all available checks.
-var Checks = []Check{
+// All contains all available checks.
+var All = []IpAddr{
 	AbuseIPDB,
 	BlockList,
 	CinsScore,
@@ -43,7 +43,7 @@ type Type int
 
 // String returns the name of the Check type.
 func (t Type) String() string {
-	return [...]string{"info", "sec", "infosec"}[t]
+	return [...]string{"Info", "IsMalicious", "InfoAndIsMalicious"}[t]
 }
 
 func (t Type) MarshalJSON() ([]byte, error) {
@@ -51,20 +51,20 @@ func (t Type) MarshalJSON() ([]byte, error) {
 	return json.Marshal(s)
 }
 
-// Check provides generic and/or security information about an IP address.
-type Check func(ipaddr net.IP) (Result, error)
+// IpAddr gatahers generic and/or security information about an IpAddr address.
+type IpAddr func(ipaddr net.IP) (Check, error)
 
-// Result is the information provided by a Check.
-type Result struct {
-	Name               string `json:"name"` // check name, max 15 chars
-	Type               Type   `json:"type"` // check type
-	MissingCredentials string `json:"missing_credentials,omitempty"`
-	Malicious          bool   `json:"malicious"` // provided by TypeSec and TypeInfoSec check type
-	Info               Info   `json:"info"`
+// Check is the information gathered about an IP address.
+type Check struct {
+	Description        string `json:"description"` // max 15 chars
+	Type               Type   `json:"type"`
+	MissingCredentials string `json:"missingCredentials,omitempty"`
+	IpAddrIsMalicious  bool   `json:"ipAddrIsMalicious"`
+	IpAddrInfo         IpInfo `json:"ipAddrInfo"`
 }
 
-// Info is generic information provided by a TypeInfo or TypeInfoSec Check.
-type Info interface {
+// IpInfo is generic information on an IP address.
+type IpInfo interface {
 	Summary() string       // summary info
 	Json() ([]byte, error) // all info in JSON format
 }

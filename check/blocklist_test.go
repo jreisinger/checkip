@@ -14,9 +14,9 @@ func TestBlockList(t *testing.T) {
 		setBlockLisFileMock(t, getBlockListFileMock)
 		result, err := BlockList(net.ParseIP("66.249.70.34"))
 		require.NoError(t, err)
-		assert.Equal(t, "blocklist.de", result.Name)
-		assert.Equal(t, TypeSec, result.Type)
-		assert.Equal(t, true, result.Malicious)
+		assert.Equal(t, "blocklist.de", result.Description)
+		assert.Equal(t, TypeIsMalicious, result.Type)
+		assert.Equal(t, true, result.IpAddrIsMalicious)
 	})
 }
 

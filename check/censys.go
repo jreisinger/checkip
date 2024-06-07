@@ -40,10 +40,10 @@ func basicAuth(username, password string) string {
 }
 
 // Censys gets generic information from search.censys.io.
-func Censys(ipaddr net.IP) (Result, error) {
-	result := Result{
-		Name: "censys.io",
-		Type: TypeInfoSec,
+func Censys(ipaddr net.IP) (Check, error) {
+	result := Check{
+		Description: "censys.io",
+		Type:        TypeInfoAndIsMalicious,
 	}
 
 	apiKey, err := getConfigValue("CENSYS_KEY")
@@ -75,12 +75,12 @@ func Censys(ipaddr net.IP) (Result, error) {
 	if err := defaultHttpClient.GetJson(apiURL, headers, map[string]string{}, &censys); err != nil {
 		return result, newCheckError(err)
 	}
-	result.Info = censys
+	result.IpAddrInfo = censys
 
 	for _, d := range censys.Result.Data {
 		port := d.Port
 		if port != 80 && port != 443 && port != 53 { // undecidable ports
-			result.Malicious = true
+			result.IpAddrIsMalicious = true
 		}
 	}
 

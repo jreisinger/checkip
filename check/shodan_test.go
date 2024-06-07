@@ -26,9 +26,9 @@ func TestShodan(t *testing.T) {
 
 		result, err := Shodan(net.ParseIP("118.25.6.39"))
 		require.NoError(t, err)
-		assert.Equal(t, "shodan.io", result.Name)
-		assert.Equal(t, TypeInfoSec, result.Type)
-		assert.Equal(t, true, result.Malicious)
+		assert.Equal(t, "shodan.io", result.Description)
+		assert.Equal(t, TypeInfoAndIsMalicious, result.Type)
+		assert.Equal(t, true, result.IpAddrIsMalicious)
 	})
 
 	t.Run("given non 2xx response then error is returned", func(t *testing.T) {

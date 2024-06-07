@@ -34,10 +34,10 @@ func (d dbip) Json() ([]byte, error) {
 }
 
 // DBip gets geolocation from https://db-ip.com/db/download/ip-to-city-lite.
-func DBip(ip net.IP) (Result, error) {
-	result := Result{
-		Name: "db-ip.com",
-		Type: TypeInfo,
+func DBip(ip net.IP) (Check, error) {
+	result := Check{
+		Description: "db-ip.com",
+		Type:        TypeInfo,
 	}
 
 	// file := "/var/tmp/dbip-city-lite.mmdb"
@@ -66,7 +66,7 @@ func DBip(ip net.IP) (Result, error) {
 		return result, newCheckError(err)
 	}
 
-	result.Info = dbip{
+	result.IpAddrInfo = dbip{
 		City:    geo.City.Names["en"],
 		Country: geo.Country.Names["en"],
 		IsoCode: geo.Country.IsoCode,

@@ -23,10 +23,10 @@ func (ps phishstats) Json() ([]byte, error) {
 
 // PhishStats checks whether the ipaddr is involved in phishing according to
 // https://phishstats.info/phish_score.csv.
-func PhishStats(ipaddr net.IP) (Result, error) {
-	result := Result{
-		Name: "phishstats.info",
-		Type: TypeInfoSec,
+func PhishStats(ipaddr net.IP) (Check, error) {
+	result := Check{
+		Description: "phishstats.info",
+		Type:        TypeInfoAndIsMalicious,
 	}
 
 	file, err := getCachePath("phish_score.csv")
@@ -42,9 +42,9 @@ func PhishStats(ipaddr net.IP) (Result, error) {
 	if err != nil {
 		return result, err
 	}
-	result.Info = ps
+	result.IpAddrInfo = ps
 	if ps.Score > 2 {
-		result.Malicious = true
+		result.IpAddrIsMalicious = true
 	}
 
 	return result, nil

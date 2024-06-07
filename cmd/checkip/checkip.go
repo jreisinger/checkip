@@ -19,12 +19,12 @@ func init() {
 	log.SetPrefix(os.Args[0] + ": ")
 }
 
-var j = flag.Bool("j", false, "output all results in JSON")
+var j = flag.Bool("j", false, "detailed output in JSON")
 var p = flag.Int("p", 5, "check `n` IP addresses in parallel")
 
 type IpAndResults struct {
 	IP      net.IP
-	Results cli.Results
+	Results cli.Checks
 }
 
 func main() {
@@ -45,7 +45,7 @@ func main() {
 		wg.Add(1)
 		go func() {
 			for ipaddr := range ipaddrsCh {
-				r, errors := cli.Run(check.Checks, ipaddr)
+				r, errors := cli.Run(check.All, ipaddr)
 				for _, e := range errors {
 					log.Print(e)
 				}

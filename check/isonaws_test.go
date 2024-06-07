@@ -28,8 +28,8 @@ func TestIsOnAWS(t *testing.T) {
 		if err != nil {
 			t.Fatalf("check.IsOnAWS(%s) failed: %v", ipaddr, err)
 		}
-		if r.Info.Summary() != test.summary {
-			t.Errorf("test %d\ngot\t%q\nwant\t%q", i, r.Info.Summary(), test.summary)
+		if r.IpAddrInfo.Summary() != test.summary {
+			t.Errorf("test %d\ngot\t%q\nwant\t%q", i, r.IpAddrInfo.Summary(), test.summary)
 		}
 	}
 }

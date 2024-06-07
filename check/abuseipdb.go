@@ -37,8 +37,8 @@ func (a abuseIPDB) Json() ([]byte, error) {
 
 // AbuseIPDB uses api.abuseipdb.com to get generic information about ipaddr and
 // to see if the ipaddr has been reported as malicious.
-func AbuseIPDB(ipaddr net.IP) (Result, error) {
-	result := Result{Name: "abuseipdb.com", Type: TypeInfoSec}
+func AbuseIPDB(ipaddr net.IP) (Check, error) {
+	result := Check{Description: "abuseipdb.com", Type: TypeInfoAndIsMalicious}
 
 	apiKey, err := getConfigValue("ABUSEIPDB_API_KEY")
 	if err != nil {
@@ -68,8 +68,8 @@ func AbuseIPDB(ipaddr net.IP) (Result, error) {
 		return result, newCheckError(err)
 	}
 
-	result.Info = response.Data
-	result.Malicious = response.Data.TotalReports > 0 &&
+	result.IpAddrInfo = response.Data
+	result.IpAddrIsMalicious = response.Data.TotalReports > 0 &&
 		!response.Data.IsWhitelisted &&
 		response.Data.AbuseConfidenceScore > 25
 

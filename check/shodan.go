@@ -26,10 +26,10 @@ type shodanData []struct {
 var shodanUrl = "https://api.shodan.io"
 
 // Shodan gets generic information from api.shodan.io.
-func Shodan(ipaddr net.IP) (Result, error) {
-	result := Result{
-		Name: "shodan.io",
-		Type: TypeInfoSec,
+func Shodan(ipaddr net.IP) (Check, error) {
+	result := Check{
+		Description: "shodan.io",
+		Type:        TypeInfoAndIsMalicious,
 	}
 
 	apiKey, err := getConfigValue("SHODAN_API_KEY")
@@ -49,10 +49,10 @@ func Shodan(ipaddr net.IP) (Result, error) {
 	if len(shodan.Vulns) == 0 {
 		shodan.Vulns = make([]string, 0)
 	}
-	result.Info = shodan
+	result.IpAddrInfo = shodan
 
 	if len(shodan.Vulns) > 0 {
-		result.Malicious = true
+		result.IpAddrIsMalicious = true
 	}
 
 	return result, nil

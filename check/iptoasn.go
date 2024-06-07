@@ -11,7 +11,7 @@ import (
 	"strings"
 )
 
-type AutonomousSystem struct {
+type autonomousSystem struct {
 	Number      int    `json:"-"`
 	FirstIP     net.IP `json:"-"`
 	LastIP      net.IP `json:"-"`
@@ -19,20 +19,20 @@ type AutonomousSystem struct {
 	CountryCode string `json:"-"`
 }
 
-func (a AutonomousSystem) Summary() string {
+func (a autonomousSystem) Summary() string {
 	return a.Description
 }
 
-func (a AutonomousSystem) Json() ([]byte, error) {
+func (a autonomousSystem) Json() ([]byte, error) {
 	return json.Marshal(a)
 }
 
 // IPtoASN gets info about autonomous system of the ipaddr. The data is taken
 // from https://iptoasn.com/data/ip2asn-combined.tsv.gz.
-func IPtoASN(ipaddr net.IP) (Result, error) {
-	result := Result{
-		Name: "iptoasn.com",
-		Type: TypeInfo,
+func IPtoASN(ipaddr net.IP) (Check, error) {
+	result := Check{
+		Description: "iptoasn.com",
+		Type:        TypeInfo,
 	}
 
 	// file := "/var/tmp/ip2asn-combined.tsv"
@@ -51,19 +51,19 @@ func IPtoASN(ipaddr net.IP) (Result, error) {
 	if err != nil {
 		return result, newCheckError(fmt.Errorf("searching %s in %s: %v", ipaddr, file, err))
 	}
-	result.Info = as
+	result.IpAddrInfo = as
 
 	return result, nil
 }
 
 // search the ippadrr in tsvFile and if found fills in AS data.
-func asSearch(ipaddr net.IP, tsvFile string) (AutonomousSystem, error) {
+func asSearch(ipaddr net.IP, tsvFile string) (autonomousSystem, error) {
 	tsv, err := os.Open(tsvFile)
 	if err != nil {
-		return AutonomousSystem{}, err
+		return autonomousSystem{}, err
 	}
 
-	as := AutonomousSystem{}
+	as := autonomousSystem{}
 	s := bufio.NewScanner(tsv)
 	for s.Scan() {
 		line := s.Text()
@@ -73,7 +73,7 @@ func asSearch(ipaddr net.IP, tsvFile string) (AutonomousSystem, error) {
 		if ipIsBetween(ipaddr, as.FirstIP, as.LastIP) {
 			as.Number, err = strconv.Atoi(fields[2])
 			if err != nil {
-				return AutonomousSystem{}, fmt.Errorf("converting string to int: %v", err)
+				return autonomousSystem{}, fmt.Errorf("converting string to int: %v", err)
 			}
 			as.CountryCode = fields[3]
 			as.Description = fields[4]
@@ -81,7 +81,7 @@ func asSearch(ipaddr net.IP, tsvFile string) (AutonomousSystem, error) {
 		}
 	}
 	if s.Err() != nil {
-		return AutonomousSystem{}, err
+		return autonomousSystem{}, err
 	}
 	return as, nil
 }

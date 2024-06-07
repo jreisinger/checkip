@@ -33,10 +33,10 @@ func (m maxmind) Json() ([]byte, error) {
 }
 
 // MaxMind gets geolocation data from maxmind.com's GeoLite2-City.mmdb.
-func MaxMind(ip net.IP) (Result, error) {
-	result := Result{
-		Name: "maxmind.com",
-		Type: TypeInfo,
+func MaxMind(ip net.IP) (Check, error) {
+	result := Check{
+		Description: "maxmind.com",
+		Type:        TypeInfo,
 	}
 
 	licenseKey, err := getConfigValue("MAXMIND_LICENSE_KEY")
@@ -71,7 +71,7 @@ func MaxMind(ip net.IP) (Result, error) {
 		return result, newCheckError(err)
 	}
 
-	result.Info = maxmind{
+	result.IpAddrInfo = maxmind{
 		City:    geo.City.Names["en"],
 		Country: geo.Country.Names["en"],
 		IsoCode: geo.Country.IsoCode,

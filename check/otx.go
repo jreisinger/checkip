@@ -16,10 +16,10 @@ type otx struct {
 
 // OTX counts pulses to find out whether the ipaddr is malicious. Is uses
 // https://otx.alienvault.com/api/v1/indicators/IPv4.
-func OTX(ipaddr net.IP) (Result, error) {
-	result := Result{
-		Name: "otx.alienvault.com",
-		Type: TypeSec,
+func OTX(ipaddr net.IP) (Check, error) {
+	result := Check{
+		Description: "otx.alienvault.com",
+		Type:        TypeIsMalicious,
 	}
 
 	u, err := url.Parse(otxUrl)
@@ -32,7 +32,7 @@ func OTX(ipaddr net.IP) (Result, error) {
 	if err := defaultHttpClient.GetJson(u.String(), map[string]string{}, map[string]string{}, &otx); err != nil {
 		return result, newCheckError(err)
 	}
-	result.Malicious = otx.PulseInfo.Count > 10
+	result.IpAddrIsMalicious = otx.PulseInfo.Count > 10
 
 	return result, nil
 }

@@ -13,10 +13,10 @@ type cins struct {
 }
 
 // CinsScore searches ipaddr in https://cinsscore.com/list/ci-badguys.txt.
-func CinsScore(ipaddr net.IP) (Result, error) {
-	result := Result{
-		Name: "cinsscore.com",
-		Type: TypeSec,
+func CinsScore(ipaddr net.IP) (Check, error) {
+	result := Check{
+		Description: "cinsscore.com",
+		Type:        TypeIsMalicious,
 	}
 
 	// file := "/var/tmp/cins.txt"
@@ -36,7 +36,7 @@ func CinsScore(ipaddr net.IP) (Result, error) {
 		return result, newCheckError(fmt.Errorf("searching %s in %s: %v", ipaddr, file, err))
 	}
 
-	result.Malicious = cins.BadGuyIP
+	result.IpAddrIsMalicious = cins.BadGuyIP
 
 	return result, nil
 }

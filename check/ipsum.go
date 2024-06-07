@@ -11,10 +11,10 @@ import (
 
 // IPSum checks how many blacklists the ipaddr is found on. It uses
 // https://raw.githubusercontent.com/stamparm/ipsum/master/ipsum.txt.
-func IPSum(ipaddr net.IP) (Result, error) {
-	result := Result{
-		Name: "github.com/stamparm/ipsum",
-		Type: TypeSec,
+func IPSum(ipaddr net.IP) (Check, error) {
+	result := Check{
+		Description: "github.com/stamparm/ipsum",
+		Type:        TypeIsMalicious,
 	}
 
 	// file := "/var/tmp/ipsum.txt"
@@ -33,7 +33,7 @@ func IPSum(ipaddr net.IP) (Result, error) {
 	if err != nil {
 		return result, newCheckError(fmt.Errorf("searching %s in %s: %v", ipaddr, file, err))
 	}
-	result.Malicious = blackLists > 0
+	result.IpAddrIsMalicious = blackLists > 0
 
 	return result, nil
 }

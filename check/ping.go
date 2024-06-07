@@ -11,10 +11,10 @@ import (
 
 // Ping sends five pings (ICMP echo request packets) to the ippaddr and returns
 // the statistics.
-func Ping(ipaddr net.IP) (Result, error) {
-	result := Result{
-		Name: "ping",
-		Type: TypeInfo,
+func Ping(ipaddr net.IP) (Check, error) {
+	result := Check{
+		Description: "ping",
+		Type:        TypeInfo,
 	}
 
 	pinger, err := ping.NewPinger(ipaddr.String())
@@ -29,7 +29,7 @@ func Ping(ipaddr net.IP) (Result, error) {
 	}
 
 	ps := pinger.Statistics() // get send/receive/duplicate/rtt stats
-	result.Info = stats(*ps)
+	result.IpAddrInfo = stats(*ps)
 
 	return result, nil
 }

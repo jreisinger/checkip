@@ -13,10 +13,10 @@ const days = 30 // limit search to last 30 days
 // UrlScan gets data from urlscan.io. When a URL is submitted to urlscan.io, an
 // automated process will browse to the URL like a regular user and record the
 // activity that this page navigation creates.
-func UrlScan(ipaddr net.IP) (Result, error) {
-	result := Result{
-		Name: "urlscan.io",
-		Type: TypeInfoSec,
+func UrlScan(ipaddr net.IP) (Check, error) {
+	result := Check{
+		Description: "urlscan.io",
+		Type:        TypeInfoAndIsMalicious,
 	}
 
 	apiKey, err := getConfigValue("URLSCAN_API_KEY")
@@ -57,8 +57,8 @@ func UrlScan(ipaddr net.IP) (Result, error) {
 		// time.Sleep(time.Millisecond * 100)
 	}
 
-	result.Info = u
-	result.Malicious = float64(maliciousVerdicts)/float64(len(u.Results)) > 0.1
+	result.IpAddrInfo = u
+	result.IpAddrIsMalicious = float64(maliciousVerdicts)/float64(len(u.Results)) > 0.1
 
 	return result, nil
 }

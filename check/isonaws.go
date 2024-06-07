@@ -33,9 +33,9 @@ func (a awsIpRanges) Summary() string {
 
 // IsOnAWS checks if ipaddr belongs to AWS. If so it provides info about the IP
 // address. It gets the info from https://ip-ranges.amazonaws.com/ip-ranges.json
-func IsOnAWS(ipaddr net.IP) (Result, error) {
-	result := Result{
-		Name: "is on AWS",
+func IsOnAWS(ipaddr net.IP) (Check, error) {
+	result := Check{
+		Description: "is on AWS",
 	}
 	resp := struct {
 		Prefixes []struct {
@@ -78,6 +78,6 @@ func IsOnAWS(ipaddr net.IP) (Result, error) {
 		}
 
 	}
-	result.Info = a
+	result.IpAddrInfo = a
 	return result, nil
 }

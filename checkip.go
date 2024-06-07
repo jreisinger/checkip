@@ -1,3 +1,2 @@
-// Package checkip contains types and functions for getting information about an
-// IP address.
+// Package checkip is useful for getting information on IP addresses.
 package checkip
