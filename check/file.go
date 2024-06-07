@@ -14,9 +14,14 @@ import (
 	"time"
 )
 
+var mu sync.Mutex
+
 // getCachePath returns OS specific absolute path to filename that is used to
 // caching data from the Internet. On Unix it will be $HOME/.checkip/<filename>
 func getCachePath(filename string) (string, error) {
+	mu.Lock()
+	defer mu.Unlock()
+
 	usr, err := user.Current()
 	if err != nil {
 		return "", err
@@ -34,8 +39,6 @@ func getCachePath(filename string) (string, error) {
 
 	return filepath.Join(dir, filename), nil
 }
-
-var mu sync.Mutex
 
 // updateFile updates file from url if the file is older than a week. If file
 // does not exist it downloads and creates it. compressFmt is the compression
