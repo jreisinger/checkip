@@ -47,6 +47,7 @@ func AbuseIPDB(ipaddr net.IP) (checkip.Result, error) {
 		return result, newCheckError(err)
 	}
 	if apiKey == "" { // we don't consider missing to be an error
+		result.MissingCredentials = "ABUSEIPDB_API_KEY"
 		return result, nil
 	}
 

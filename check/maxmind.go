@@ -45,6 +45,7 @@ func MaxMind(ip net.IP) (checkip.Result, error) {
 		return result, newCheckError(err)
 	}
 	if licenseKey == "" {
+		result.MissingCredentials = "MAXMIND_LICENSE_KEY"
 		return result, nil
 	}
 
