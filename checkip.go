@@ -3,6 +3,7 @@ package checkip
 
 import (
 	"encoding/json"
+	"fmt"
 	"net"
 )
 
@@ -18,19 +19,11 @@ type Type int
 
 // String returns the name of the Check type.
 func (t Type) String() string {
-	return [...]string{"Info", "Sec", "InfoSec"}[t]
+	return [...]string{"info", "sec", "infosec"}[t]
 }
 
 func (t Type) MarshalJSON() ([]byte, error) {
-	var s string
-	switch t {
-	case TypeInfo:
-		s = "info"
-	case TypeSec:
-		s = "security"
-	case TypeInfoSec:
-		s = "infoAndSecurity"
-	}
+	s := fmt.Sprint(t)
 	return json.Marshal(s)
 }
 
