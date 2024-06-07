@@ -13,20 +13,11 @@ const (
 )
 
 // Type is the type of a Check.
-type Type int32
+type Type int
 
-// String returns the name of the Check type: Info, Sec or InfoSec.
+// String returns the name of the Check type.
 func (t Type) String() string {
-	switch t {
-	case TypeInfo:
-		return "Info"
-	case TypeSec:
-		return "Sec"
-	case TypeInfoSec:
-		return "InfoSec"
-	default:
-		return "Unknown check type"
-	}
+	return [...]string{"Info", "Sec", "InfoSec"}[t]
 }
 
 // Check provides generic and/or security information about an IP address.
