@@ -156,7 +156,7 @@ Checkip is easy to extend. If you want to add a new way of checking IP addresses
 Typical workflow:
 
 ```
-make run # test, install and run
+make run # test and run
 
 git commit -m "backwards compatible bug fix" main.go
 

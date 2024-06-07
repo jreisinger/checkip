@@ -15,26 +15,36 @@ import (
 )
 
 // Run runs checks concurrently against the ippaddr.
-func Run(checks []check.Func, ipaddr net.IP) (Checks, []error) {
-	var results Checks
-	var errors []error
+func Run(checkFuncs []check.Func, ipaddr net.IP) (Checks, []error) {
+	var checksMu struct {
+		sync.Mutex
+		checks []check.Check
+	}
+	var errorsMu struct {
+		sync.Mutex
+		errors []error
+	}
 
 	var wg sync.WaitGroup
-	for _, chk := range checks {
+	for _, cf := range checkFuncs {
 		wg.Add(1)
-		go func(c check.Func) {
+		go func(cf check.Func) {
 			defer wg.Done()
-			r, err := c(ipaddr)
+			c, err := cf(ipaddr)
 			if err != nil {
-				errors = append(errors, err)
+				errorsMu.Lock()
+				errorsMu.errors = append(errorsMu.errors, err)
+				errorsMu.Unlock()
 				return
 			}
-			results = append(results, r)
-		}(chk)
+			checksMu.Lock()
+			checksMu.checks = append(checksMu.checks, c)
+			checksMu.Unlock()
+		}(cf)
 	}
 	wg.Wait()
 
-	return results, errors
+	return checksMu.checks, errorsMu.errors
 }
 
 // Checks are generic or security information provided by a Check.

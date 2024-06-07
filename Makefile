@@ -1,8 +1,8 @@
 test:
-	go test -cover ./...
+	go test ./...
 
-install: test
-	go install checkip.go
+run: test
+	go run -race ./checkip.go 91.228.166.47
 
-run: install
-	checkip 91.228.166.47
+install: run
+	go install ./checkip.go
