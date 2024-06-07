@@ -12,12 +12,8 @@ import (
 
 func TestOnyphe(t *testing.T) {
 
-	apiKey, err := getConfigValue("CENSYS_KEY")
+	apiKey, err := getConfigValue("ONYPHE_API_KEY")
 	if err != nil || apiKey == "" {
-		return
-	}
-	apiSec, err := getConfigValue("CENSYS_SEC")
-	if err != nil || apiSec == "" {
 		return
 	}
 
