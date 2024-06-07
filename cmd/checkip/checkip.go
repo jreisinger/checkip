@@ -8,9 +8,6 @@ import (
 	"log"
 	"net"
 	"os"
-	"reflect"
-	"runtime"
-	"strings"
 	"sync"
 
 	"github.com/jreisinger/checkip/check"
@@ -24,7 +21,6 @@ func init() {
 
 var a = flag.Bool("a", false, "run all available checks")
 var j = flag.Bool("j", false, "output all results in JSON")
-var t = flag.String("t", "", "list of checks")
 var c = flag.Int("c", 5, "IP addresses being checked concurrently")
 
 type IpAndResults struct {
@@ -32,65 +28,10 @@ type IpAndResults struct {
 	Results cli.Results
 }
 
-var funcRegistry = make(map[string]interface{})
-var funcDefaultRegistry = make(map[string]int)
-
-func init() {
-	for _, v := range check.All {
-		name := runtime.FuncForPC(reflect.ValueOf(v).Pointer()).Name()
-		funcRegistry[name] = v
-	}
-	for _, v := range check.Default {
-		name := runtime.FuncForPC(reflect.ValueOf(v).Pointer()).Name()
-		funcDefaultRegistry[name] = 1
-	}
-}
-
 func main() {
-	flag.Usage = func() {
-		fmt.Fprintf(os.Stderr, "Usage of %s [-flag] IP [IP liste]\n", os.Args[0])
-
-		flag.PrintDefaults()
-
-		fmt.Fprintf(os.Stderr, "  * All checks : ")
-		for v := range funcRegistry {
-			v = strings.Replace(v, "github.com/jreisinger/checkip/check.", "", -1)
-			fmt.Fprintf(os.Stderr, "%s, ", v)
-		}
-		fmt.Fprintln(os.Stderr, "")
-		fmt.Fprintf(os.Stderr, "  * Default checks : ")
-		for v := range funcDefaultRegistry {
-			v = strings.Replace(v, "github.com/jreisinger/checkip/check.", "", -1)
-			fmt.Fprintf(os.Stderr, "%s, ", v)
-		}
-		fmt.Fprintln(os.Stderr, "")
-	}
-
 	flag.Parse()
 
-	tcheck := ""
-	if *t == "" {
-		tcheck, _ = check.GetConfigValue("CHECKS")
-	} else {
-		tcheck = *t
-	}
-	tcheck = strings.Replace(tcheck, " ", "", -1)
-	split := strings.Split(tcheck, ",")
-	for _, s := range split {
-		fname := "github.com/jreisinger/checkip/check." + s
-		if funcRegistry[fname] != nil {
-			check.AddUse(funcRegistry[fname])
-		}
-	}
-
-	use := check.Use
-
 	checks := check.Default
-	if len(use) > 0 {
-		fmt.Println("Checks: " + tcheck)
-		checks = use
-	}
-
 	if *a {
 		checks = check.All
 	}
