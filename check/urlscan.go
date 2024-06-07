@@ -26,6 +26,7 @@ func UrlScan(ipaddr net.IP) (checkip.Result, error) {
 		return result, newCheckError(err)
 	}
 	if apiKey == "" {
+		result.MissingCredentials = "URLSCAN_API_KEY"
 		return result, nil
 	}
 

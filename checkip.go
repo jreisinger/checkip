@@ -39,10 +39,11 @@ type Check func(ipaddr net.IP) (Result, error)
 
 // Result is the information provided by a Check.
 type Result struct {
-	Name      string `json:"name"`      // check name, max 15 chars
-	Type      Type   `json:"type"`      // check type
-	Malicious bool   `json:"malicious"` // provided by TypeSec and TypeInfoSec check type
-	Info      Info   `json:"info"`
+	Name               string `json:"name"` // check name, max 15 chars
+	Type               Type   `json:"type"` // check type
+	MissingCredentials string `json:"missing_credentials,omitempty"`
+	Malicious          bool   `json:"malicious"` // provided by TypeSec and TypeInfoSec check type
+	Info               Info   `json:"info"`
 }
 
 // Info is generic information provided by a TypeInfo or TypeInfoSec Check.
