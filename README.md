@@ -4,57 +4,111 @@
 
 # checkip
 
-Sometimes I come across an IP address, for example when reviewing logs. And I'd like to find out more about this numerical label. Checkip is CLI tool and Go [library](https://pkg.go.dev/github.com/jreisinger/checkip/check) that provides generic and security information about IP addresses in a quick way.
+Sometimes I come across an IP address, for example when reviewing logs. And I'd like to find out more about this numerical label. Checkip is CLI tool and Go [library](https://pkg.go.dev/github.com/jreisinger/checkip/check) that provides infomation on and security posture of IP addresses. Most checks are passive and active checks are not aggressive.
 
-```sh
-$ checkip 91.228.166.47
+## Usage examples
+
+Check an IP address:
+
+```
+❯ checkip 91.228.166.47
 --- 91.228.166.47 ---
 db-ip.com       Petržalka, Slovakia
 dns name        skh1-webredir01-v.eset.com
 iptoasn.com     ESET-AS
 is on AWS       false
 ping            100% packet loss (5/0), avg round-trip 0 ms
-shodan.io       OS: n/a, open: tcp/80 (nginx), tcp/443 (nginx), vulns: n/a
-tls             TLS 1.3, exp. 2024/01/02, www.eset.com, eset.com
-malicious       0% (0/7) ✅
+tls             TLS 1.3, exp. 2024/01/02!!, www.eset.com, eset.com
+malicious       14% (1/7) ✅
 ```
 
-```sh
-$ checkip -j 34.250.182.30 | jq '.checks[] | select(.malicious == true)'
+Check multiple IP addresses coming from STDIN:
+
+```
+❯ dig +short eset.sk | checkip
+--- 91.228.167.128 ---
+db-ip.com       Petržalka, Slovakia
+dns name        h3-webredir02-v.eset.com
+iptoasn.com     ESET-AS
+is on AWS       false
+ping            100% packet loss (5/0), avg round-trip 0 ms
+tls             TLS 1.3, exp. 2024/01/02!!, www.eset.com, eset.com
+malicious       14% (1/7) ✅
+--- 91.228.166.47 ---
+db-ip.com       Petržalka, Slovakia
+dns name        skh1-webredir01-v.eset.com
+iptoasn.com     ESET-AS
+is on AWS       false
+ping            100% packet loss (5/0), avg round-trip 0 ms
+tls             TLS 1.3, exp. 2024/01/02!!, www.eset.com, eset.com
+malicious       14% (1/7) ✅
+```
+
+Use more detailed JSON output to filter out those checks that consider the IP address to be malicious:
+
+```
+❯ checkip -j 91.228.166.47 | jq '.checks[] | select(.malicious == true)'
 {
-  "name": "shodan.io",
-  "type": 2,
+  "name": "tls",
+  "type": "infoAndSecurity",
   "malicious": true,
   "info": {
-    "org": "Amazon Data Services Ireland Limited",
-    "data": [
-      {
-        "product": "lighttpd",
-        "version": "1.4.53",
-        "port": 80,
-        "transport": "tcp"
-      },
-      {
-        "product": "AWS ELB",
-        "version": "2.0",
-        "port": 443,
-        "transport": "tcp"
-      }
+    "SAN": [
+      "www.eset.com",
+      "eset.com"
     ],
-    "os": "",
-    "ports": [
-      80,
-      443
-    ],
-    "vulns": [
-      "CVE-2022-22707",
-      "CVE-2019-11072"
-    ]
+    "Version": 772,
+    "Expiry": "2024-01-02T23:59:59Z"
   }
 }
 ```
 
-See Wiki for more [usage examples](https://github.com/jreisinger/checkip/wiki/Usage-examples).
+Continuously generate [random IP addresses](https://github.com/jreisinger/checkip/blob/master/randip) and check them (hit Ctrl-C to stop):
+
+```
+❯ while true; do ./randip; sleep 2; done | checkip 2> /dev/null
+--- 120.0.40.221 ---
+db-ip.com       Zhoutou, China
+iptoasn.com     CHINA169-BACKBONE CHINA UNICOM China169 Backbone
+is on AWS       false
+ping            100% packet loss (5/0), avg round-trip 0 ms
+malicious       0% (0/6) ✅
+--- 109.31.58.28 ---
+db-ip.com       Paris, France
+dns name        28.58.31.109.rev.sfr.net
+iptoasn.com     LDCOMNET
+is on AWS       false
+ping            100% packet loss (5/0), avg round-trip 0 ms
+malicious       0% (0/6) ✅
+```
+
+Generate 100 random IP addresses and select Russian or Chinese:
+
+```
+❯ ./randip 100 | checkip -c 20 -j 2> /dev/null | \
+jq -r '.ipaddr as $ip | .checks[] | select (.name == "db-ip.com" and (.info.iso_code == "RU" or .info.iso_code == "CN")) | $ip'
+43.33.161.208
+223.13.196.8
+```
+
+Find out who is trying to SSH into your Linux system:
+
+```
+❯ sudo journalctl --unit ssh --since "1 hour ago" | \
+∙ grep 'Bye Bye' | perl -wlne '/from ([\d\.]+)/ && print $1' | sort | uniq | \
+∙ checkip 2> /dev/null
+--- 167.172.105.64 ---
+db-ip.com       Frankfurt am Main, Germany
+iptoasn.com     DIGITALOCEAN-ASN
+ping            0% packet loss (5/5), avg round-trip 21 ms
+tls             TLS 1.3, exp. 2024/12/27, portal.itruck.com.sa, www.portal.itruck.com.sa
+malicious       43% (3/7) 🤏
+--- 180.168.95.234 ---
+db-ip.com       Shanghai, China
+iptoasn.com     CHINANET-SH-AP China Telecom Group
+ping            0% packet loss (5/5), avg round-trip 213 ms
+malicious       50% (3/6) 🚫
+```
 
 ## Installation
 
@@ -71,7 +125,7 @@ or download a [release](https://github.com/jreisinger/checkip/releases) binary (
 
 ## Configuration
 
-For some checks to start working you need to register and get an API (LICENSE) key. See the service web site for how to do that. An absent key is not reported as an error, the check is simply ignored.
+For some checks to start working you need to register and get an API (LICENSE) key. See the service web site for how to do that. An absent key is not reported as an error, the check is simply not executed and `missing_credentials` JSON field is set.
 
 Store the keys in `$HOME/.checkip.yaml` file:
 
