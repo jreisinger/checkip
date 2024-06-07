@@ -12,7 +12,7 @@ var Use = []checkip.Check{}
 
 // AddUse : methode to add function in checks
 func AddUse(s interface{}) {
-	Use = append(Use,s.(checkip.Check))
+	Use = append(Use, s.(checkip.Check))
 }
 
 // All contains all available checks.
@@ -30,7 +30,6 @@ var All = []checkip.Check{
 	IsOnAWS,
 	MaxMind,
 	OTX,
-	Onyphe,
 	PhishStats,
 	Ping,
 	SansISC,
