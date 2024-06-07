@@ -9,8 +9,8 @@ Sometimes I come across an IP address, for example when reviewing logs. And I'd 
 ## Quick start
 
 ```
-❯ go install github.com/jreisinger/checkip@latest
-❯ checkip 1.1.1.1
+go install github.com/jreisinger/checkip@latest
+checkip 1.1.1.1
 ```
 
 ## Usage examples
