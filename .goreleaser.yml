@@ -15,7 +15,7 @@ builds:
     goarch:
       - amd64
       - arm
-    main: ./cmd/checkip/checkip.go
+    main: ./checkip.go
 checksum:
   name_template: 'checksums.txt'
 snapshot:
