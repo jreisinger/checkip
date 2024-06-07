@@ -118,7 +118,7 @@ To install the CLI tool
 # optional; to install inside a container
 docker run --rm -it golang /bin/bash
 
-go install github.com/jreisinger/checkip/cmd/checkip@latest
+go install github.com/jreisinger/checkip@latest
 ```
 
 or download a [release](https://github.com/jreisinger/checkip/releases) binary (from under "Assets") for your system and architecture.
