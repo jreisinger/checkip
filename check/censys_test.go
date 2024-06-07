@@ -35,9 +35,8 @@ func TestCensys(t *testing.T) {
 		assert.Equal(t, "censys.io", result.Name)
 		assert.Equal(t, checkip.TypeInfoSec, result.Type)
 		assert.Equal(t, true, result.Malicious)
-		assert.Equal(t, "OS: RB760iGS, MikroTik, open: udp/161 (snmp), tcp/2000 (mikrotik_bw), tcp/51922 (ssh)", result.Info.Summary())
+		assert.Equal(t, "MikroTik, RB760iGS, udp/161 (snmp), tcp/2000 (mikrotik_bw), tcp/51922 (ssh)", result.Info.Summary())
 	})
-
 
 	t.Run("given non 2xx response then error is returned", func(t *testing.T) {
 		handlerFn := http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {

@@ -21,10 +21,10 @@ type result struct {
 }
 
 type operatingSystem struct {
-	Product                   string `json:"product"`
-	Vendor                    string `json:"vendor"`
-	Version                   string `json:"version"`
-	Edition                   string `json:"edition"`
+	Product string `json:"product"`
+	Vendor  string `json:"vendor"`
+	Version string `json:"version"`
+	Edition string `json:"edition"`
 }
 
 type censysData []struct {
@@ -53,6 +53,7 @@ func Censys(ipaddr net.IP) (checkip.Result, error) {
 		return result, newCheckError(err)
 	}
 	if apiKey == "" {
+		result.MissingCredentials = "CENSYS_KEY"
 		return result, nil
 	}
 
@@ -61,6 +62,7 @@ func Censys(ipaddr net.IP) (checkip.Result, error) {
 		return result, newCheckError(err)
 	}
 	if apiSec == "" {
+		result.MissingCredentials = "CENSYS_SEC"
 		return result, nil
 	}
 
@@ -93,24 +95,13 @@ func (x byPortC) Len() int           { return len(x) }
 func (x byPortC) Less(i, j int) bool { return x[i].Port < x[j].Port }
 func (x byPortC) Swap(i, j int)      { x[i], x[j] = x[j], x[i] }
 
-// Info returns interesting information from the check.
+// Summary returns interesting information from the check.
 func (c censys) Summary() string {
 	var portInfo []string
-	var os string
-	if c.Result.OS.Product != "" {
-		os = c.Result.OS.Product
-	}
-	var osvendor string
-	if c.Result.OS.Vendor != "" {
-		osvendor = c.Result.OS.Vendor
-	}
-
-	service := make(map[string]int)
 	sort.Sort(byPortC(c.Result.Data))
 	for _, d := range c.Result.Data {
-		port := d.Port
-
-		sport := fmt.Sprintf("%s/%d", strings.ToLower(d.Transport), port)
+		service := make(map[string]int)
+		sport := fmt.Sprintf("%s/%d", strings.ToLower(d.Transport), d.Port)
 		service[sport]++
 
 		if service[sport] > 1 {
@@ -120,7 +111,7 @@ func (c censys) Summary() string {
 		portInfo = append(portInfo, fmt.Sprintf("%s (%s)", sport, strings.ToLower(d.ServiceName)))
 	}
 
-	return fmt.Sprintf("OS: %s, open: %s", strings.Join(nonEmpty(os, osvendor), ", "), strings.Join(portInfo, ", "))
+	return fmt.Sprint(strings.Join(nonEmpty(c.Result.OS.Vendor, c.Result.OS.Product, strings.Join(portInfo, ", ")), ", "))
 }
 
 func (c censys) Json() ([]byte, error) {
