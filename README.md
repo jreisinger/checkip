@@ -130,7 +130,7 @@ or download a [release](https://github.com/jreisinger/checkip/releases) binary (
 
 ## Configuration
 
-For some checks to start working you need to register and get an API (LICENSE) key. See the service web site for how to do that. An absent key is not reported as an error, the check is simply not executed and `missing_credentials` JSON field is set.
+For some checks to start working you need to register and get an API (LICENSE) key. See the service web site for how to do that. An absent key is not reported as an error, the check is simply not executed and `missingCredentials` JSON field is set.
 
 Store the keys in `$HOME/.checkip.yaml` file:
 
