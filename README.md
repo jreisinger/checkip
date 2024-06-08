@@ -157,18 +157,18 @@ Data used by some checks are downloaded (cached) to `$HOME/.checkip/` folder. Th
 
 Checkip is easy to extend. If you want to add a new way of checking IP addresses:
 
-1. Write a function of type `check.Func`.
-2. Add the new check to `check.Funcs` variable.
+1. Write a function of type [check.Func](https://pkg.go.dev/github.com/jreisinger/checkip/check#Func).
+2. Add it to [check.Funcs](https://pkg.go.dev/github.com/jreisinger/checkip/check#Funcs) variable.
 
 Typical workflow:
 
 ```
 make run # test and run
 
-git commit -m "backwards compatible bug fix" main.go
+git commit
 
 git tag | sort -V | tail -1
-git tag -a v0.16.1 -m "patch" # will build a new release on GitHub when pushed
+git tag -a v0.2.0 -m "new check func"
 
-git push --follow-tags
+git push --follow-tags # will build a new release on GitHub
 ```
