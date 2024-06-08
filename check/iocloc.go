@@ -1,39 +1,28 @@
 package check
 
 import (
-	"context"
 	"encoding/json"
 	"errors"
-	"os/user"
-	"path/filepath"
-
 	"fmt"
-	//"log"
 	"net"
-	"time"
 
 	"github.com/logrusorgru/aurora"
-	//"github.com/mitchellh/go-homedir"
 	"github.com/oschwald/geoip2-golang"
 )
 
 type loc struct {
 	IP      string `json:"ip"`
+	City    string `json:"city"`
 	Country string `json:"country"`
-	Name    string `json:"name"`
+	IsoCode string `json:"iso_code"`
+	IsInEU  bool   `json:"is_in_eu"`
 	ASN     string `json:"asn"`
-}
-
-func (l loc) Json() ([]byte, error) {
-	return json.Marshal(l)
 }
 
 func (l loc) Summary() string {
 	au := aurora.NewAurora(true)
-	flag, _ := emocode(l.Country)
-	//return fmt.Sprintf("%s%s (%s)%s %s", l.IP, l.Name, au.Green(l.Country), flag, l.ASN)
-	//fmt.Printf("%s%s (%s)%s %s", l.IP, l.Name, au.Green(l.Country), flag, l.ASN)
-	return fmt.Sprintf("%s (%s)%s %s", l.IP, au.Green(l.Country), flag, l.ASN)
+	flag, _ := emocode(l.IsoCode)
+	return fmt.Sprintf("%s (%s)%s %s", l.IP, au.Green(l.IsoCode), flag, l.ASN)
 }
 
 func emocode(x string) (string, error) {
@@ -46,59 +35,74 @@ func emocode(x string) (string, error) {
 	return string(0x1F1E6+rune(x[0])-'A') + string(0x1F1E6+rune(x[1])-'A'), nil
 }
 
-/*func getConfigConfDir(path string) string {
-	d, e := homedir.Expand(path)
-	if e != nil {
-		log.Fatalf("failed to get home dir: error=%v", e)
-	}
-	return d
-}*/
+func (l loc) Json() ([]byte, error) {
+	return json.Marshal(l)
+}
 
-// IOCLoc print my loc format
-func IOCLoc(ipaddr net.IP) (Check, error) {
+// IOCLoc gets geolocation data from maxmind.com's GeoLite2-City.mmdb.
+func IOCLoc(ip net.IP) (Check, error) {
 	result := Check{
 		Description: "IOCLoc",
 		Type: Info,
 	}
 
-	timeout := time.Duration(500) * time.Millisecond
-	ctx, cancel := context.WithTimeout(context.TODO(), timeout)
-	defer cancel()
-	var r net.Resolver
-
-	l := loc{IP: ipaddr.String()}
-	usr, err := user.Current()
-    if err != nil {
-        return Check{}, err
-    }
-    ConfDir := filepath.Join(usr.HomeDir, ".scan/")
-	geoip := false
-	DbCity, err := geoip2.Open(ConfDir + "/GeoLite2-City.mmdb")
-	var DbASN *geoip2.Reader
-	if err == nil {
-		geoip = true
-	} else {
-		fmt.Println("Warning:", fmt.Sprintf("missing geoip dbs in «%s»\n\n", ConfDir))
+	licenseKey, err := getConfigValue("MAXMIND_LICENSE_KEY")
+	if err != nil {
+		return result, newCheckError(err)
 	}
-	if geoip {
-		DbASN, _ = geoip2.Open(ConfDir + "/GeoLite2-ASN.mmdb")
+	if licenseKey == "" {
+		result.MissingCredentials = "MAXMIND_LICENSE_KEY"
+		return result, nil
 	}
 
-	rec, err := DbCity.City(ipaddr)
-	l.Country = rec.Country.IsoCode
+	var dbCity, dbASN *geoip2.Reader
+	for _, f := range []string{"GeoLite2-City", "GeoLite2-ASN"} {
 
-	name := ""
-	names, err := r.LookupAddr(ctx, ipaddr.String())
-	if err == nil && len(names) > 0 {
-		name = " (" + names[0] + ")"
+		// file := "/var/tmp/GeoLite2-City.mmdb"
+		file, err := getCachePath(f + ".mmdb")
+		if err != nil {
+			return result, err
+		}
+
+		url := "https://download.maxmind.com/app/geoip_download?edition_id=" + f + "&license_key=" + licenseKey + "&suffix=tar.gz"
+
+		if err := updateFile(file, url, "tgz"); err != nil {
+			return result, newCheckError(err)
+		}
+		switch f {
+		case "GeoLite2-City":
+
+			dbCity, err = geoip2.Open(file)
+			if err != nil {
+				return result, newCheckError(fmt.Errorf("can't load DB file %s: %v", file, err))
+			}
+			defer dbCity.Close()
+		case "GeoLite2-ASN":
+			dbASN, err = geoip2.Open(file)
+			if err != nil {
+				return result, newCheckError(fmt.Errorf("can't load DB file %s: %v", file, err))
+			}
+			defer dbASN.Close()
+		}
 	}
-	l.Name = name
 
-	asn, _ := DbASN.ASN(ipaddr)
-	l.ASN = fmt.Sprintf(" AS%d", asn.AutonomousSystemNumber)
-	l.ASN += " - " + asn.AutonomousSystemOrganization
+	geo, err := dbCity.City(ip)
+	if err != nil {
+		return result, newCheckError(err)
+	}
+	geoAsn, err := dbASN.ASN(ip)
+	if err != nil {
+		return result, newCheckError(err)
+	}
 
-	result.IpAddrInfo = l
+	result.IpAddrInfo = loc{
+		IP:      ip.String(),
+		City:    geo.City.Names["en"],
+		Country: geo.Country.Names["en"],
+		IsoCode: geo.Country.IsoCode,
+		IsInEU:  geo.Country.IsInEuropeanUnion,
+		ASN:     fmt.Sprintf(" AS%d - %s", geoAsn.AutonomousSystemNumber, geoAsn.AutonomousSystemOrganization),
+	}
 
 	return result, nil
 }
