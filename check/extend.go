@@ -19,6 +19,8 @@ func AddUse(s interface{}) {
 
 // All contains all available checks.
 var All = []Func{
+	IOCLoc,
+	Spur,
 	AbuseIPDB,
 	BlockList,
 	CinsScore,
