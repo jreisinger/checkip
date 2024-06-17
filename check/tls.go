@@ -46,7 +46,7 @@ func (t tlsinfo) Json() ([]byte, error) {
 func Tls(ipaddr net.IP) (Check, error) {
 	result := Check{
 		Description: "tls",
-		Type:        TypeInfoAndIsMalicious,
+		Type:        InfoAndIsMalicious,
 	}
 
 	address := net.JoinHostPort(ipaddr.String(), "443")

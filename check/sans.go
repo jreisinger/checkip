@@ -31,7 +31,7 @@ func (s sans) Json() ([]byte, error) {
 func SansISC(ipaddr net.IP) (Check, error) {
 	result := Check{
 		Description: "isc.sans.edu",
-		Type:        TypeInfoAndIsMalicious,
+		Type:        InfoAndIsMalicious,
 	}
 
 	u, err := url.Parse(sansUrl)

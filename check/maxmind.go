@@ -36,7 +36,7 @@ func (m maxmind) Json() ([]byte, error) {
 func MaxMind(ip net.IP) (Check, error) {
 	result := Check{
 		Description: "maxmind.com",
-		Type:        TypeInfo,
+		Type:        Info,
 	}
 
 	licenseKey, err := getConfigValue("MAXMIND_LICENSE_KEY")

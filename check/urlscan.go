@@ -16,7 +16,7 @@ const days = 30 // limit search to last 30 days
 func UrlScan(ipaddr net.IP) (Check, error) {
 	result := Check{
 		Description: "urlscan.io",
-		Type:        TypeInfoAndIsMalicious,
+		Type:        InfoAndIsMalicious,
 	}
 
 	apiKey, err := getConfigValue("URLSCAN_API_KEY")

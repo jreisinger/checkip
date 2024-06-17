@@ -23,7 +23,7 @@ func TestAbuseIPDB(t *testing.T) {
 		result, err := AbuseIPDB(net.ParseIP("118.25.6.39"))
 		require.NoError(t, err)
 		assert.Equal(t, "abuseipdb.com", result.Description)
-		assert.Equal(t, TypeInfoAndIsMalicious, result.Type)
+		assert.Equal(t, InfoAndIsMalicious, result.Type)
 		assert.Equal(t, true, result.IpAddrIsMalicious)
 		assert.Equal(t, "domain: tencent.com, usage type: Data Center/Web Hosting/Transit", result.IpAddrInfo.Summary())
 	})

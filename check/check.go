@@ -8,11 +8,11 @@ import (
 	"regexp"
 )
 
-// Existing Check types.
+// Type of a check.
 const (
-	TypeInfo               Type = iota // some information about the IP address
-	TypeIsMalicious                    // whether the IP address is considered malicious
-	TypeInfoAndIsMalicious             // both of the above
+	Info               Type = iota // some information about the IP address
+	IsMalicious                    // whether the IP address is considered malicious
+	InfoAndIsMalicious             // both of the above
 )
 
 // Funcs contains all available functions for checking IP addresses.

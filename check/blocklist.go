@@ -11,7 +11,7 @@ import (
 func BlockList(ipaddr net.IP) (Check, error) {
 	result := Check{
 		Description: "blocklist.de",
-		Type:        TypeIsMalicious,
+		Type:        IsMalicious,
 	}
 
 	file, err := getBlockListFile()

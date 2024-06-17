@@ -36,7 +36,7 @@ func (mx mx) Json() ([]byte, error) {
 func DnsMX(ipaddr net.IP) (Check, error) {
 	result := Check{
 		Description: "dns mx",
-		Type:        TypeInfo,
+		Type:        Info,
 	}
 
 	names, _ := net.LookupAddr(ipaddr.String()) // NOTE: ignoring error

@@ -43,7 +43,7 @@ func basicAuth(username, password string) string {
 func Censys(ipaddr net.IP) (Check, error) {
 	result := Check{
 		Description: "censys.io",
-		Type:        TypeInfoAndIsMalicious,
+		Type:        InfoAndIsMalicious,
 	}
 
 	apiKey, err := getConfigValue("CENSYS_KEY")

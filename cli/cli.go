@@ -90,7 +90,7 @@ func (rs Checks) PrintSummary() {
 			continue
 		}
 
-		if r.Type == check.TypeInfo || r.Type == check.TypeInfoAndIsMalicious {
+		if r.Type == check.Info || r.Type == check.InfoAndIsMalicious {
 			fmt.Printf("%-15s %s\n", r.Description, r.IpAddrInfo.Summary())
 		}
 	}
@@ -118,7 +118,7 @@ func (rs Checks) maliciousStats() (total, malicious int, prob float64) {
 		// if r.Info == nil {
 		// 	continue
 		// }
-		if r.Type == check.TypeIsMalicious || r.Type == check.TypeInfoAndIsMalicious {
+		if r.Type == check.IsMalicious || r.Type == check.InfoAndIsMalicious {
 			total++
 			if r.IpAddrIsMalicious {
 				malicious++

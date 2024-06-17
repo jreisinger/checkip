@@ -32,7 +32,7 @@ func (a autonomousSystem) Json() ([]byte, error) {
 func IPtoASN(ipaddr net.IP) (Check, error) {
 	result := Check{
 		Description: "iptoasn.com",
-		Type:        TypeInfo,
+		Type:        Info,
 	}
 
 	// file := "/var/tmp/ip2asn-combined.tsv"

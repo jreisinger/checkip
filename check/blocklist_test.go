@@ -15,7 +15,7 @@ func TestBlockList(t *testing.T) {
 		result, err := BlockList(net.ParseIP("66.249.70.34"))
 		require.NoError(t, err)
 		assert.Equal(t, "blocklist.de", result.Description)
-		assert.Equal(t, TypeIsMalicious, result.Type)
+		assert.Equal(t, IsMalicious, result.Type)
 		assert.Equal(t, true, result.IpAddrIsMalicious)
 	})
 }

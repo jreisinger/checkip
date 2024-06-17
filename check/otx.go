@@ -19,7 +19,7 @@ type otx struct {
 func OTX(ipaddr net.IP) (Check, error) {
 	result := Check{
 		Description: "otx.alienvault.com",
-		Type:        TypeIsMalicious,
+		Type:        IsMalicious,
 	}
 
 	u, err := url.Parse(otxUrl)

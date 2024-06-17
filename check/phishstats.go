@@ -26,7 +26,7 @@ func (ps phishstats) Json() ([]byte, error) {
 func PhishStats(ipaddr net.IP) (Check, error) {
 	result := Check{
 		Description: "phishstats.info",
-		Type:        TypeInfoAndIsMalicious,
+		Type:        InfoAndIsMalicious,
 	}
 
 	file, err := getCachePath("phish_score.csv")

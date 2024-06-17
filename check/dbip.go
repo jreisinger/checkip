@@ -37,7 +37,7 @@ func (d dbip) Json() ([]byte, error) {
 func DBip(ip net.IP) (Check, error) {
 	result := Check{
 		Description: "db-ip.com",
-		Type:        TypeInfo,
+		Type:        Info,
 	}
 
 	// file := "/var/tmp/dbip-city-lite.mmdb"

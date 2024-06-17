@@ -29,7 +29,7 @@ var shodanUrl = "https://api.shodan.io"
 func Shodan(ipaddr net.IP) (Check, error) {
 	result := Check{
 		Description: "shodan.io",
-		Type:        TypeInfoAndIsMalicious,
+		Type:        InfoAndIsMalicious,
 	}
 
 	apiKey, err := getConfigValue("SHODAN_API_KEY")

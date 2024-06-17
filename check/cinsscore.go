@@ -16,7 +16,7 @@ type cins struct {
 func CinsScore(ipaddr net.IP) (Check, error) {
 	result := Check{
 		Description: "cinsscore.com",
-		Type:        TypeIsMalicious,
+		Type:        IsMalicious,
 	}
 
 	// file := "/var/tmp/cins.txt"

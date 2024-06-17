@@ -38,7 +38,7 @@ func (a abuseIPDB) Json() ([]byte, error) {
 // AbuseIPDB uses api.abuseipdb.com to get generic information about ipaddr and
 // to see if the ipaddr has been reported as malicious.
 func AbuseIPDB(ipaddr net.IP) (Check, error) {
-	result := Check{Description: "abuseipdb.com", Type: TypeInfoAndIsMalicious}
+	result := Check{Description: "abuseipdb.com", Type: InfoAndIsMalicious}
 
 	apiKey, err := getConfigValue("ABUSEIPDB_API_KEY")
 	if err != nil {

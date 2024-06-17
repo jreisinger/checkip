@@ -12,7 +12,7 @@ import (
 func Firehol(ipaddr net.IP) (Check, error) {
 	result := Check{
 		Description: "firehol.org",
-		Type:        TypeIsMalicious,
+		Type:        IsMalicious,
 	}
 
 	file, err := getCachePath("firehol_level1.netset")

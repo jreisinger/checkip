@@ -14,7 +14,7 @@ import (
 func Ping(ipaddr net.IP) (Check, error) {
 	result := Check{
 		Description: "ping",
-		Type:        TypeInfo,
+		Type:        Info,
 	}
 
 	pinger, err := ping.NewPinger(ipaddr.String())

@@ -32,7 +32,7 @@ func TestCensys(t *testing.T) {
 		result, err := Censys(net.ParseIP("118.25.6.39"))
 		require.NoError(t, err)
 		assert.Equal(t, "censys.io", result.Description)
-		assert.Equal(t, TypeInfoAndIsMalicious, result.Type)
+		assert.Equal(t, InfoAndIsMalicious, result.Type)
 		assert.Equal(t, true, result.IpAddrIsMalicious)
 		assert.Equal(t, "MikroTik, RB760iGS, udp/161 (snmp), tcp/2000 (mikrotik_bw), tcp/51922 (ssh)", result.IpAddrInfo.Summary())
 	})

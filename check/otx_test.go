@@ -22,7 +22,7 @@ func TestOTX(t *testing.T) {
 		result, err := OTX(net.ParseIP("118.25.6.39"))
 		require.NoError(t, err)
 		assert.Equal(t, "otx.alienvault.com", result.Description)
-		assert.Equal(t, TypeIsMalicious, result.Type)
+		assert.Equal(t, IsMalicious, result.Type)
 		assert.Equal(t, true, result.IpAddrIsMalicious)
 	})
 

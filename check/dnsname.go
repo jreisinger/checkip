@@ -21,7 +21,7 @@ func (n dnsNames) Json() ([]byte, error) {
 func DnsName(ipaddr net.IP) (Check, error) {
 	result := Check{
 		Description: "dns name",
-		Type:        TypeInfo,
+		Type:        Info,
 	}
 
 	names, err := net.LookupAddr(ipaddr.String())

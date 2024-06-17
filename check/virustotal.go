@@ -42,7 +42,7 @@ func (v virusTotal) Json() ([]byte, error) {
 func VirusTotal(ipaddr net.IP) (Check, error) {
 	result := Check{
 		Description: "virustotal.com",
-		Type:        TypeInfoAndIsMalicious,
+		Type:        InfoAndIsMalicious,
 	}
 
 	apiKey, err := getConfigValue("VIRUSTOTAL_API_KEY")

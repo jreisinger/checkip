@@ -14,7 +14,7 @@ import (
 func IPSum(ipaddr net.IP) (Check, error) {
 	result := Check{
 		Description: "github.com/stamparm/ipsum",
-		Type:        TypeIsMalicious,
+		Type:        IsMalicious,
 	}
 
 	// file := "/var/tmp/ipsum.txt"
