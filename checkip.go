@@ -2,12 +2,12 @@
 package main
 
 import (
-	"bufio"
 	"flag"
 	"fmt"
 	"log"
 	"net"
 	"os"
+	"path/filepath"
 	"sync"
 
 	"github.com/jreisinger/checkip/check"
@@ -16,40 +16,40 @@ import (
 
 func init() {
 	log.SetFlags(0)
-	log.SetPrefix(os.Args[0] + ": ")
+	log.SetPrefix(filepath.Base(os.Args[0]) + ": ")
 }
 
 var j = flag.Bool("j", false, "detailed output in JSON")
 var p = flag.Int("p", 5, "check `n` IP addresses in parallel")
 
-type IpAndResults struct {
-	IP      net.IP
-	Results cli.Checks
+type Result struct {
+	IP     net.IP
+	Checks cli.Checks
 }
 
 func main() {
 	flag.Parse()
 
-	ipaddrsCh := make(chan net.IP)
-	resultsCh := make(chan IpAndResults)
+	ipaddrs := make(chan net.IP)
+	results := make(chan Result)
 
 	var wg sync.WaitGroup
 
 	wg.Add(1)
 	go func() {
-		getIpAddrs(flag.Args(), ipaddrsCh)
+		cli.GetIpAddrs(flag.Args(), ipaddrs)
 		wg.Done()
 	}()
 
 	for i := 0; i < *p; i++ {
 		wg.Add(1)
 		go func() {
-			for ipaddr := range ipaddrsCh {
-				r, errors := cli.Run(check.Funcs, ipaddr)
+			for ipaddr := range ipaddrs {
+				checks, errors := cli.Run(check.Funcs, ipaddr)
 				for _, e := range errors {
 					log.Print(e)
 				}
-				resultsCh <- IpAndResults{ipaddr, r}
+				results <- Result{ipaddr, checks}
 			}
 			wg.Done()
 		}()
@@ -57,47 +57,17 @@ func main() {
 
 	go func() {
 		wg.Wait()
-		close(resultsCh)
+		close(results)
 	}()
 
-	for c := range resultsCh {
+	for result := range results {
 		if *j {
-			c.Results.PrintJSON(c.IP)
+			result.Checks.PrintJSON(result.IP)
 		} else {
-			fmt.Printf("--- %s ---\n", c.IP.String())
-			c.Results.SortByName()
-			c.Results.PrintSummary()
-			c.Results.PrintMalicious()
-		}
-	}
-}
-
-// getIpAddrs parses IP addresses supplied as command line arguments or as
-// STDIN. It sends the received IP addresses down the ipaddrsCh.
-func getIpAddrs(args []string, ipaddrsCh chan net.IP) {
-	defer close(ipaddrsCh)
-
-	if len(args) == 0 { // get IP addresses from stdin.
-		input := bufio.NewScanner(os.Stdin)
-		for input.Scan() {
-			ipaddr := net.ParseIP(input.Text())
-			if ipaddr == nil {
-				log.Printf("wrong IP address: %s", input.Text())
-				continue
-			}
-			ipaddrsCh <- ipaddr
-		}
-		if err := input.Err(); err != nil {
-			log.Print(err)
-		}
-	} else {
-		for _, arg := range args {
-			ipaddr := net.ParseIP(arg)
-			if ipaddr == nil {
-				log.Printf("wrong IP address: %s", arg)
-				continue
-			}
-			ipaddrsCh <- ipaddr
+			fmt.Printf("--- %s ---\n", result.IP.String())
+			result.Checks.SortByName()
+			result.Checks.PrintSummary()
+			result.Checks.PrintMalicious()
 		}
 	}
 }

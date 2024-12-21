@@ -2,6 +2,7 @@
 package cli
 
 import (
+	"bufio"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -47,16 +48,15 @@ func Run(checkFuncs []check.Func, ipaddr net.IP) (Checks, []error) {
 	return checksMu.checks, errorsMu.errors
 }
 
-// Checks are generic or security information provided by a Check.
 type Checks []check.Check
 
-// PrintJSON prints all results in JSON.
-func (rs Checks) PrintJSON(ipaddr net.IP) {
+// PrintJSON prints detailed results in JSON format.
+func (checks Checks) PrintJSON(ipaddr net.IP) {
 	// if len(rs) == 0 {
 	// 	return
 	// }
 
-	_, _, prob := rs.maliciousStats()
+	_, _, prob := checks.maliciousStats()
 
 	out := struct {
 		IpAddr        net.IP `json:"ipAddr"`
@@ -65,7 +65,7 @@ func (rs Checks) PrintJSON(ipaddr net.IP) {
 	}{
 		ipaddr,
 		fmt.Sprintf("%.2f", prob),
-		rs,
+		checks,
 	}
 
 	enc := json.NewEncoder(os.Stdout)
@@ -75,15 +75,15 @@ func (rs Checks) PrintJSON(ipaddr net.IP) {
 }
 
 // SortByName sorts Results by name.
-func (rs Checks) SortByName() {
-	sort.Slice(rs, func(i, j int) bool {
-		return rs[i].Description < rs[j].Description
+func (checks Checks) SortByName() {
+	sort.Slice(checks, func(i, j int) bool {
+		return checks[i].Description < checks[j].Description
 	})
 }
 
 // PrintSummary prints summary results from Info and InfoSec checks.
-func (rs Checks) PrintSummary() {
-	for _, r := range rs {
+func (checks Checks) PrintSummary() {
+	for _, r := range checks {
 		// To avoid "invalid memory address or nil pointer dereference"
 		// runtime error and printing empty summary info.
 		if r.IpAddrInfo == nil || r.IpAddrInfo.Summary() == "" {
@@ -98,8 +98,8 @@ func (rs Checks) PrintSummary() {
 
 // PrintMalicious prints how many of the InfoSec and Sec checks consider the IP
 // address to be malicious.
-func (rs Checks) PrintMalicious() {
-	total, malicious, prob := rs.maliciousStats()
+func (checks Checks) PrintMalicious() {
+	total, malicious, prob := checks.maliciousStats()
 	msg := fmt.Sprintf("%-15s %.0f%% (%d/%d) ",
 		"malicious prob.", math.Round(prob*100), malicious, total)
 	switch {
@@ -113,8 +113,8 @@ func (rs Checks) PrintMalicious() {
 	fmt.Println(msg)
 }
 
-func (rs Checks) maliciousStats() (total, malicious int, prob float64) {
-	for _, r := range rs {
+func (checks Checks) maliciousStats() (total, malicious int, prob float64) {
+	for _, r := range checks {
 		// if r.Info == nil {
 		// 	continue
 		// }
@@ -127,4 +127,34 @@ func (rs Checks) maliciousStats() (total, malicious int, prob float64) {
 	}
 	prob = float64(malicious) / float64(total)
 	return total, malicious, prob
+}
+
+// GetIpAddrs parses IP addresses supplied as command line arguments or as
+// STDIN. It sends the received IP addresses down the ipaddrs channel.
+func GetIpAddrs(args []string, ipaddrs chan net.IP) {
+	defer close(ipaddrs)
+
+	if len(args) == 0 { // get IP addresses from stdin.
+		input := bufio.NewScanner(os.Stdin)
+		for input.Scan() {
+			ipaddr := net.ParseIP(input.Text())
+			if ipaddr == nil {
+				log.Printf("wrong IP address: %s", input.Text())
+				continue
+			}
+			ipaddrs <- ipaddr
+		}
+		if err := input.Err(); err != nil {
+			log.Print(err)
+		}
+	} else {
+		for _, arg := range args {
+			ipaddr := net.ParseIP(arg)
+			if ipaddr == nil {
+				log.Printf("wrong IP address: %s", arg)
+				continue
+			}
+			ipaddrs <- ipaddr
+		}
+	}
 }
