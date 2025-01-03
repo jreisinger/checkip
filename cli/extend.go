@@ -3,6 +3,7 @@ package cli
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/jreisinger/checkip/check"
 )
@@ -10,11 +11,28 @@ import (
 // ExtPrintSummary add IpAddrInfo.Summary for IOCLoc check
 func (rs Checks) ExtPrintSummary() string {
 	res := ""
+	cotation := ""
 	for _, r := range rs {
 		// To avoid "invalid memory address or nil pointer dereference"
 		// runtime error and printing empty summary info.
 		if r.IpAddrInfo == nil || r.IpAddrInfo.Summary() == "" {
 			continue
+		}
+
+        desc := strings.ToLower(r.IpAddrInfo.Summary())
+		switch {
+		case cotation == "" && strings.Contains(desc, "data center"):
+			cotation = "A"
+		case strings.Contains(desc, "mikrotik"):
+			cotation = "B"
+		case strings.Contains(r.IpAddrInfo.Summary(), "open:"):
+			cotation = "A"
+		case strings.Contains(desc, "vpn") || strings.Contains(desc, "avast"):
+			cotation = "C"
+		case strings.Contains(desc, "mobile"):
+			cotation = "D"
+		case strings.Contains(desc, "akamai"):
+			cotation = "E"
 		}
 
 		if r.Type == check.Info || r.Type == check.InfoAndIsMalicious {
@@ -26,5 +44,5 @@ func (rs Checks) ExtPrintSummary() string {
 		}
 
 	}
-	return res
+	return fmt.Sprintf("[%s1] %s",cotation,res)
 }
