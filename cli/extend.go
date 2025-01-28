@@ -23,12 +23,12 @@ func (rs Checks) ExtPrintSummary() string {
 		switch {
 		case cotation == "" && strings.Contains(desc, "data center"):
 			cotation = "A"  // server
+		case cotation == "" && strings.Contains(r.IpAddrInfo.Summary(), "open:"):
+			cotation = "A"  // server
 		case strings.Contains(desc, "vpn") || strings.Contains(desc, "avast"):
 			cotation = "B"  // vpn, proxy
 		case strings.Contains(desc, "mikrotik") || strings.Contains(desc, "fixed line"):
 			cotation = "C"  // botnet
-		case strings.Contains(r.IpAddrInfo.Summary(), "open:"):
-			cotation = "A"  // server
 		case strings.Contains(desc, "mobile"):
 			cotation = "D"  // mobile
 		case strings.Contains(desc, "akamai") || strings.Contains(desc, "amazon"):
