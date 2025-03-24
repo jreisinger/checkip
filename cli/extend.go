@@ -22,17 +22,17 @@ func (rs Checks) ExtPrintSummary() string {
         desc := strings.ToLower(r.IpAddrInfo.Summary())
 		switch {
 		case cotation == "" && strings.Contains(desc, "data center"):
-			cotation = "A"  // server
+			cotation = "A1 - server"  // server
 		case cotation == "" && strings.Contains(r.IpAddrInfo.Summary(), "open:"):
-			cotation = "A"  // server
+			cotation = "A1 - server"  // server
 		case strings.Contains(desc, "vpn") || strings.Contains(desc, "avast"):
-			cotation = "B"  // vpn, proxy
+			cotation = "B1 - vpn"  // vpn, proxy
 		case strings.Contains(desc, "mikrotik") || strings.Contains(desc, "fixed line"):
-			cotation = "C"  // botnet
+			cotation = "C1 - botnet"  // botnet
 		case strings.Contains(desc, "mobile"):
-			cotation = "D"  // mobile
+			cotation = "D1 - mobile"  // mobile
 		case strings.Contains(desc, "akamai") || strings.Contains(desc, "amazon"):
-			cotation = "E"  // cdn
+			cotation = "E1 - cdn"  // cdn
 		}
 
 		if r.Type == check.Info || r.Type == check.InfoAndIsMalicious {
@@ -44,5 +44,5 @@ func (rs Checks) ExtPrintSummary() string {
 		}
 
 	}
-	return fmt.Sprintf("%s [%s1]",res,cotation)
+	return fmt.Sprintf("%s [%s]",res,cotation)
 }
