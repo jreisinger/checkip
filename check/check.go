@@ -33,6 +33,7 @@ var Funcs = []Func{
 	Ping,
 	SansISC,
 	Shodan,
+	Spur,
 	Tls,
 	UrlScan,
 	VirusTotal,
