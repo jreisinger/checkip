@@ -107,8 +107,8 @@ Find out who is trying to SSH into your Linux system:
 
 ```
 ❯ sudo journalctl --unit ssh --since "1 hour ago" | \
-∙ grep 'Bye Bye' | perl -wlne '/from ([\d\.]+)/ && print $1' | sort | uniq | \
-∙ checkip 2> /dev/null
+  grep 'Bye Bye' | perl -wlne '/from ([\d\.]+)/ && print $1' | sort | uniq | \
+  checkip 2> /dev/null
 --- 167.172.105.64 ---
 db-ip.com       Frankfurt am Main, Germany
 iptoasn.com     DIGITALOCEAN-ASN
