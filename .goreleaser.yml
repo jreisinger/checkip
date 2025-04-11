@@ -1,5 +1,7 @@
 # Check the documentation at https://goreleaser.com
 
+version: 2
+
 # Commented out because it's a security risk (https://go.dev/blog/supply-chain).
 # before:
 #   hooks:
