@@ -1,0 +1,40 @@
+{
+  "as": {
+    "number": 30083,
+    "organization": "AS-30083-GO-DADDY-COM-LLC"
+  },
+  "client": {
+    "behaviors": ["TOR_PROXY_USER"],
+    "concentration": {
+      "city": "Weldon Spring",
+      "country": "US",
+      "density": 0.202,
+      "geohash": "9yz",
+      "skew": 45,
+      "state": "Missouri"
+    },
+    "count": 14,
+    "countries": 1,
+    "proxies": ["LUMINATI_PROXY", "SHIFTER_PROXY"],
+    "spread": 4941431,
+    "types": ["MOBILE", "DESKTOP"]
+  },
+  "infrastructure": "DATACENTER",
+  "ip": "148.72.164.186",
+  "location": {
+    "city": "St Louis",
+    "country": "US",
+    "state": "Missouri"
+  },
+  "risks": ["WEB_SCRAPING", "TUNNEL"],
+  "services": ["IPSEC", "OPENVPN"],
+  "tunnels": [
+    {
+      "anonymous": true,
+      "entries": ["148.72.164.179"],
+      "exits": ["148.72.164.177"],
+      "operator": "NORD_VPN",
+      "type": "VPN"
+    }
+  ]
+}
