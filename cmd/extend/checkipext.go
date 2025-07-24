@@ -12,6 +12,7 @@ import (
 	"runtime"
 	"strings"
 	"sync"
+	"time"
 
 	"github.com/jreisinger/checkip/check"
 	"github.com/jreisinger/checkip/cli"
@@ -29,6 +30,7 @@ func init() {
 }
 
 var j = flag.Bool("j", false, "detailed output in JSON")
+var m = flag.Bool("m", false, "MISP event output in JSON")
 var p = flag.Int("p", 5, "check `n` IP addresses in parallel")
 var t = flag.String("t", "", "list of checks")
 var d = flag.Bool("d", false, "debug")
@@ -36,6 +38,7 @@ var d = flag.Bool("d", false, "debug")
 type IpAndResults struct {
 	IP      net.IP
 	Results cli.Checks
+	Rating  cli.Rating
 }
 
 func main() {
@@ -74,7 +77,7 @@ func main() {
 
 	checks := check.Funcs
 	if len(check.Use) > 0 {
-		if *j == false {
+		if *j == false && *m == false {
 			fmt.Println("Checks: " + tcheck)
 		}
 		checks = check.Use
@@ -91,15 +94,19 @@ func main() {
 		wg.Done()
 	}()
 
+	var ra cli.Rating
 	for i := 0; i < *p; i++ {
 		wg.Add(1)
 		go func() {
 			for ipaddr := range ipaddrsCh {
 				r, errors := cli.Run(checks, ipaddr)
 				for _, e := range errors {
-					log.Print(e)
+					if *d == true {
+						log.Print(e)
+					}
 				}
-				resultsCh <- IpAndResults{ipaddr, r}
+				ra = r.Cotation()
+				resultsCh <- IpAndResults{ipaddr, r, ra}
 			}
 			wg.Done()
 		}()
@@ -110,20 +117,39 @@ func main() {
 		close(resultsCh)
 	}()
 
+    currentTime := time.Now()
+    date := fmt.Sprintf("%s", currentTime.Format("2006-01-02"))
+	if *m {
+		fmt.Printf("{\"Event\":{\"date\":\"%s\"",date)
+		// distribution: 5 inherit frome event, 2 connected community, 0 community
+		fmt.Printf(`,"threat_level_id":"1","info":"testevent","published":false,"analysis":"0","distribution":"2","Attribute":[`)
+	}
+
 	var res []string
 	for c := range resultsCh {
+		ra = c.Rating
+		rating := fmt.Sprintf("%s1 - %s", ra.Type, ra.TypeDesc)
 		if *j {
-			c.Results.PrintJSON(c.IP)
+			c.Results.PrintExtJSON(c.IP, ra)
+		} else if *m {
+			c.Results.PrintMISPJSON(c.IP, ra)
+			fmt.Printf(",")
 		} else {
 			fmt.Printf("--- %s ---\n", c.IP.String())
 			c.Results.SortByName()
 			r := c.Results.ExtPrintSummary()
-			if r != "" {
-				res = append(res, r)
+			if ra.Type != "" {
+				res = append(res, fmt.Sprintf("%s [%s]", r, rating))
+				fmt.Printf("%-15s %s\n", "Cotation", rating)
 			}
 			c.Results.PrintMalicious()
 		}
 	}
+
+    if *m {
+		fmt.Printf("{}]}}")
+	}
+
 	if len(res) > 0 {
 		fmt.Printf("\nIOC: %s\n", strings.Join(res, ", "))
 	}
