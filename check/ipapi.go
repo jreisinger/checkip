@@ -35,20 +35,15 @@ func IpAPI(ipaddr net.IP) (Check, error) {
 		Type:        InfoAndIsMalicious,
 	}
 
-	apiKey, _ := getConfigValue("IP_API_KEY")
-	/*apiKey, err := getConfigValue("IP_API_KEY")
-	if err != nil {
-		return result, newCheckError(err)
-	}
-	if apiKey == "" {
-		result.MissingCredentials = "IP_API_KEY"
-		return result, nil
-	}*/
-
 	headers := map[string]string{
-		//"Token":        apiKey,
 		"Accept":       "application/json",
 		"Content-Type": "application/json",
+	}
+
+	// optional API_KEY
+	apiKey, _ := getConfigValue("IP_API_KEY")
+	if apiKey != "" {
+		headers["Token"] = apiKey
 	}
 
 	var ipapi ipapi
@@ -69,23 +64,10 @@ func IpAPI(ipaddr net.IP) (Check, error) {
 
 // Info returns interesting information from the check.
 func (o ipapi) Summary() string {
-	//var operators []string
 	var stype []string
-	/*for _, t := range s.Tunnels {
-		if t.Anonymous == true {
-			stype = append(stype, t.Type)
-		}
-		if t.Operator != "" {
-			operators = append(operators, t.Operator)
-		}
-	}
-	if len(s.Tunnels) == 0 {
-		stype = append(stype, "Residential")
-		operators = s.Risks
-	}*/
 
 	if o.IsVpn == true {
-		if o.Vpn.Service != ""  {
+		if o.Vpn.Service != "" {
 			stype = append(stype, fmt.Sprintf("VPN (%s)", o.Vpn.Service))
 		} else {
 			stype = append(stype, "VPN")
@@ -94,7 +76,6 @@ func (o ipapi) Summary() string {
 	}
 
 	return fmt.Sprintf("%s", strings.Join(stype, ", "))
-	//return fmt.Sprintf("%s: %s", strings.Join(stype, ", "), strings.Join(operators, ", "))
 }
 
 func (o ipapi) Json() ([]byte, error) {
