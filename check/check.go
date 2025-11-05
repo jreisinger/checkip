@@ -29,7 +29,6 @@ var Funcs = []Func{
 	IsOnAWS,
 	MaxMind,
 	OTX,
-	PhishStats,
 	Ping,
 	SansISC,
 	Shodan,

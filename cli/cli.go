@@ -129,9 +129,10 @@ func (checks Checks) maliciousStats() (total, malicious int, prob float64) {
 	return total, malicious, prob
 }
 
-// GetIpAddrs parses IP addresses supplied as command line arguments or as
-// STDIN. It sends the received IP addresses down the ipaddrs channel.
-func GetIpAddrs(args []string, ipaddrs chan net.IP) {
+// GetIpAddrs parses IP addresses supplied as command line arguments or on
+// STDIN. It keeps sending the received IP addresses down the ipaddrs channel.
+// When there's no more input it closes the channel and returns.
+func GetIpAddrs(args []string, ipaddrs chan<- net.IP) {
 	defer close(ipaddrs)
 
 	if len(args) == 0 { // get IP addresses from stdin.
