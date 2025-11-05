@@ -37,7 +37,6 @@ var All = []Func{
 	MyDB,
 	Onyphe,
 	OTX,
-	PhishStats,
 	Ping,
 	SansISC,
 	Shodan,
