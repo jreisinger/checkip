@@ -1,0 +1,10 @@
+{
+  "ip": "8.8.8.8",
+  "noise": false,
+  "riot": true,
+  "classification": "benign",
+  "name": "Google Public DNS",
+  "link": "https://viz.greynoise.io/ip/8.8.8.8",
+  "last_seen": "2023-10-30",
+  "message": "This IP belongs to a known service provider."
+}

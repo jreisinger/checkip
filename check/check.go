@@ -36,6 +36,7 @@ var Funcs = []Func{
 	Tls,
 	UrlScan,
 	VirusTotal,
+	GreyNoise,
 }
 
 // Type is the type of a Check.

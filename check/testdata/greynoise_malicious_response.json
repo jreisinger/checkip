@@ -1,0 +1,10 @@
+{
+  "ip": "1.2.3.4",
+  "noise": true,
+  "riot": false,
+  "classification": "malicious",
+  "name": "Test Scanner",
+  "link": "https://viz.greynoise.io/ip/1.2.3.4",
+  "last_seen": "2023-10-30",
+  "message": "This IP has been observed scanning the internet."
+}
