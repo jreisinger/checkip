@@ -124,6 +124,8 @@ git push --follow-tags # will build a new release on GitHub
 
 With a plugin system to choose each check on command line, or in config file, to manage your subscriptions plans
 
+add MISP event output and experimental cotation scale
+
 ```
 ❯ git checkout extend
 ❯ make extend
@@ -131,25 +133,30 @@ With a plugin system to choose each check on command line, or in config file, to
 ❯ checkipext -h
 Usage of checkipext:
  checkipext [-flag] IP [IP liste]
+  -a string
+        append to list of checks
   -d	debug
   -j	detailed output in JSON
+  -m	MISP event output in JSON
   -p n
         check n IP addresses in parallel (default 5)
   -t string
         list of checks
 
   Available Checks :
-  IPtoASN, MyDB, Onyphe, Shodan, Spur, AbuseIPDB, DnsMX, IPSum, UrlScan, VirusTotal, MaxMind, OTX, SansISC, DnsName, Firehol, IsOnAWS, PhishStats, Ping, BlockList, CinsScore, DBip, Tls, Censys
+  IOCLoc, AbuseIPDB, IsOnAWS, OTX, Tls, UrlScan, DnsMX, DnsName, MyDB, Onyphe, SansISC, BlockList, DBip, IPSum,
+  IPtoASN, MaxMind, Spur, CinsScore, Censys, Firehol, IpAPI, Ping, Shodan, VirusTotal
 ```
 
 or add default checks in  ``$HOME/.checkip.yaml`` file
 ```
-CHECKS: IOCLoc, MyDB, Spur, BlockList, CinsScore, DBip, DnsName, Firehol, IPSum, IPtoASN, IsOnAWS, OTX, AbuseIPDB, Shodan, Onyphe, Tls
+CHECKS: IOCLoc, IpAPI, MyDB, Spur, BlockList, CinsScore, DBip, DnsName, Firehol, IPSum, IPtoASN, IsOnAWS, OTX, AbuseIPDB, Shodan, Onyphe, Tls
 ```
 
 ```
 ❯ checkipext 91.228.166.47
-Checks: IOCLoc,MyDB,Spur,BlockList,CinsScore,DBip,DnsName,Firehol,IPSum,IPtoASN,IsOnAWS,OTX,AbuseIPDB,Shodan,Onyphe,Tls
+Checks: IOCLoc,IpAPI,MyDB,Spur,BlockList,CinsScore,DBip,DnsName,Firehol,IPSum,IPtoASN,IsOnAWS,OTX,
+ AbuseIPDB,Shodan,Onyphe,Tls
 --- 91.228.166.47 ---
 IOCLoc          91.228.166.47 (SK)🇸🇰  AS50881 - ESET, spol. s r.o.
 abuseipdb.com   domain: eset.com, usage type: Commercial
@@ -159,29 +166,36 @@ iptoasn.com     ESET-AS
 is on AWS       false
 shodan.io       OS: n/a, open: tcp/80 (nginx), tcp/443 (nginx), vulns: n/a
 tls             TLS 1.3, exp. 2024/01/02!!, www.eset.com, eset.com
+Cotation        A1 - server
 malicious prob. 11% (1/9) ✅
 
 --- 148.72.164.179 ---
 IOCLoc          148.72.164.179 (US)🇺🇸  AS30083 - AS-30083-US-VELIA-NET
 abuseipdb.com   domain: velia.net, usage type: Data Center/Web Hosting/Transit
+ipapi.is        VPN (NordVPN)
 db-ip.com       St Louis, United States
 iptoasn.com     AS-30083-US-VELIA-NET
 spur.io         VPN : NORD_VPN
 is on AWS       false
+Cotation        B1 - vpn
 malicious prob. 12% (1/8) ✅
 
-IOC: 91.228.166.47 (SK)🇸🇰  AS50881 - ESET, spol. s r.o., 148.72.164.179 (US)🇺🇸  AS30083 - AS-30083-US-VELIA-NET
+IOC: 91.228.166.47 (SK)🇸🇰  AS50881 - ESET, spol. s r.o. [A1 - server],
+   148.72.164.179 (US)🇺🇸  AS30083 - AS-30083-US-VELIA-NET [B1 - vpn]
 ```
 
-With additional checks :
+With additional and optional checks :
+  - Onyphe: https://www.onyphe.io/
+  - IpAPI: https://ipapi.is
+  - IOCLoc : list all "IP (country) ASN"
+  - MyDB : to check your own DB by IP ``curl -H "Authorization: bearer {{token}} "MYDB_URL/{{IP}}"``
 
-Onyphe
 
-IOCLoc : list all "IP (country) ASN"
-
-MyDB : to check your own DB by IP ``curl -H "Authorization: bearer {{token}} "MYDB_URL/{{IP}}"``
+add keys in ``$HOME/.checkip.yaml`` file
 
 ```
 MYDB_URL: https://zzzzzzzzzz/sss/ssss
 MYDB_API_KEY: xxxxxxxxxxx
+ONYPHE_API_KEY: xxxxxxxxxxxxxxx
+IP_API_KEY : xxxxxxxxxxxxxxx
 ```
