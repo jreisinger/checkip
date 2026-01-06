@@ -9,6 +9,7 @@ import (
 	"net"
 	"os"
 	"reflect"
+	"regexp"
 	"runtime"
 	"strings"
 	"sync"
@@ -33,6 +34,7 @@ var j = flag.Bool("j", false, "detailed output in JSON")
 var m = flag.Bool("m", false, "MISP event output in JSON")
 var p = flag.Int("p", 5, "check `n` IP addresses in parallel")
 var t = flag.String("t", "", "list of checks")
+var a = flag.String("a", "", "append to list of checks")
 var d = flag.Bool("d", false, "debug")
 
 type IpAndResults struct {
@@ -66,9 +68,18 @@ func main() {
 	} else {
 		tcheck = *t
 	}
+
+	if *a != "" {
+		tcheck = tcheck + ", " + *a
+	}
+
 	tcheck = strings.Replace(tcheck, " ", "", -1)
 	split := strings.Split(tcheck, ",")
+	rxAlpha := regexp.MustCompile("^[a-zA-Z]+$")
 	for _, s := range split {
+		if rxAlpha.MatchString(s) == false {
+			continue
+		}
 		fname := "github.com/jreisinger/checkip/check." + s
 		if funcRegistry[fname] != nil {
 			check.AddUse(funcRegistry[fname])
@@ -117,10 +128,10 @@ func main() {
 		close(resultsCh)
 	}()
 
-    currentTime := time.Now()
-    date := fmt.Sprintf("%s", currentTime.Format("2006-01-02"))
+	currentTime := time.Now()
+	date := fmt.Sprintf("%s", currentTime.Format("2006-01-02"))
 	if *m {
-		fmt.Printf("{\"Event\":{\"date\":\"%s\"",date)
+		fmt.Printf("{\"Event\":{\"date\":\"%s\"", date)
 		// distribution: 5 inherit frome event, 2 connected community, 0 community
 		fmt.Printf(`,"threat_level_id":"1","info":"testevent","published":false,"analysis":"0","distribution":"2","Attribute":[`)
 	}
@@ -146,7 +157,7 @@ func main() {
 		}
 	}
 
-    if *m {
+	if *m {
 		fmt.Printf("{}]}}")
 	}
 
