@@ -34,6 +34,7 @@ var All = []Func{
 	IOCLoc,
 	IsOnAWS,
 	MaxMind,
+	Misp,
 	MyDB,
 	Onyphe,
 	OTX,

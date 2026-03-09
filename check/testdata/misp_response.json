@@ -1,0 +1,34 @@
+{
+  "response": {
+    "Attribute": [
+      {
+        "id": "90",        
+        "event_id": "13",
+        "comment": "[B1 - vpn] express (GR) AS212238 - Datacamp Limited",
+        "deleted": false,
+        "value": "191.96.146.190",
+        "Event": {
+          "publish_timestamp": "1772123034",
+          "id": "13",
+          "orgc_id": "2",
+          "info": "Something bad happened",
+          "uuid": "cfxzxzfc-eb42-41b2-8d59-972d724xzxzx"
+        }
+      },
+      {
+        "id": "91",
+        "event_id": "13",
+        "comment": "[B2 - vpn] express (GR) AS212238 - Datacamp Limited",
+        "deleted": false,
+        "value": "191.96.146.0/24",
+        "Event": {
+          "publish_timestamp": "1772123034",
+          "id": "13",
+          "orgc_id": "2",
+          "info": "Something bad happened",
+          "uuid": "cfxzxzfc-eb42-41b2-8d59-972d724xzxzx"
+        }
+      }
+    ]
+  }
+}

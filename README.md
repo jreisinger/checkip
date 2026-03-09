@@ -144,7 +144,7 @@ Usage of checkipext:
         list of checks
 
   Available Checks :
-  IOCLoc, AbuseIPDB, IsOnAWS, OTX, Tls, UrlScan, DnsMX, DnsName, MyDB, Onyphe, SansISC, BlockList, DBip, IPSum,
+  IOCLoc, AbuseIPDB, IsOnAWS, OTX, Tls, UrlScan, DnsMX, DnsName, Misp, MyDB, Onyphe, SansISC, BlockList, DBip, IPSum,
   IPtoASN, MaxMind, Spur, CinsScore, Censys, Firehol, IpAPI, Ping, Shodan, VirusTotal
 ```
 
@@ -189,13 +189,22 @@ With additional and optional checks :
   - IpAPI: https://ipapi.is
   - IOCLoc : list all "IP (country) ASN"
   - MyDB : to check your own DB by IP ``curl -H "Authorization: bearer {{token}} "MYDB_URL/{{IP}}"``
+  - Misp : to check by attribute ip-src on your own Misp instance
 
 
 add keys in ``$HOME/.checkip.yaml`` file
 
 ```
+MISP_URL: https://localhost
+MISP_KEY: xxxxxxxxxxxxxxxxxxxxxxxx
+# optional MISP_OPT :
+#  selfsigned cert, search in last 365 days (or h for hours)
+MISP_OPT: selfsigned, 365d
+
 MYDB_URL: https://zzzzzzzzzz/sss/ssss
 MYDB_API_KEY: xxxxxxxxxxx
+
 ONYPHE_API_KEY: xxxxxxxxxxxxxxx
+
 IP_API_KEY : xxxxxxxxxxxxxxx
 ```
