@@ -15,6 +15,7 @@ import (
 )
 
 var mu sync.Mutex
+var downloadHTTPClient = &http.Client{Timeout: defaultHTTPTimeout}
 
 // getCachePath returns OS specific absolute path to filename that is used to
 // caching data from the Internet. On Unix it will be $HOME/.checkip/<filename>
@@ -81,13 +82,14 @@ func isOlderThanOneWeek(t time.Time) bool {
 
 func downloadFile(url string) (r io.ReadCloser, err error) {
 	log.Printf("downloading %s", redactSecrets(url))
-	resp, err := http.Get(url)
+	resp, err := downloadHTTPClient.Get(url)
 	if err != nil {
 		return nil, err
 	}
 
 	// Check the server response.
 	if resp.StatusCode != http.StatusOK {
+		resp.Body.Close()
 		return nil, fmt.Errorf("can't download %v: %v", redactSecrets(url), resp.Status)
 	}
 

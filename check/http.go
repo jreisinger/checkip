@@ -9,8 +9,10 @@ import (
 	"time"
 )
 
+const defaultHTTPTimeout = 10 * time.Second
+
 // defaultHttpClient is reused by checks that make HTTP requests.
-var defaultHttpClient = newHttpClient(&http.Client{Timeout: 10 * time.Second})
+var defaultHttpClient = newHttpClient(&http.Client{Timeout: defaultHTTPTimeout})
 
 type httpClient struct {
 	client *http.Client

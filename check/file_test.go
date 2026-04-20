@@ -14,6 +14,12 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+type roundTripFunc func(*http.Request) (*http.Response, error)
+
+func (fn roundTripFunc) RoundTrip(req *http.Request) (*http.Response, error) {
+	return fn(req)
+}
+
 func TestGetDbFilesPath(t *testing.T) {
 	testcases := []struct {
 		filename string
@@ -53,13 +59,24 @@ func TestIsOlderThanOneWeek(t *testing.T) {
 
 func TestDownloadFile(t *testing.T) {
 	t.Run("given valid response then result and no error is returned", func(t *testing.T) {
-		handlerFn := http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
-			rw.WriteHeader(http.StatusOK)
-			rw.Write(loadResponse(t, "file.txt"))
+		oldClient := downloadHTTPClient
+		downloadHTTPClient = &http.Client{
+			Timeout: time.Second,
+			Transport: roundTripFunc(func(req *http.Request) (*http.Response, error) {
+				assert.Equal(t, "https://example.com/file.txt", req.URL.String())
+				return &http.Response{
+					StatusCode: http.StatusOK,
+					Body:       io.NopCloser(strings.NewReader("just a simple file")),
+					Header:     make(http.Header),
+					Request:    req,
+				}, nil
+			}),
+		}
+		t.Cleanup(func() {
+			downloadHTTPClient = oldClient
 		})
 
-		testUrl := setMockHttpClient(t, handlerFn)
-		rc, err := downloadFile(testUrl)
+		rc, err := downloadFile("https://example.com/file.txt")
 		require.NoError(t, err)
 		defer rc.Close()
 
