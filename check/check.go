@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net"
 	"regexp"
+	"time"
 )
 
 // Type of a check.
@@ -15,27 +16,149 @@ const (
 	InfoAndIsMalicious             // both of the above
 )
 
-// Funcs contains all available functions for checking IP addresses.
-var Funcs = []Func{
-	AbuseIPDB,
-	BlockList,
-	CinsScore,
-	DBip,
-	DnsMX,
-	DnsName,
-	Firehol,
-	IPSum,
-	IPtoASN,
-	IsOnAWS,
-	MaxMind,
-	OTX,
-	Ping,
-	SansISC,
-	Shodan,
-	Spur,
-	Tls,
-	UrlScan,
-	VirusTotal,
+// CachePolicy says whether a check result can be reused within one process.
+type CachePolicy int
+
+const (
+	// CacheProcess reuses the check result for repeated IP addresses within a
+	// single process.
+	CacheProcess CachePolicy = iota
+	// CacheNone always runs the check live.
+	CacheNone
+)
+
+// Definition describes a check and how it should be executed.
+type Definition struct {
+	// Name should be unique across all registered checks.
+	Name string
+	Run  Func
+	// Cache defaults to CacheProcess.
+	Cache CachePolicy
+	// PersistentTTL controls whether the check result is cached across runs.
+	// Zero disables persistent result caching.
+	PersistentTTL time.Duration
+	// NewInfo creates a concrete IpInfo value for decoding cached JSON data.
+	NewInfo func() IpInfo
+}
+
+const remoteResultTTL = time.Hour
+
+// Definitions contains all available checks and their execution policy.
+var Definitions = []Definition{
+	{
+		Name:          "abuseipdb.com",
+		Run:           AbuseIPDB,
+		PersistentTTL: remoteResultTTL,
+		NewInfo: func() IpInfo {
+			return &abuseIPDB{}
+		},
+	},
+	{Name: "blocklist.de", Run: BlockList},
+	{
+		Name: "censys.io",
+		Run:  Censys,
+		NewInfo: func() IpInfo {
+			return &censys{}
+		},
+	},
+	{Name: "cinsscore.com", Run: CinsScore},
+	{Name: "db-ip.com", Run: DBip},
+	{
+		Name: "dns mx",
+		Run:  DnsMX,
+		NewInfo: func() IpInfo {
+			return &mx{}
+		},
+	},
+	{
+		Name: "dns name",
+		Run:  DnsName,
+		NewInfo: func() IpInfo {
+			return &dnsNames{}
+		},
+	},
+	{Name: "firehol.org", Run: Firehol},
+	{Name: "github.com/stamparm/ipsum", Run: IPSum},
+	{Name: "iptoasn.com", Run: IPtoASN},
+	{
+		Name: "is on AWS",
+		Run:  IsOnAWS,
+		NewInfo: func() IpInfo {
+			return &awsIpRanges{}
+		},
+	},
+	{
+		Name: "maxmind.com",
+		Run:  MaxMind,
+		NewInfo: func() IpInfo {
+			return &maxmind{}
+		},
+	},
+	{
+		Name:          "otx.alienvault.com",
+		Run:           OTX,
+		PersistentTTL: remoteResultTTL,
+	},
+	{Name: "ping", Run: Ping},
+	{
+		Name:          "isc.sans.edu",
+		Run:           SansISC,
+		PersistentTTL: remoteResultTTL,
+		NewInfo: func() IpInfo {
+			return &sans{}
+		},
+	},
+	{
+		Name:          "shodan.io",
+		Run:           Shodan,
+		PersistentTTL: remoteResultTTL,
+		NewInfo: func() IpInfo {
+			return &shodan{}
+		},
+	},
+	{
+		Name:          "spur.io",
+		Run:           Spur,
+		PersistentTTL: remoteResultTTL,
+		NewInfo: func() IpInfo {
+			return &spur{}
+		},
+	},
+	{
+		Name: "tls",
+		Run:  Tls,
+		NewInfo: func() IpInfo {
+			return &tlsinfo{}
+		},
+	},
+	{
+		Name:          "urlscan.io",
+		Run:           UrlScan,
+		PersistentTTL: remoteResultTTL,
+		NewInfo: func() IpInfo {
+			return &urlscan{}
+		},
+	},
+	{
+		Name:          "virustotal.com",
+		Run:           VirusTotal,
+		PersistentTTL: remoteResultTTL,
+		NewInfo: func() IpInfo {
+			return &virusTotal{}
+		},
+	},
+}
+
+// Funcs contains all available check functions, derived from Definitions for
+// backward compatibility.
+var Funcs = funcs(Definitions)
+
+func funcs(definitions []Definition) []Func {
+	funcs := make([]Func, 0, len(definitions))
+	for _, definition := range definitions {
+		funcs = append(funcs, definition.Run)
+	}
+	return funcs
 }
 
 // Type is the type of a Check.

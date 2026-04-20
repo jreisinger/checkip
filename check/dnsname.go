@@ -34,7 +34,7 @@ func DnsName(ipaddr net.IP) (Check, error) {
 		}
 	}
 	for i := range names {
-		names[i] = strings.TrimSuffix(names[i], ".")
+		names[i] = trimTrailingDot(names[i])
 	}
 	result.IpAddrInfo = dnsNames(names)
 

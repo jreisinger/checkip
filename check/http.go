@@ -11,8 +11,10 @@ import (
 	"github.com/TylerBrock/colorjson"
 )
 
+const defaultHTTPTimeout = 10 * time.Second
+
 // defaultHttpClient is reused by checks that make HTTP requests.
-var defaultHttpClient = newHttpClient(&http.Client{Timeout: 5 * time.Second})
+var defaultHttpClient = newHttpClient(&http.Client{Timeout: defaultHTTPTimeout})
 
 type httpClient struct {
 	client *http.Client

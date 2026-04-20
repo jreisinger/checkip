@@ -10,42 +10,25 @@ import (
 	"net"
 	"os"
 	"sort"
-	"sync"
 
 	"github.com/jreisinger/checkip/check"
 )
 
-// Run runs checks concurrently against the ippaddr.
+// Run runs checks against ipaddr in the supplied order.
 func Run(checkFuncs []check.Func, ipaddr net.IP) (Checks, []error) {
-	var checksMu struct {
-		sync.Mutex
-		checks []check.Check
-	}
-	var errorsMu struct {
-		sync.Mutex
-		errors []error
-	}
+	checks := make(Checks, 0, len(checkFuncs))
+	var errors []error
 
-	var wg sync.WaitGroup
 	for _, cf := range checkFuncs {
-		wg.Add(1)
-		go func(cf check.Func) {
-			defer wg.Done()
-			c, err := cf(ipaddr)
-			if err != nil {
-				errorsMu.Lock()
-				errorsMu.errors = append(errorsMu.errors, err)
-				errorsMu.Unlock()
-				return
-			}
-			checksMu.Lock()
-			checksMu.checks = append(checksMu.checks, c)
-			checksMu.Unlock()
-		}(cf)
+		c, err := cf(ipaddr)
+		if err != nil {
+			errors = append(errors, err)
+			continue
+		}
+		checks = append(checks, c)
 	}
-	wg.Wait()
 
-	return checksMu.checks, errorsMu.errors
+	return checks, errors
 }
 
 type Checks []check.Check
@@ -115,6 +98,9 @@ func (checks Checks) PrintMalicious() {
 
 func (checks Checks) maliciousStats() (total, malicious int, prob float64) {
 	for _, r := range checks {
+		if r.MissingCredentials != "" {
+			continue
+		}
 		// if r.Info == nil {
 		// 	continue
 		// }
@@ -124,6 +110,9 @@ func (checks Checks) maliciousStats() (total, malicious int, prob float64) {
 				malicious++
 			}
 		}
+	}
+	if total == 0 {
+		return total, malicious, 0
 	}
 	prob = float64(malicious) / float64(total)
 	return total, malicious, prob

@@ -12,6 +12,8 @@ type cins struct {
 	CountIPs int
 }
 
+var cinsScoreURL = "https://cinsscore.com/list/ci-badguys.txt"
+
 // CinsScore searches ipaddr in https://cinsscore.com/list/ci-badguys.txt.
 func CinsScore(ipaddr net.IP) (Check, error) {
 	result := Check{
@@ -25,9 +27,7 @@ func CinsScore(ipaddr net.IP) (Check, error) {
 		return result, err
 	}
 
-	url := "http://cinsscore.com/list/ci-badguys.txt"
-
-	if err := updateFile(file, url, ""); err != nil {
+	if err := updateFile(file, cinsScoreURL, ""); err != nil {
 		return result, newCheckError(err)
 	}
 
@@ -47,6 +47,7 @@ func cinsSearch(ipaddr net.IP, filename string) (cins, error) {
 	if err != nil {
 		return cins{}, err
 	}
+	defer file.Close()
 
 	var cinsArmy cins
 	s := bufio.NewScanner(file)
@@ -58,7 +59,7 @@ func cinsSearch(ipaddr net.IP, filename string) (cins, error) {
 		}
 	}
 	if s.Err() != nil {
-		return cins{}, err
+		return cins{}, s.Err()
 	}
 	return cinsArmy, nil
 }

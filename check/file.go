@@ -15,26 +15,39 @@ import (
 )
 
 var mu sync.Mutex
+var downloadHTTPClient = &http.Client{Timeout: defaultHTTPTimeout}
 
-// getCachePath returns OS specific absolute path to filename that is used to
-// caching data from the Internet. On Unix it will be $HOME/.checkip/<filename>
-func getCachePath(filename string) (string, error) {
+// CacheDir returns an absolute path to the checkip cache directory, optionally
+// nested under elem. The directory is created if needed.
+func CacheDir(elem ...string) (string, error) {
 	mu.Lock()
 	defer mu.Unlock()
 
+	return cacheDir(elem...)
+}
+
+func cacheDir(elem ...string) (string, error) {
 	usr, err := user.Current()
 	if err != nil {
 		return "", err
 	}
 
-	dir := filepath.Join(usr.HomeDir, ".checkip")
+	parts := append([]string{usr.HomeDir, ".checkip"}, elem...)
+	dir := filepath.Join(parts...)
 
-	// Make sure dir exists.
-	if _, err := os.Stat(dir); os.IsNotExist(err) {
-		err := os.Mkdir(dir, 0750)
-		if err != nil {
-			return "", err
-		}
+	if err := os.MkdirAll(dir, 0750); err != nil {
+		return "", err
+	}
+
+	return dir, nil
+}
+
+// getCachePath returns OS specific absolute path to filename that is used to
+// caching data from the Internet. On Unix it will be $HOME/.checkip/<filename>
+func getCachePath(filename string) (string, error) {
+	dir, err := CacheDir()
+	if err != nil {
+		return "", err
 	}
 
 	return filepath.Join(dir, filename), nil
@@ -49,30 +62,26 @@ func updateFile(file, url string, compressFmt string) error {
 	defer mu.Unlock()
 
 	f, err := os.Stat(file)
-
-	if os.IsNotExist(err) {
-		r, err := downloadFile(url)
-		if err != nil {
-			return err
+	if err != nil {
+		if os.IsNotExist(err) {
+			return refreshFile(file, url, compressFmt)
 		}
-		if err := extractFile(file, r, compressFmt); err != nil {
-			return err
-		}
-
-		return nil // don't check ModTime if file does not exist
+		return err
 	}
 
 	if isOlderThanOneWeek(f.ModTime()) {
-		r, err := downloadFile(url)
-		if err != nil {
-			return err
-		}
-		if err := extractFile(file, r, compressFmt); err != nil {
-			return err
-		}
+		return refreshFile(file, url, compressFmt)
 	}
 
 	return nil
+}
+
+func refreshFile(file, url string, compressFmt string) error {
+	r, err := downloadFile(url)
+	if err != nil {
+		return err
+	}
+	return extractFileAtomic(file, r, compressFmt)
 }
 
 func isOlderThanOneWeek(t time.Time) bool {
@@ -81,13 +90,14 @@ func isOlderThanOneWeek(t time.Time) bool {
 
 func downloadFile(url string) (r io.ReadCloser, err error) {
 	log.Printf("downloading %s", redactSecrets(url))
-	resp, err := http.Get(url)
+	resp, err := downloadHTTPClient.Get(url)
 	if err != nil {
 		return nil, err
 	}
 
 	// Check the server response.
 	if resp.StatusCode != http.StatusOK {
+		resp.Body.Close()
 		return nil, fmt.Errorf("can't download %v: %v", redactSecrets(url), resp.Status)
 	}
 
@@ -116,12 +126,43 @@ func extractFile(filename string, r io.ReadCloser, compressFmt string) error {
 	return nil
 }
 
+func extractFileAtomic(filename string, r io.ReadCloser, compressFmt string) error {
+	tempFile, err := os.CreateTemp(filepath.Dir(filename), filepath.Base(filename)+".tmp-*")
+	if err != nil {
+		r.Close()
+		return err
+	}
+	tempFilename := tempFile.Name()
+	if err := tempFile.Close(); err != nil {
+		r.Close()
+		os.Remove(tempFilename)
+		return err
+	}
+
+	removeTemp := true
+	defer func() {
+		if removeTemp {
+			os.Remove(tempFilename)
+		}
+	}()
+
+	if err := extractFile(tempFilename, r, compressFmt); err != nil {
+		return err
+	}
+	if err := os.Rename(tempFilename, filename); err != nil {
+		return err
+	}
+
+	removeTemp = false
+	return nil
+}
+
 func storeFile(outFilename string, r io.ReadCloser) error {
 	defer r.Close() // let's close resp.Body
 
 	outFile, err := os.Create(outFilename)
 	if err != nil {
-		return nil
+		return err
 	}
 	defer outFile.Close()
 
@@ -142,7 +183,7 @@ func extractGzFile(outFilename string, r io.ReadCloser) error {
 
 	outFile, err := os.Create(outFilename)
 	if err != nil {
-		return nil
+		return err
 	}
 	defer outFile.Close()
 

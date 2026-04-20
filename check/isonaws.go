@@ -58,6 +58,7 @@ func IsOnAWS(ipaddr net.IP) (Check, error) {
 	if err != nil {
 		return result, err
 	}
+	defer f.Close()
 	dec := json.NewDecoder(f)
 	if err := dec.Decode(&resp); err != nil {
 		return result, err

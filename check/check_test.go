@@ -38,6 +38,20 @@ func TestNonEmpty(t *testing.T) {
 	}
 }
 
+func TestDefinitionsHaveUniqueNames(t *testing.T) {
+	seen := make(map[string]struct{}, len(Definitions))
+
+	for _, definition := range Definitions {
+		if definition.Name == "" {
+			t.Fatal("definition name must not be empty")
+		}
+		if _, ok := seen[definition.Name]; ok {
+			t.Fatalf("duplicate definition name %q", definition.Name)
+		}
+		seen[definition.Name] = struct{}{}
+	}
+}
+
 // equal tells whether a and b contain the same elements. A nil argument is
 // equivalent to an empty slice.
 func equal(a, b []string) bool {

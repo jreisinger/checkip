@@ -1,5 +1,5 @@
 test:
-	go test ./...
+	go test -race -cover ./...
 
 run: test
 	go run -race ./checkip.go 91.228.166.47
