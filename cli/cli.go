@@ -115,6 +115,9 @@ func (checks Checks) PrintMalicious() {
 
 func (checks Checks) maliciousStats() (total, malicious int, prob float64) {
 	for _, r := range checks {
+		if r.MissingCredentials != "" {
+			continue
+		}
 		// if r.Info == nil {
 		// 	continue
 		// }
@@ -124,6 +127,9 @@ func (checks Checks) maliciousStats() (total, malicious int, prob float64) {
 				malicious++
 			}
 		}
+	}
+	if total == 0 {
+		return total, malicious, 0
 	}
 	prob = float64(malicious) / float64(total)
 	return total, malicious, prob
