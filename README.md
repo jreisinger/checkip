@@ -101,6 +101,8 @@ Data used by some checks is downloaded (cached) to `$HOME/.checkip/` folder. Is 
 
 Repeated checks of the same IP address within a single `checkip` process are memoized (cached) in memory, so duplicate inputs in one run reuse already computed results instead of hitting the same providers again.
 
+Some passive remote checks also persist per-IP results under `$HOME/.checkip/results/v1/` for one hour, so repeated runs can reuse recent results without hitting the same APIs again. Use `checkip -no-cache ...` to bypass the in-memory and persistent result caches for a run. This does not bypass the source-data cache for downloaded files.
+
 ## Development
 
 Checkip is easy to extend. If you want to add a new way of checking IP addresses:
@@ -108,7 +110,7 @@ Checkip is easy to extend. If you want to add a new way of checking IP addresses
 1. Write a function of type [check.Func](https://pkg.go.dev/github.com/jreisinger/checkip/check#Func).
 2. Add a [check.Definition](https://pkg.go.dev/github.com/jreisinger/checkip/check#Definition) to [check.Definitions](https://pkg.go.dev/github.com/jreisinger/checkip/check#Definitions).
 
-New checks use process-lifetime memoization by default. If a check must always run live, set its cache policy to `check.CacheNone`.
+Checks use per run (process-lifetime) memoization by default. If a check should persist results across runs, set `PersistentTTL` and provide `NewInfo` for decoding cached `ipAddrInfo` JSON. If a check must always run live (e.g. an active check), set its cache policy to `check.CacheNone`.
 
 Typical workflow:
 

@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net"
 	"regexp"
+	"time"
 )
 
 // Type of a check.
@@ -33,29 +34,119 @@ type Definition struct {
 	Run  Func
 	// Cache defaults to CacheProcess.
 	Cache CachePolicy
+	// PersistentTTL controls whether the check result is cached across runs.
+	// Zero disables persistent result caching.
+	PersistentTTL time.Duration
+	// NewInfo creates a concrete IpInfo value for decoding cached JSON data.
+	NewInfo func() IpInfo
 }
+
+const remoteResultTTL = time.Hour
 
 // Definitions contains all available checks and their execution policy.
 var Definitions = []Definition{
-	{Name: "abuseipdb.com", Run: AbuseIPDB},
+	{
+		Name:          "abuseipdb.com",
+		Run:           AbuseIPDB,
+		PersistentTTL: remoteResultTTL,
+		NewInfo: func() IpInfo {
+			return &abuseIPDB{}
+		},
+	},
 	{Name: "blocklist.de", Run: BlockList},
+	{
+		Name: "censys.io",
+		Run:  Censys,
+		NewInfo: func() IpInfo {
+			return &censys{}
+		},
+	},
 	{Name: "cinsscore.com", Run: CinsScore},
 	{Name: "db-ip.com", Run: DBip},
-	{Name: "dns MX", Run: DnsMX},
-	{Name: "dns name", Run: DnsName},
+	{
+		Name: "dns mx",
+		Run:  DnsMX,
+		NewInfo: func() IpInfo {
+			return &mx{}
+		},
+	},
+	{
+		Name: "dns name",
+		Run:  DnsName,
+		NewInfo: func() IpInfo {
+			return &dnsNames{}
+		},
+	},
 	{Name: "firehol.org", Run: Firehol},
-	{Name: "ipsum.app", Run: IPSum},
+	{Name: "github.com/stamparm/ipsum", Run: IPSum},
 	{Name: "iptoasn.com", Run: IPtoASN},
-	{Name: "is on AWS", Run: IsOnAWS},
-	{Name: "maxmind.com", Run: MaxMind},
-	{Name: "otx.alienvault.com", Run: OTX},
+	{
+		Name: "is on AWS",
+		Run:  IsOnAWS,
+		NewInfo: func() IpInfo {
+			return &awsIpRanges{}
+		},
+	},
+	{
+		Name: "maxmind.com",
+		Run:  MaxMind,
+		NewInfo: func() IpInfo {
+			return &maxmind{}
+		},
+	},
+	{
+		Name:          "otx.alienvault.com",
+		Run:           OTX,
+		PersistentTTL: remoteResultTTL,
+	},
 	{Name: "ping", Run: Ping},
-	{Name: "isc.sans.edu", Run: SansISC},
-	{Name: "shodan.io", Run: Shodan},
-	{Name: "spur.us", Run: Spur},
-	{Name: "tls", Run: Tls},
-	{Name: "urlscan.io", Run: UrlScan},
-	{Name: "virustotal.com", Run: VirusTotal},
+	{
+		Name:          "isc.sans.edu",
+		Run:           SansISC,
+		PersistentTTL: remoteResultTTL,
+		NewInfo: func() IpInfo {
+			return &sans{}
+		},
+	},
+	{
+		Name:          "shodan.io",
+		Run:           Shodan,
+		PersistentTTL: remoteResultTTL,
+		NewInfo: func() IpInfo {
+			return &shodan{}
+		},
+	},
+	{
+		Name:          "spur.io",
+		Run:           Spur,
+		PersistentTTL: remoteResultTTL,
+		NewInfo: func() IpInfo {
+			return &spur{}
+		},
+	},
+	{
+		Name: "tls",
+		Run:  Tls,
+		NewInfo: func() IpInfo {
+			return &tlsinfo{}
+		},
+	},
+	{
+		Name:          "urlscan.io",
+		Run:           UrlScan,
+		PersistentTTL: remoteResultTTL,
+		NewInfo: func() IpInfo {
+			return &urlscan{}
+		},
+	},
+	{
+		Name:          "virustotal.com",
+		Run:           VirusTotal,
+		PersistentTTL: remoteResultTTL,
+		NewInfo: func() IpInfo {
+			return &virusTotal{}
+		},
+	},
 }
 
 // Funcs contains all available check functions, derived from Definitions for

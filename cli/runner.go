@@ -3,15 +3,25 @@ package cli
 import (
 	"net"
 	"sync"
+	"time"
 
 	"github.com/jreisinger/checkip/check"
 )
+
+// RunnerOptions configures runner caching behavior.
+type RunnerOptions struct {
+	DisableCache bool
+	CacheDir     string
+	Now          func() time.Time
+}
 
 // Runner executes checks and memoizes cacheable results by IP address. It is
 // safe for concurrent use.
 type Runner struct {
 	cachedDefinitions []check.Definition
 	liveDefinitions   []check.Definition
+	disableCache      bool
+	resultCache       *resultCache
 
 	mu   sync.Mutex
 	memo map[string]*memoEntry
@@ -25,8 +35,20 @@ type memoEntry struct {
 
 // NewRunner creates a runner from check definitions.
 func NewRunner(definitions []check.Definition) *Runner {
+	return NewRunnerWithOptions(definitions, RunnerOptions{})
+}
+
+// NewRunnerWithOptions creates a runner from check definitions and options.
+func NewRunnerWithOptions(definitions []check.Definition, options RunnerOptions) *Runner {
 	runner := &Runner{
-		memo: make(map[string]*memoEntry),
+		disableCache: options.DisableCache,
+	}
+	if !options.DisableCache {
+		runner.memo = make(map[string]*memoEntry)
+		cache, err := newResultCache(options.CacheDir, options.Now)
+		if err == nil {
+			runner.resultCache = cache
+		}
 	}
 
 	for _, definition := range definitions {
@@ -42,9 +64,23 @@ func NewRunner(definitions []check.Definition) *Runner {
 
 // Run executes the configured checks for ipaddr.
 func (r *Runner) Run(ipaddr net.IP) (Checks, []error) {
+	if r.disableCache {
+		return r.runAll(ipaddr)
+	}
+
 	checks, errors := r.cachedRun(ipaddr)
 
-	liveChecks, liveErrors := runDefinitions(r.liveDefinitions, ipaddr)
+	liveChecks, liveErrors := r.runDefinitions(r.liveDefinitions, ipaddr)
+	checks = append(checks, liveChecks...)
+	errors = append(errors, liveErrors...)
+
+	return checks, errors
+}
+
+func (r *Runner) runAll(ipaddr net.IP) (Checks, []error) {
+	checks, errors := r.runDefinitions(r.cachedDefinitions, ipaddr)
+
+	liveChecks, liveErrors := r.runDefinitions(r.liveDefinitions, ipaddr)
 	checks = append(checks, liveChecks...)
 	errors = append(errors, liveErrors...)
 
@@ -70,30 +106,48 @@ func (r *Runner) cachedRun(ipaddr net.IP) (Checks, []error) {
 	r.mu.Unlock()
 	defer close(entry.ready)
 
-	checks, errors := runDefinitions(r.cachedDefinitions, ipaddr)
+	checks, errors := r.runDefinitions(r.cachedDefinitions, ipaddr)
 	entry.checks = cloneChecks(checks)
 	entry.errors = cloneErrors(errors)
 
 	return cloneChecks(checks), cloneErrors(errors)
 }
 
-func runDefinitions(definitions []check.Definition, ipaddr net.IP) (Checks, []error) {
+func (r *Runner) runDefinitions(definitions []check.Definition, ipaddr net.IP) (Checks, []error) {
 	checks := make(Checks, 0, len(definitions))
 	var errors []error
 
 	for _, definition := range definitions {
-		result, err := definition.Run(ipaddr)
+		result, err := r.runDefinition(definition, ipaddr)
 		if err != nil {
 			errors = append(errors, err)
 			continue
-		}
-		if result.Description == "" {
-			result.Description = definition.Name
 		}
 		checks = append(checks, result)
 	}
 
 	return checks, errors
+}
+
+func (r *Runner) runDefinition(definition check.Definition, ipaddr net.IP) (check.Check, error) {
+	ip := ipaddr.String()
+	if r.resultCache != nil && definition.PersistentTTL > 0 {
+		if result, ok := r.resultCache.load(definition, ip); ok {
+			return result, nil
+		}
+	}
+
+	result, err := definition.Run(ipaddr)
+	if err != nil {
+		return check.Check{}, err
+	}
+	result.Description = definition.Name
+
+	if r.resultCache != nil && definition.PersistentTTL > 0 && result.MissingCredentials == "" {
+		r.resultCache.store(definition, ip, result)
+	}
+
+	return result, nil
 }
 
 func cloneChecks(checks Checks) Checks {

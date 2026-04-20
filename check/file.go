@@ -17,25 +17,37 @@ import (
 var mu sync.Mutex
 var downloadHTTPClient = &http.Client{Timeout: defaultHTTPTimeout}
 
-// getCachePath returns OS specific absolute path to filename that is used to
-// caching data from the Internet. On Unix it will be $HOME/.checkip/<filename>
-func getCachePath(filename string) (string, error) {
+// CacheDir returns an absolute path to the checkip cache directory, optionally
+// nested under elem. The directory is created if needed.
+func CacheDir(elem ...string) (string, error) {
 	mu.Lock()
 	defer mu.Unlock()
 
+	return cacheDir(elem...)
+}
+
+func cacheDir(elem ...string) (string, error) {
 	usr, err := user.Current()
 	if err != nil {
 		return "", err
 	}
 
-	dir := filepath.Join(usr.HomeDir, ".checkip")
+	parts := append([]string{usr.HomeDir, ".checkip"}, elem...)
+	dir := filepath.Join(parts...)
 
-	// Make sure dir exists.
-	if _, err := os.Stat(dir); os.IsNotExist(err) {
-		err := os.Mkdir(dir, 0750)
-		if err != nil {
-			return "", err
-		}
+	if err := os.MkdirAll(dir, 0750); err != nil {
+		return "", err
+	}
+
+	return dir, nil
+}
+
+// getCachePath returns OS specific absolute path to filename that is used to
+// caching data from the Internet. On Unix it will be $HOME/.checkip/<filename>
+func getCachePath(filename string) (string, error) {
+	dir, err := CacheDir()
+	if err != nil {
+		return "", err
 	}
 
 	return filepath.Join(dir, filename), nil

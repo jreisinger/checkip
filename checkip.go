@@ -20,6 +20,7 @@ func init() {
 }
 
 var j = flag.Bool("j", false, "detailed output in JSON")
+var noCache = flag.Bool("no-cache", false, "disable in-memory and persistent result cache")
 var p = flag.Int("p", 5, "check `n` IP addresses in parallel")
 
 type Result struct {
@@ -40,7 +41,9 @@ func main() {
 		log.Fatal(err)
 	}
 
-	runner := cli.NewRunner(check.Definitions)
+	runner := cli.NewRunnerWithOptions(check.Definitions, cli.RunnerOptions{
+		DisableCache: *noCache,
+	})
 
 	ipaddrs := make(chan net.IP)
 	results := make(chan Result)
