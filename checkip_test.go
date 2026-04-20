@@ -1,6 +1,10 @@
 package main
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/jreisinger/checkip/check"
+)
 
 func TestValidateParallelism(t *testing.T) {
 	tests := []struct {
@@ -21,4 +25,41 @@ func TestValidateParallelism(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestSelectedDefinitionsKeepsAllChecksByDefault(t *testing.T) {
+	selected := selectedDefinitions(false)
+
+	if len(selected) != len(check.Definitions) {
+		t.Fatalf("len(selected) = %d, want %d", len(selected), len(check.Definitions))
+	}
+}
+
+func TestSelectedDefinitionsCanDisableActiveChecks(t *testing.T) {
+	selected := selectedDefinitions(true)
+
+	if len(selected) >= len(check.Definitions) {
+		t.Fatalf("len(selected) = %d, want less than %d", len(selected), len(check.Definitions))
+	}
+
+	for _, definition := range selected {
+		if definition.Active {
+			t.Fatalf("selected active definition %q", definition.Name)
+		}
+	}
+
+	for _, active := range []string{"ping", "tls"} {
+		if containsDefinition(selected, active) {
+			t.Fatalf("selected definitions unexpectedly contain %q", active)
+		}
+	}
+}
+
+func containsDefinition(definitions []check.Definition, name string) bool {
+	for _, definition := range definitions {
+		if definition.Name == name {
+			return true
+		}
+	}
+	return false
 }

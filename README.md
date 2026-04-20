@@ -4,7 +4,7 @@
 
 # checkip
 
-Sometimes I come across an IP address, reviewing logs for example, and I want to know more about this numerical label. Checkip is CLI tool and Go [library](https://pkg.go.dev/github.com/jreisinger/checkip/check) that provides (security) information on IP addresses. It runs various checks to get the information. Most checks are passive, i.e. not interacting directly with the IP address. Active checks, like ping and tls, are not aggressive.
+Sometimes I come across an IP address, reviewing logs for example, and I want to know more about this numerical label. Checkip is CLI tool and Go [library](https://pkg.go.dev/github.com/jreisinger/checkip/check) that provides (security) information on IP addresses. It runs various checks to get the information. Most checks are passive, i.e. not interacting directly with the IP address. Active checks, like ping and tls, are not aggressive and can be disabled with `-no-active`.
 
 ## Quick start
 
@@ -110,7 +110,7 @@ Checkip is easy to extend. If you want to add a new way of checking IP addresses
 1. Write a function of type [check.Func](https://pkg.go.dev/github.com/jreisinger/checkip/check#Func).
 2. Add a [check.Definition](https://pkg.go.dev/github.com/jreisinger/checkip/check#Definition) to [check.Definitions](https://pkg.go.dev/github.com/jreisinger/checkip/check#Definitions).
 
-Checks use per run (process-lifetime) memoization by default. If a check should persist results across runs, set `PersistentTTL` and provide `NewInfo` for decoding cached `ipAddrInfo` JSON. If a check must always run live (e.g. an active check), set its cache policy to `check.CacheNone`.
+Checks use per run (process-lifetime) memoization by default. If a check should persist results across runs, set `PersistentTTL` and provide `NewInfo` for decoding cached `ipAddrInfo` JSON. If a check directly contacts the target IP address, mark it as active so CLI users can disable it with `-no-active`. If a check must always run live, set its cache policy to `check.CacheNone`.
 
 Typical workflow:
 

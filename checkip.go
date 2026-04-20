@@ -21,6 +21,7 @@ func init() {
 
 var j = flag.Bool("j", false, "detailed output in JSON")
 var noCache = flag.Bool("no-cache", false, "disable in-memory and persistent result cache")
+var noActive = flag.Bool("no-active", false, "disable active checks that contact the target IP directly")
 var p = flag.Int("p", 5, "check `n` IP addresses in parallel")
 
 type Result struct {
@@ -35,13 +36,20 @@ func validateParallelism(parallelism int) error {
 	return nil
 }
 
+func selectedDefinitions(disableActive bool) []check.Definition {
+	if !disableActive {
+		return check.Definitions
+	}
+	return check.WithoutActive(check.Definitions)
+}
+
 func main() {
 	flag.Parse()
 	if err := validateParallelism(*p); err != nil {
 		log.Fatal(err)
 	}
 
-	runner := cli.NewRunnerWithOptions(check.Definitions, cli.RunnerOptions{
+	runner := cli.NewRunnerWithOptions(selectedDefinitions(*noActive), cli.RunnerOptions{
 		DisableCache: *noCache,
 	})
 
