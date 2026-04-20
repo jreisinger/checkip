@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"net"
+	"sort"
 	"strings"
 )
 
@@ -17,17 +18,24 @@ type mx struct {
 }
 
 func (mx mx) Summary() string {
-	var s string
-	for domain, mxRecords := range mx.Records {
-		if domain == "" && len(mxRecords) == 0 {
+	var records []string
+	var domains []string
+	for domain := range mx.Records {
+		domains = append(domains, domain)
+	}
+	sort.Strings(domains)
+
+	for _, domain := range domains {
+		mxRecords := mx.Records[domain]
+		if domain == "" || len(mxRecords) == 0 {
 			continue
 		}
 		for i := range mxRecords {
-			mxRecords[i] = strings.TrimSuffix(mxRecords[i], ".")
+			mxRecords[i] = trimTrailingDot(mxRecords[i])
 		}
-		s += domain + ": " + strings.Join(mxRecords, ", ")
+		records = append(records, domain+": "+strings.Join(mxRecords, ", "))
 	}
-	return na(s)
+	return strings.Join(records, ", ")
 }
 
 func (mx mx) Json() ([]byte, error) {
@@ -44,9 +52,12 @@ func DnsMX(ipaddr net.IP) (Check, error) {
 	}
 
 	names, _ := dnsLookupAddr(ipaddr.String()) // NOTE: ignoring error
+	for i := range names {
+		names[i] = trimTrailingDot(names[i])
+	}
 
 	// Enrich names with a name with 'www.' removed.
-	// [www.csh.ac.at.] => [www.csh.ac.at. csh.ac.at.]
+	// [www.csh.ac.at] => [www.csh.ac.at csh.ac.at]
 	for _, n := range names {
 		t := strings.TrimPrefix(n, "www.")
 		names = append(names, t)
@@ -69,15 +80,21 @@ func DnsMX(ipaddr net.IP) (Check, error) {
 		if err := decoder.Decode(&a); err != nil {
 			return result, newCheckError(err)
 		}
-		names = append(names, a.Domain)
+		names = append(names, trimTrailingDot(a.Domain))
 	}
 
 	var mx mx
 	for _, n := range names {
+		if n == "" {
+			continue
+		}
 		var mxRecords2 []string
 		mxRecords, _ := dnsLookupMX(n) // NOTE: ingoring error
 		for _, r := range mxRecords {
-			mxRecords2 = append(mxRecords2, r.Host)
+			mxRecords2 = append(mxRecords2, trimTrailingDot(r.Host))
+		}
+		if len(mxRecords2) == 0 {
+			continue
 		}
 		if mx.Records == nil {
 			mx.Records = make(map[string][]string)

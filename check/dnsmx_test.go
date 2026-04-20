@@ -15,9 +15,9 @@ func TestDnsMXUsesReverseLookupWithoutAbuseIPDBInfo(t *testing.T) {
 	}
 	dnsLookupMX = func(name string) ([]*net.MX, error) {
 		switch name {
-		case "www.example.com.":
+		case "www.example.com":
 			return []*net.MX{{Host: "mx-www.example.com."}}, nil
-		case "example.com.":
+		case "example.com":
 			return []*net.MX{{Host: "mx.example.com."}}, nil
 		default:
 			return nil, nil
@@ -43,10 +43,20 @@ func TestDnsMXUsesReverseLookupWithoutAbuseIPDBInfo(t *testing.T) {
 	}
 
 	want := map[string][]string{
-		"www.example.com.": {"mx-www.example.com."},
-		"example.com.":     {"mx.example.com."},
+		"www.example.com": {"mx-www.example.com"},
+		"example.com":     {"mx.example.com"},
 	}
 	if !reflect.DeepEqual(info.Records, want) {
 		t.Fatalf("records = %#v, want %#v", info.Records, want)
+	}
+}
+
+func TestMxSummaryReturnsEmptyWhenNoMXRecordsExist(t *testing.T) {
+	info := mx{Records: map[string][]string{
+		"one.one.one.one": {},
+	}}
+
+	if got := info.Summary(); got != "" {
+		t.Fatalf("Summary() = %q, want empty string", got)
 	}
 }
