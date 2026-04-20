@@ -47,6 +47,7 @@ func cinsSearch(ipaddr net.IP, filename string) (cins, error) {
 	if err != nil {
 		return cins{}, err
 	}
+	defer file.Close()
 
 	var cinsArmy cins
 	s := bufio.NewScanner(file)
@@ -58,7 +59,7 @@ func cinsSearch(ipaddr net.IP, filename string) (cins, error) {
 		}
 	}
 	if s.Err() != nil {
-		return cins{}, err
+		return cins{}, s.Err()
 	}
 	return cinsArmy, nil
 }

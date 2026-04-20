@@ -44,6 +44,7 @@ func searchIPSumBlacklists(ipaddr net.IP, tsvFile string) (int, error) {
 	if err != nil {
 		return 0, err
 	}
+	defer tsv.Close()
 
 	s := bufio.NewScanner(tsv)
 	for s.Scan() {
@@ -61,7 +62,7 @@ func searchIPSumBlacklists(ipaddr net.IP, tsvFile string) (int, error) {
 		}
 	}
 	if s.Err() != nil {
-		return 0, err
+		return 0, s.Err()
 	}
 	return 0, nil
 }

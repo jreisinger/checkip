@@ -62,6 +62,7 @@ func asSearch(ipaddr net.IP, tsvFile string) (autonomousSystem, error) {
 	if err != nil {
 		return autonomousSystem{}, err
 	}
+	defer tsv.Close()
 
 	as := autonomousSystem{}
 	s := bufio.NewScanner(tsv)
@@ -81,7 +82,7 @@ func asSearch(ipaddr net.IP, tsvFile string) (autonomousSystem, error) {
 		}
 	}
 	if s.Err() != nil {
-		return autonomousSystem{}, err
+		return autonomousSystem{}, s.Err()
 	}
 	return as, nil
 }
