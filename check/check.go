@@ -32,6 +32,8 @@ type Definition struct {
 	// Name should be unique across all registered checks.
 	Name string
 	Run  Func
+	// Active means the check directly interacts with the target IP address.
+	Active bool
 	// Cache defaults to CacheProcess.
 	Cache CachePolicy
 	// PersistentTTL controls whether the check result is cached across runs.
@@ -99,7 +101,7 @@ var Definitions = []Definition{
 		Run:           OTX,
 		PersistentTTL: remoteResultTTL,
 	},
-	{Name: "ping", Run: Ping},
+	{Name: "ping", Run: Ping, Active: true},
 	{
 		Name:          "isc.sans.edu",
 		Run:           SansISC,
@@ -125,8 +127,9 @@ var Definitions = []Definition{
 		},
 	},
 	{
-		Name: "tls",
-		Run:  Tls,
+		Name:   "tls",
+		Run:    Tls,
+		Active: true,
 		NewInfo: func() IpInfo {
 			return &tlsinfo{}
 		},
@@ -159,6 +162,19 @@ func funcs(definitions []Definition) []Func {
 		funcs = append(funcs, definition.Run)
 	}
 	return funcs
+}
+
+// WithoutActive returns definitions that do not directly interact with the
+// target IP address.
+func WithoutActive(definitions []Definition) []Definition {
+	filtered := make([]Definition, 0, len(definitions))
+	for _, definition := range definitions {
+		if definition.Active {
+			continue
+		}
+		filtered = append(filtered, definition)
+	}
+	return filtered
 }
 
 // Type is the type of a Check.
