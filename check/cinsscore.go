@@ -12,6 +12,8 @@ type cins struct {
 	CountIPs int
 }
 
+var cinsScoreURL = "https://cinsscore.com/list/ci-badguys.txt"
+
 // CinsScore searches ipaddr in https://cinsscore.com/list/ci-badguys.txt.
 func CinsScore(ipaddr net.IP) (Check, error) {
 	result := Check{
@@ -25,9 +27,7 @@ func CinsScore(ipaddr net.IP) (Check, error) {
 		return result, err
 	}
 
-	url := "http://cinsscore.com/list/ci-badguys.txt"
-
-	if err := updateFile(file, url, ""); err != nil {
+	if err := updateFile(file, cinsScoreURL, ""); err != nil {
 		return result, newCheckError(err)
 	}
 
