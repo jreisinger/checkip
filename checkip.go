@@ -27,8 +27,18 @@ type Result struct {
 	Checks cli.Checks
 }
 
+func validateParallelism(parallelism int) error {
+	if parallelism < 1 {
+		return fmt.Errorf("invalid -p value %d: must be > 0", parallelism)
+	}
+	return nil
+}
+
 func main() {
 	flag.Parse()
+	if err := validateParallelism(*p); err != nil {
+		log.Fatal(err)
+	}
 
 	ipaddrs := make(chan net.IP)
 	results := make(chan Result)
