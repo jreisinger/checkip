@@ -15,27 +15,59 @@ const (
 	InfoAndIsMalicious             // both of the above
 )
 
-// Funcs contains all available functions for checking IP addresses.
-var Funcs = []Func{
-	AbuseIPDB,
-	BlockList,
-	CinsScore,
-	DBip,
-	DnsMX,
-	DnsName,
-	Firehol,
-	IPSum,
-	IPtoASN,
-	IsOnAWS,
-	MaxMind,
-	OTX,
-	Ping,
-	SansISC,
-	Shodan,
-	Spur,
-	Tls,
-	UrlScan,
-	VirusTotal,
+// CachePolicy says whether a check result can be reused within one process.
+type CachePolicy int
+
+const (
+	// CacheProcess reuses the check result for repeated IP addresses within a
+	// single process.
+	CacheProcess CachePolicy = iota
+	// CacheNone always runs the check live.
+	CacheNone
+)
+
+// Definition describes a check and how it should be executed.
+type Definition struct {
+	// Name should be unique across all registered checks.
+	Name string
+	Run  Func
+	// Cache defaults to CacheProcess.
+	Cache CachePolicy
+}
+
+// Definitions contains all available checks and their execution policy.
+var Definitions = []Definition{
+	{Name: "abuseipdb.com", Run: AbuseIPDB},
+	{Name: "blocklist.de", Run: BlockList},
+	{Name: "cinsscore.com", Run: CinsScore},
+	{Name: "db-ip.com", Run: DBip},
+	{Name: "dns MX", Run: DnsMX},
+	{Name: "dns name", Run: DnsName},
+	{Name: "firehol.org", Run: Firehol},
+	{Name: "ipsum.app", Run: IPSum},
+	{Name: "iptoasn.com", Run: IPtoASN},
+	{Name: "is on AWS", Run: IsOnAWS},
+	{Name: "maxmind.com", Run: MaxMind},
+	{Name: "otx.alienvault.com", Run: OTX},
+	{Name: "ping", Run: Ping},
+	{Name: "isc.sans.edu", Run: SansISC},
+	{Name: "shodan.io", Run: Shodan},
+	{Name: "spur.us", Run: Spur},
+	{Name: "tls", Run: Tls},
+	{Name: "urlscan.io", Run: UrlScan},
+	{Name: "virustotal.com", Run: VirusTotal},
+}
+
+// Funcs contains all available check functions, derived from Definitions for
+// backward compatibility.
+var Funcs = funcs(Definitions)
+
+func funcs(definitions []Definition) []Func {
+	funcs := make([]Func, 0, len(definitions))
+	for _, definition := range definitions {
+		funcs = append(funcs, definition.Run)
+	}
+	return funcs
 }
 
 // Type is the type of a Check.

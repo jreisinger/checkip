@@ -40,6 +40,8 @@ func main() {
 		log.Fatal(err)
 	}
 
+	runner := cli.NewRunner(check.Definitions)
+
 	ipaddrs := make(chan net.IP)
 	results := make(chan Result)
 
@@ -55,7 +57,7 @@ func main() {
 		wg.Add(1)
 		go func() {
 			for ipaddr := range ipaddrs {
-				checks, errors := cli.Run(check.Funcs, ipaddr)
+				checks, errors := runner.Run(ipaddr)
 				for _, e := range errors {
 					log.Print(e)
 				}

@@ -99,12 +99,16 @@ You can also use environment variables with the same names.
 
 Data used by some checks is downloaded (cached) to `$HOME/.checkip/` folder. Is gets periodically re-downloaded so it is fresh.
 
+Repeated checks of the same IP address within a single `checkip` process are memoized (cached) in memory, so duplicate inputs in one run reuse already computed results instead of hitting the same providers again.
+
 ## Development
 
 Checkip is easy to extend. If you want to add a new way of checking IP addresses:
 
 1. Write a function of type [check.Func](https://pkg.go.dev/github.com/jreisinger/checkip/check#Func).
-2. Add it to [check.Funcs](https://pkg.go.dev/github.com/jreisinger/checkip/check#Funcs) variable.
+2. Add a [check.Definition](https://pkg.go.dev/github.com/jreisinger/checkip/check#Definition) to [check.Definitions](https://pkg.go.dev/github.com/jreisinger/checkip/check#Definitions).
+
+New checks use process-lifetime memoization by default. If a check must always run live, set its cache policy to `check.CacheNone`.
 
 Typical workflow:
 
