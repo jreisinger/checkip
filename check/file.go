@@ -121,7 +121,7 @@ func storeFile(outFilename string, r io.ReadCloser) error {
 
 	outFile, err := os.Create(outFilename)
 	if err != nil {
-		return nil
+		return err
 	}
 	defer outFile.Close()
 
@@ -142,7 +142,7 @@ func extractGzFile(outFilename string, r io.ReadCloser) error {
 
 	outFile, err := os.Create(outFilename)
 	if err != nil {
-		return nil
+		return err
 	}
 	defer outFile.Close()
 

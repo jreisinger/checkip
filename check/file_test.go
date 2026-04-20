@@ -1,8 +1,11 @@
 package check
 
 import (
+	"bytes"
+	"compress/gzip"
 	"io"
 	"net/http"
+	"path/filepath"
 	"strings"
 	"testing"
 	"time"
@@ -64,4 +67,26 @@ func TestDownloadFile(t *testing.T) {
 		require.NoError(t, err)
 		assert.Equal(t, "just a simple file", string(b))
 	})
+}
+
+func TestStoreFileReturnsCreateError(t *testing.T) {
+	outFile := filepath.Join(t.TempDir(), "missing", "file.txt")
+
+	err := storeFile(outFile, io.NopCloser(strings.NewReader("content")))
+
+	require.Error(t, err)
+}
+
+func TestExtractGzFileReturnsCreateError(t *testing.T) {
+	var compressed bytes.Buffer
+	zw := gzip.NewWriter(&compressed)
+	_, err := zw.Write([]byte("content"))
+	require.NoError(t, err)
+	require.NoError(t, zw.Close())
+
+	outFile := filepath.Join(t.TempDir(), "missing", "file.txt")
+
+	err = extractGzFile(outFile, io.NopCloser(bytes.NewReader(compressed.Bytes())))
+
+	require.Error(t, err)
 }
