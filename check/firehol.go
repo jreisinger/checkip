@@ -1,11 +1,16 @@
 package check
 
 import (
+	"fmt"
 	"io"
 	"net"
 	"os"
 	"strings"
 )
+
+var fireholGetCachePath = getCachePath
+var fireholUpdateFile = updateFile
+var fireholSearch = ipFound
 
 // Firehol checks whether the ipaddr is found on blacklist
 // https://iplists.firehol.org/?ipset=firehol_level1.
@@ -15,26 +20,26 @@ func Firehol(ipaddr net.IP) (Check, error) {
 		Type:        IsMalicious,
 	}
 
-	file, err := getCachePath("firehol_level1.netset")
+	file, err := fireholGetCachePath("firehol_level1.netset")
 	if err != nil {
-		return result, err
+		return result, newCheckError(err)
 	}
 
 	url := "https://iplists.firehol.org/files/firehol_level1.netset"
 
-	if err := updateFile(file, url, ""); err != nil {
+	if err := fireholUpdateFile(file, url, ""); err != nil {
 		return result, newCheckError(err)
 	}
 
 	f, err := os.Open(file)
 	if err != nil {
-		return result, err
+		return result, newCheckError(err)
 	}
 	defer f.Close()
 
-	found, err := ipFound(f, ipaddr)
+	found, err := fireholSearch(f, ipaddr)
 	if err != nil {
-		return result, err
+		return result, newCheckError(err)
 	}
 	result.IpAddrIsMalicious = found
 
@@ -50,14 +55,16 @@ func ipFound(subnets io.Reader, ipaddr net.IP) (bool, error) {
 	}
 
 	for _, line := range strings.Split(string(lines), "\n") {
+		line = strings.TrimSpace(line)
+
 		// skip empty lines and comments
 		if line == "" || strings.HasPrefix(line, "#") {
 			continue
 		}
 
-		_, ipnet, err := net.ParseCIDR(line)
+		ipnet, err := parseSubnet(line)
 		if err != nil {
-			return false, err
+			return false, fmt.Errorf("parse FireHOL entry %q: %w", line, err)
 		}
 
 		if ipnet.Contains(ipaddr) {
@@ -66,4 +73,19 @@ func ipFound(subnets io.Reader, ipaddr net.IP) (bool, error) {
 	}
 
 	return false, nil
+}
+
+func parseSubnet(line string) (*net.IPNet, error) {
+	if ip := net.ParseIP(line); ip != nil {
+		if ipv4 := ip.To4(); ipv4 != nil {
+			return &net.IPNet{IP: ipv4, Mask: net.CIDRMask(32, 32)}, nil
+		}
+		return &net.IPNet{IP: ip, Mask: net.CIDRMask(128, 128)}, nil
+	}
+
+	_, ipnet, err := net.ParseCIDR(line)
+	if err != nil {
+		return nil, err
+	}
+	return ipnet, nil
 }
