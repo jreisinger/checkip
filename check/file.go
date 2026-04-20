@@ -50,30 +50,26 @@ func updateFile(file, url string, compressFmt string) error {
 	defer mu.Unlock()
 
 	f, err := os.Stat(file)
-
-	if os.IsNotExist(err) {
-		r, err := downloadFile(url)
-		if err != nil {
-			return err
+	if err != nil {
+		if os.IsNotExist(err) {
+			return refreshFile(file, url, compressFmt)
 		}
-		if err := extractFile(file, r, compressFmt); err != nil {
-			return err
-		}
-
-		return nil // don't check ModTime if file does not exist
+		return err
 	}
 
 	if isOlderThanOneWeek(f.ModTime()) {
-		r, err := downloadFile(url)
-		if err != nil {
-			return err
-		}
-		if err := extractFile(file, r, compressFmt); err != nil {
-			return err
-		}
+		return refreshFile(file, url, compressFmt)
 	}
 
 	return nil
+}
+
+func refreshFile(file, url string, compressFmt string) error {
+	r, err := downloadFile(url)
+	if err != nil {
+		return err
+	}
+	return extractFileAtomic(file, r, compressFmt)
 }
 
 func isOlderThanOneWeek(t time.Time) bool {
@@ -115,6 +111,37 @@ func extractFile(filename string, r io.ReadCloser, compressFmt string) error {
 	default:
 		return fmt.Errorf("don't know ho to extract a %s file", compressFmt)
 	}
+	return nil
+}
+
+func extractFileAtomic(filename string, r io.ReadCloser, compressFmt string) error {
+	tempFile, err := os.CreateTemp(filepath.Dir(filename), filepath.Base(filename)+".tmp-*")
+	if err != nil {
+		r.Close()
+		return err
+	}
+	tempFilename := tempFile.Name()
+	if err := tempFile.Close(); err != nil {
+		r.Close()
+		os.Remove(tempFilename)
+		return err
+	}
+
+	removeTemp := true
+	defer func() {
+		if removeTemp {
+			os.Remove(tempFilename)
+		}
+	}()
+
+	if err := extractFile(tempFilename, r, compressFmt); err != nil {
+		return err
+	}
+	if err := os.Rename(tempFilename, filename); err != nil {
+		return err
+	}
+
+	removeTemp = false
 	return nil
 }
 
