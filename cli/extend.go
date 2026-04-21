@@ -10,6 +10,7 @@ import (
 	"regexp"
 	"strings"
 
+    "github.com/logrusorgru/aurora"
 	"github.com/jreisinger/checkip/check"
 )
 
@@ -126,6 +127,7 @@ func (checks Checks) PrintMISPJSON(ipaddr net.IP, rating Rating) {
 
 // ExtPrintSummary add IpAddrInfo.Summary for IOCLoc check
 func (rs Checks) ExtPrintSummary() string {
+	au := aurora.NewAurora(true)
 	res := ""
 	for _, r := range rs {
 		// To avoid "invalid memory address or nil pointer dereference"
@@ -135,6 +137,9 @@ func (rs Checks) ExtPrintSummary() string {
 		}
 
 		if r.Type == check.Info || r.Type == check.InfoAndIsMalicious {
+			if r.Description == "MyDB" || r.Description == "Misp" {
+				r.Description = fmt.Sprintf("<%s>\t\t",au.Yellow(r.Description))
+			}
 			fmt.Printf("%-15s %s\n", r.Description, r.IpAddrInfo.Summary())
 			if r.Description == "IOCLoc" {
 				res = r.IpAddrInfo.Summary()
