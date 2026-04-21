@@ -6,14 +6,11 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/logrusorgru/aurora"
-
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
 func TestMisp(t *testing.T) {
-	au := aurora.NewAurora(true)
 	t.Run("given valid response then result and no error is returned", func(t *testing.T) {
 		handlerFn := http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
 			rw.WriteHeader(http.StatusOK)
@@ -25,7 +22,7 @@ func TestMisp(t *testing.T) {
 
 		result, err := Misp(net.ParseIP("154.16.192.230"))
 		require.NoError(t, err)
-		assert.Equal(t, fmt.Sprintf("<%s>\t\t", au.Yellow("Misp")), result.Description)
+		assert.Equal(t, "Misp", result.Description)
 		assert.Equal(t, InfoAndIsMalicious, result.Type)
 		assert.Equal(t, true, result.IpAddrIsMalicious)
 		assert.Equal(t, "* [13 orgc: 2] Something bad happened: [B1 - vpn] express, [B2 - vpn] express", result.IpAddrInfo.Summary())

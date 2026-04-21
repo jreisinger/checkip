@@ -14,8 +14,6 @@ import (
 	"io"
 	"net/http"
 	"net/url"
-
-	"github.com/logrusorgru/aurora"
 )
 
 /*
@@ -117,12 +115,8 @@ type event struct {
 
 // Misp gets generic information from search.misp.io.
 func Misp(ipaddr net.IP) (Check, error) {
-	au := aurora.NewAurora(true)
 
-	result := Check{
-		Description: fmt.Sprintf("<%s>\t\t", au.Yellow("Misp")),
-		Type:        InfoAndIsMalicious,
-	}
+	result := Check{Description: "Misp", Type: InfoAndIsMalicious}
 
 	headers := map[string]string{
 		"Accept":       "application/vnd.misp.api.v3.host.v1+json",

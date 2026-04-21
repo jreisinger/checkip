@@ -4,8 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net"
-
-	"github.com/logrusorgru/aurora"
 )
 
 type myDB struct {
@@ -20,12 +18,8 @@ var myDBUrl = ""
 
 // MyDB gets generic information from api.myDB.io.
 func MyDB(ipaddr net.IP) (Check, error) {
-	au := aurora.NewAurora(true)
 
-	result := Check{
-		Description: fmt.Sprintf("<%s>\t\t",au.Yellow("MyDB")),
-		Type:        InfoAndIsMalicious,
-	}
+	result := Check{Description: "MyDB", Type: InfoAndIsMalicious}
 
 	if myDBUrl == "" { // or set by test
 		var err1 error
@@ -51,7 +45,7 @@ func MyDB(ipaddr net.IP) (Check, error) {
 	headers := map[string]string{
 		"Authorization": "bearer " + apiKey,
 		"Accept":        "application/json",
-		"Content-Type": "application/x-www-form-urlencoded",
+		"Content-Type":  "application/x-www-form-urlencoded",
 	}
 	var t myDB
 	apiURL := fmt.Sprintf("%s/%s", myDBUrl, ipaddr)
