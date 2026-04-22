@@ -144,50 +144,56 @@ Usage of checkipext:
   -d	debug
   -j	detailed output in JSON
   -m	MISP event output in JSON
+  -no-active
+        disable active checks that contact the target IP directly
+  -no-cache
+        disable in-memory and persistent result cache
   -p n
         check n IP addresses in parallel (default 5)
   -t string
         list of checks
 
   Available Checks :
-  IOCLoc, AbuseIPDB, IsOnAWS, OTX, Tls, UrlScan, DnsMX, DnsName, Misp, MyDB, Onyphe, SansISC, BlockList, DBip, IPSum,
-  IPtoASN, MaxMind, Spur, CinsScore, Censys, Firehol, IpAPI, Ping, Shodan, VirusTotal
+  abuseipdb.com, blocklist.de, censys.io, cinsscore.com, db-ip.com, dns mx, dns name, firehol.org,
+  github.com/stamparm/ipsum, iptoasn.com, is on AWS, maxmind.com, otx.alienvault.com, ping, isc.sans.edu,
+  shodan.io, spur.io, tls, urlscan.io, virustotal.com, Misp, MyDB, IOCLoc, Onyphe, IpAPI
+
 ```
 
 or add default checks in  ``$HOME/.checkip.yaml`` file
 ```
-CHECKS: IOCLoc, IpAPI, MyDB, Spur, BlockList, CinsScore, DBip, DnsName, Firehol, IPSum, IPtoASN, IsOnAWS, OTX, AbuseIPDB, Shodan, Onyphe, Tls
+CHECKS: IOCLoc, IpAPI, MyDB, spur.io, blocklist.de, cinsscore.com, db-ip.com, dns name, firehol.org,
+  github.com/stamparm/ipsum, iptoasn.com, is on AWS, otx.alienvault.com, abuseipdb.com, shodan.io,
+  Onyphei, tls
 ```
 
 ```
-❯ checkipext 91.228.166.47
-Checks: IOCLoc,IpAPI,MyDB,Spur,BlockList,CinsScore,DBip,DnsName,Firehol,IPSum,IPtoASN,IsOnAWS,OTX,
- AbuseIPDB,Shodan,Onyphe,Tls
+❯ checkipext 91.228.166.47 195.86.24.104
+Checks: IOCLoc, IpAPI, MyDB, spur.io, blocklist.de, cinsscore.com, db-ip.com, dnsname, firehol.org,
+  github.com/stamparm/ipsum, iptoasn.com, isonAWS, otx.alienvault.com, abuseipdb.com, shodan.io,
+  Onyphe, Tls
 --- 91.228.166.47 ---
 IOCLoc          91.228.166.47 (SK)🇸🇰  AS50881 - ESET, spol. s r.o.
 abuseipdb.com   domain: eset.com, usage type: Commercial
 db-ip.com       Petržalka, Slovakia
-dns name        skh1-webredir01-v.eset.com
 iptoasn.com     ESET-AS
-is on AWS       false
 shodan.io       OS: n/a, open: tcp/80 (nginx), tcp/443 (nginx), vulns: n/a
 tls             TLS 1.3, exp. 2024/01/02!!, www.eset.com, eset.com
 Cotation        A1 - server
-malicious prob. 11% (1/9) ✅
+malicious prob. 10% (1/10) ✅
 
---- 148.72.164.179 ---
-IOCLoc          148.72.164.179 (US)🇺🇸  AS30083 - AS-30083-US-VELIA-NET
-abuseipdb.com   domain: velia.net, usage type: Data Center/Web Hosting/Transit
-ipapi.is        VPN (NordVPN)
-db-ip.com       St Louis, United States
-iptoasn.com     AS-30083-US-VELIA-NET
-spur.io         VPN : NORD_VPN
-is on AWS       false
+--- 195.86.24.104 ---
+IOCLoc          195.86.24.104 (FR)🇫🇷  AS212238 - Datacamp Limited
+IpAPI           VPN (Surfshark)
+abuseipdb.com   domain: gtt.net, usage type: Data Center/Web Hosting/Transit
+db-ip.com       Bordeaux, France
+iptoasn.com     CDNEXT
+shodan.io       OS: n/a, open: tcp/1443, tcp/4000, tcp/7443, tcp/8443, vulns: n/a
 Cotation        B1 - vpn
-malicious prob. 12% (1/8) ✅
+malicious prob. 10% (1/9) 🤏
 
 IOC: 91.228.166.47 (SK)🇸🇰  AS50881 - ESET, spol. s r.o. [A1 - server],
-   148.72.164.179 (US)🇺🇸  AS30083 - AS-30083-US-VELIA-NET [B1 - vpn]
+    195.86.24.104 (FR)🇫🇷  AS212238 - Datacamp Limited [B1 - vpn]
 ```
 
 With additional and optional checks :
