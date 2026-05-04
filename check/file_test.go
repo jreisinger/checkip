@@ -1,6 +1,7 @@
 package check
 
 import (
+	"archive/tar"
 	"bytes"
 	"compress/gzip"
 	"io"
@@ -127,6 +128,32 @@ func TestExtractGzFileReturnsCreateError(t *testing.T) {
 	err = extractGzFile(outFile, io.NopCloser(bytes.NewReader(compressed.Bytes())))
 
 	require.Error(t, err)
+}
+
+func TestExtractFileAtomicExtractsTgzEntryMatchingFinalFilename(t *testing.T) {
+	const content = "geoip database content"
+
+	var compressed bytes.Buffer
+	zw := gzip.NewWriter(&compressed)
+	tw := tar.NewWriter(zw)
+	require.NoError(t, tw.WriteHeader(&tar.Header{
+		Name: "GeoLite2-City_20260501/GeoLite2-City.mmdb",
+		Mode: 0600,
+		Size: int64(len(content)),
+	}))
+	_, err := tw.Write([]byte(content))
+	require.NoError(t, err)
+	require.NoError(t, tw.Close())
+	require.NoError(t, zw.Close())
+
+	outFile := filepath.Join(t.TempDir(), "GeoLite2-City.mmdb")
+
+	err = extractFileAtomic(outFile, io.NopCloser(bytes.NewReader(compressed.Bytes())), "tgz")
+	require.NoError(t, err)
+
+	got, err := os.ReadFile(outFile)
+	require.NoError(t, err)
+	assert.Equal(t, content, string(got))
 }
 
 func TestUpdateFileKeepsExistingFileWhenRefreshFails(t *testing.T) {

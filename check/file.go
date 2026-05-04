@@ -10,6 +10,7 @@ import (
 	"os"
 	"os/user"
 	"path/filepath"
+	"strings"
 	"sync"
 	"time"
 )
@@ -213,7 +214,7 @@ func extractTgzFile(outFile string, r io.ReadCloser) error {
 			return err
 		}
 		if tarHeader.Typeflag == tar.TypeReg {
-			if filepath.Base(tarHeader.Name) == filepath.Base(outFile) {
+			if matchesTgzOutputName(tarHeader.Name, outFile) {
 				if err := writeTarEntry(outFile, tarReader); err != nil {
 					return err
 				}
@@ -221,6 +222,13 @@ func extractTgzFile(outFile string, r io.ReadCloser) error {
 		}
 	}
 	return nil
+}
+
+func matchesTgzOutputName(tarName, outFile string) bool {
+	tarBase := filepath.Base(tarName)
+	outBase := filepath.Base(outFile)
+
+	return tarBase == outBase || strings.HasPrefix(outBase, tarBase+".tmp-")
 }
 
 func writeTarEntry(outFile string, tarReader *tar.Reader) error {
