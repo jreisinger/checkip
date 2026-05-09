@@ -9,9 +9,12 @@ on:
       - "v*"
 
 jobs:
-  go-test-scan:
-    uses: jreisinger/github-actions/.github/workflows/go-test-scan.yml@main
+  go-test:
+    uses: jreisinger/github-actions/.github/workflows/go-test.yml@v1.0.1
+  trivy-scan:
+    uses: jreisinger/github-actions/.github/workflows/trivy-scan.yml@v1.0.1
   go-release:
     needs:
-      - go-test-scan
-    uses: jreisinger/github-actions/.github/workflows/go-release.yml@main
+      - go-test
+      - trivy-scan
+    uses: jreisinger/github-actions/.github/workflows/go-release.yml@v1.0.1
