@@ -2,9 +2,9 @@ package check
 
 import (
 	"encoding/json"
-	"fmt"
+	"errors"
 	"net"
-	"strings"
+	"net/http"
 )
 
 var greynoiseurl = "https://api.greynoise.io/v3/community/"
@@ -27,7 +27,7 @@ func (g grey) Json() ([]byte, error) {
 
 // Summary implements IpInfo.
 func (g grey) Summary() string {
-	return fmt.Sprintf("%s", na(g.Message))
+	return na(g.Message)
 }
 
 // GreyNoise is a check for GreyNoise.
@@ -43,16 +43,11 @@ func GreyNoise(ipaddr net.IP) (Check, error) {
 	headers := map[string]string{"accept": "application/json"}
 
 	if err := defaultHttpClient.GetJson(apiURL, headers, map[string]string{}, &response); err != nil {
-		if strings.Contains(err.Error(), "404 Not Found") {
+		var statusErr *httpStatusError
+		if errors.As(err, &statusErr) && statusErr.StatusCode == http.StatusNotFound {
 			result.IpAddrInfo = grey{
-				IP:             ipaddr.String(),
-				Noise:          false,
-				Riot:           false,
-				Message:        "IP not observed scanning the internet or contained in RIOT data set.",
-				Link:           na(response.Link),
-				LastSeen:       na(response.LastSeen),
-				Name:           na(response.Name),
-				Classification: na(response.Classification),
+				IP:      ipaddr.String(),
+				Message: "IP not observed scanning the internet or contained in RIOT data set.",
 			}
 			return result, nil
 		}
