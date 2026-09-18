@@ -59,9 +59,22 @@ func (c httpClient) Get(apiUrl string, headers map[string]string, queryParams ma
 	}
 
 	if resp.StatusCode/100 != 2 {
-		return nil, fmt.Errorf("GET %s: %s", apiUrl, resp.Status)
+		return nil, &httpStatusError{StatusCode: resp.StatusCode, url: apiUrl, status: resp.Status}
 	}
 	return body, nil
+}
+
+// httpStatusError is returned by Get when the response status is not 2xx, so
+// callers can check the status code with errors.As instead of matching the
+// error string.
+type httpStatusError struct {
+	StatusCode int
+	url        string
+	status     string
+}
+
+func (e *httpStatusError) Error() string {
+	return fmt.Sprintf("GET %s: %s", e.url, e.status)
 }
 
 func (c httpClient) GetJson(apiUrl string, headers map[string]string, queryParams map[string]string, response interface{}) error {

@@ -1,0 +1,10 @@
+{
+  "ip": "1.2.3.4",
+  "noise": true,
+  "riot": false,
+  "classification": "malicious",
+  "name": "example scanner",
+  "link": "https://viz.greynoise.io/ip/1.2.3.4",
+  "last_seen": "2024-01-01",
+  "message": "Success"
+}

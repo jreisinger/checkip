@@ -150,6 +150,14 @@ var Definitions = []Definition{
 			return &virusTotal{}
 		},
 	},
+	{
+		Name:          "greynoise.io",
+		Run:           GreyNoise,
+		PersistentTTL: remoteResultTTL,
+		NewInfo: func() IpInfo {
+			return &grey{}
+		},
+	},
 }
 
 // Funcs contains all available check functions, derived from Definitions for
