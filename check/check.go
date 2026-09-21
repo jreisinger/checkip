@@ -111,6 +111,14 @@ var Definitions = []Definition{
 		},
 	},
 	{
+		Name:          "scanmalware.com",
+		Run:           ScanMalware,
+		PersistentTTL: remoteResultTTL,
+		NewInfo: func() IpInfo {
+			return &scanMalware{}
+		},
+	},
+	{
 		Name:          "shodan.io",
 		Run:           Shodan,
 		PersistentTTL: remoteResultTTL,
