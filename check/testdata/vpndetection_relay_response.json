@@ -1,0 +1,37 @@
+{
+  "ip": "172.224.226.6",
+  "is_bogon": false,
+  "is_vpn": false,
+  "is_relay": true,
+  "is_tor": false,
+  "is_anycast": false,
+  "relay": {
+    "provider": "apple_private_relay",
+    "provider_name": "Apple iCloud Private Relay",
+    "confidence": "high",
+    "last_seen": "2026-11-19"
+  },
+  "tor": {},
+  "location": {
+    "continent": "EU",
+    "continent_name": "Europe",
+    "country": "GB",
+    "country_name": "United Kingdom",
+    "timezone": "Europe/London",
+    "currency_code": "GBP",
+    "currency_name": "Pound",
+    "currency_symbol": "£",
+    "flag_emoji": "🇬🇧",
+    "flag_unicode": "U+1F1EC U+1F1E7"
+  },
+  "asn": {
+    "asn": 36183,
+    "name": "Akamai Technologies, Inc.",
+    "domain": "akamai.com",
+    "type": "hosting",
+    "prefix": "172.224.226.0/24",
+    "country": "US",
+    "rpki_status": "valid"
+  },
+  "hostname": "a172-224-226-6.source.akaquill.net"
+}

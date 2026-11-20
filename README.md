@@ -92,6 +92,7 @@ MAXMIND_LICENSE_KEY: abcdef1234567890
 SHODAN_API_KEY: aaaabbbbccccddddeeeeffff11112222
 URLSCAN_API_KEY: abcd1234-a123-4567-678z-a2b3c4b5d6e7
 VIRUSTOTAL_API_KEY: aaaaaaaabbbbbbbbccccccccddddddddeeeeeeeeffffffff1111111122222222
+VPNDETECTION_API_KEY: aaaabbbbccccdddd1111222233334444
 ```
 
 You can also use environment variables with the same names.
