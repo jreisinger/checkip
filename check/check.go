@@ -159,6 +159,14 @@ var Definitions = []Definition{
 		},
 	},
 	{
+		Name:          "vpndetection.io",
+		Run:           VPNDetection,
+		PersistentTTL: remoteResultTTL,
+		NewInfo: func() IpInfo {
+			return &vpnDetection{}
+		},
+	},
+	{
 		Name:          "greynoise.io",
 		Run:           GreyNoise,
 		PersistentTTL: remoteResultTTL,
