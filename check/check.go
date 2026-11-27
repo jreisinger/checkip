@@ -96,6 +96,7 @@ var Definitions = []Definition{
 			return &maxmind{}
 		},
 	},
+	{Name: "netapi.com", Run: NetAPI},
 	{
 		Name:          "otx.alienvault.com",
 		Run:           OTX,
