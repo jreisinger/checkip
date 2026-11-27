@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-// NetAPI searches the ipaddr in https://netapi.com/zf-api/f/compromised/ip/live/,
+// NetAPI searches the ipaddr in https://netapi.com/api2/netapi-compromised-ips.txt,
 // the IPv4 addresses that attacked NetAPI's own honeypot sensors within the
 // last 48 hours (one address per line). See https://netapi.com/compromised-ips/.
 func NetAPI(ipaddr net.IP) (Check, error) {
@@ -48,7 +48,7 @@ var getNetAPIFile = func() (*os.File, error) {
 		return nil, newCheckError(err)
 	}
 
-	u := "https://netapi.com/zf-api/f/compromised/ip/live/"
+	u := "https://netapi.com/api2/netapi-compromised-ips.txt"
 	if err := updateFile(file, u, ""); err != nil {
 		return nil, newCheckError(err)
 	}
